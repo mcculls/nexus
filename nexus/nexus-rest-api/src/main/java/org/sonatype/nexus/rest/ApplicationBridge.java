@@ -95,6 +95,10 @@ import org.sonatype.nexus.rest.model.RepositoryStatusListResource;
 import org.sonatype.nexus.rest.model.RepositoryStatusListResourceResponse;
 import org.sonatype.nexus.rest.model.RepositoryStatusResource;
 import org.sonatype.nexus.rest.model.RepositoryStatusResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceListResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceListResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceResourceResponse;
 import org.sonatype.nexus.rest.model.SearchResponse;
 import org.sonatype.nexus.rest.model.StatusConfigurationValidationResponse;
 import org.sonatype.nexus.rest.model.StatusResource;
@@ -108,6 +112,8 @@ import org.sonatype.nexus.rest.repositories.RepositoryStatusResourceHandler;
 import org.sonatype.nexus.rest.repositorystatuses.RepositoryStatusesListResourceHandler;
 import org.sonatype.nexus.rest.routes.RepositoryRouteListResourceHandler;
 import org.sonatype.nexus.rest.routes.RepositoryRouteResourceHandler;
+import org.sonatype.nexus.rest.schedules.ScheduledServiceListResourceHandler;
+import org.sonatype.nexus.rest.schedules.ScheduledServiceResourceHandler;
 import org.sonatype.nexus.rest.status.StatusResourceHandler;
 import org.sonatype.nexus.rest.templates.repositories.RepositoryTemplateListResourceHandler;
 import org.sonatype.nexus.rest.templates.repositories.RepositoryTemplateResourceHandler;
@@ -285,6 +291,11 @@ public class ApplicationBridge
         xstream.omitField( StatusResource.class, "modelEncoding" );
         xstream.omitField( StatusResourceResponse.class, "modelEncoding" );
         xstream.omitField( StatusConfigurationValidationResponse.class, "modelEncoding" );
+        
+        xstream.omitField( ScheduledServiceListResource.class, "modelEncoding" );
+        xstream.omitField( ScheduledServiceListResourceResponse.class, "modelEncoding" );
+        xstream.omitField( ScheduledServiceResource.class, "modelEncoding" );
+        xstream.omitField( ScheduledServiceResourceResponse.class, "modelEncoding" );
 
         // Maven model
         xstream.omitField( Model.class, "modelEncoding" );
@@ -424,6 +435,12 @@ public class ApplicationBridge
 
         router.attach( "/data_cache/{" + CacheResourceHandler.DOMAIN + "}/{" + CacheResourceHandler.TARGET_ID
             + "}/content", protectResource( CacheResourceHandler.class ) );
+        
+        router.attach( "/schedules", protectResource( ScheduledServiceListResourceHandler.class ) );
+        
+        router.attach( 
+            "/schedules/{" + ScheduledServiceResourceHandler.SCHEDULED_SERVICE_ID_KEY + "}",
+            protectResource( ScheduledServiceResourceHandler.class ) );
 
         // returning root
         return root;
