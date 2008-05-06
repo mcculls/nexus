@@ -148,6 +148,11 @@ Sonatype.repoServer.referenceData = {
     repositories : []
       //@todo: there's a discrepancy between routes list and state representation of
       //    the repo data inside routes data
+  },
+  
+  schedule : {
+    id : "",
+    name : "",
   }
 };
 
