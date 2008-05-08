@@ -29,18 +29,21 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
   
   var ht = Sonatype.repoServer.resources.help.schedules;
   
+  //TODO: this will be calling a rest method at some point
+  var serviceTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Synchronize Repositories'],['Purge Snapshots']]});
+  
   this.loadDataModFuncs = {
-    group : {
+    schedule : {
     }
   };
   
   this.submitDataModFuncs = {
-    group : {
+    schedule : {
     }
   };
   
   this.formConfig = {};
-  this.formConfig.schedule = {
+  this.formConfig.scheduleOff = {
     region: 'center',
     width: '100%',
     height: '100%',
@@ -67,6 +70,68 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
         name: 'name',
         width: 200,
         allowBlank:false
+      },
+      {
+        xtype: 'combo',
+        fieldLabel: 'Service Type',
+        itemCls: 'required-field',
+        helpText: ht.serviceType,
+        name: 'serviceType',
+        width: 75,
+        store: serviceTypeStore,
+        displayField:'value',
+        editable: false,
+        forceSelection: true,
+        mode: 'local',
+        triggerAction: 'all',
+        emptyText:'Select...',
+        selectOnFocus:true,
+        allowBlank: false    
+      },
+      {
+        xtype: 'fieldset',
+        checkboxToggle:false,
+        title: 'Schedule',
+        helpText: ht.serviceSchedule,
+        anchor: Sonatype.view.FIELDSET_OFFSET,
+        collapsible: false,
+        autoHeight:true,
+        layoutConfig: {
+          labelSeparator: ''
+        },
+
+        items: [
+	      {
+	        xtype: 'radio',
+	        fieldLabel: 'Off',
+	        name: 'serviceSchedule',
+	        value: 'off'    
+	      },
+	      {
+	        xtype: 'radio',
+	        fieldLabel: 'One Time',
+	        name: 'serviceSchedule',
+	        value: 'one-time'    
+	      },
+	      {
+	        xtype: 'radio',
+	        fieldLabel: 'Daily',
+	        name: 'serviceSchedule',
+	        value: 'daily'    
+	      },
+	      {
+	        xtype: 'radio',
+	        fieldLabel: 'Weekly',
+	        name: 'serviceSchedule',
+	        value: 'weekly'    
+	      },
+		  {
+		    xtype: 'radio',
+		    fieldLabel: 'Monthly',
+		    name: 'serviceSchedule',
+		    value: 'monthly'    
+		  }
+        ]
       }
     ],
     buttons: [
@@ -82,7 +147,9 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
   // START: Repo list ******************************************************
   this.scheduleRecordConstructor = Ext.data.Record.create([
     {name:'resourceURI'},
-    {name:'name', sortType:Ext.data.SortTypes.asUCString}
+    {name:'name', sortType:Ext.data.SortTypes.asUCString},
+    {name:'serviceType'},
+    {name:'serviceSchedule'}
   ]);
 
   this.schedulesReader = new Ext.data.JsonReader({root: 'data', id: 'resourceURI'}, this.scheduleRecordConstructor );
@@ -140,7 +207,9 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
     loadMask: true,
     deferredRender: false,
     columns: [
-      {header: 'Name', dataIndex: 'name', width:175, id: 'schedule-config-name-col'}
+      {header: 'Name', dataIndex: 'name', width:175, id: 'schedule-config-name-col'},
+      {header: 'Service Type', dataIndex: 'serviceType', width:175, id: 'schedule-config-service-type-col'},
+      {header: 'Schedule', dataIndex: 'serviceSchedule', width:175, id: 'schedule-config-service-schedule-col'}
     ],
     autoExpandColumn: 'schedule-config-name-col',
     disableSelection: false,
@@ -241,7 +310,7 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
   addResourceHandler : function() {
     var id = 'new_schedule_' + new Date().getTime();
 
-    var config = Ext.apply({}, this.formConfig.schedule, {id:id});
+    var config = Ext.apply({}, this.formConfig.scheduleOff, {id:id});
     var formPanel = new Ext.FormPanel(config);
     
     formPanel.form.on('actioncomplete', this.actionCompleteHandler, this);
@@ -262,7 +331,8 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     //add place holder to grid
     var newRec = new this.scheduleRecordConstructor({
         name : 'New Scheduled Service',
-        resourceURI : 'new'
+        resourceURI : 'new',
+        serviceSchedule : 'off'
       },
       id); //use "new_schedule_" id instead of resourceURI like the reader does
     this.schedulesDataStore.insert(0, [newRec]);
@@ -416,6 +486,8 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
 
         rec.beginEdit();
         rec.set('name', sentData.name);
+        rec.set('serviceType', sentData.serviceType);
+        rec.set('serviceSchedule', sentData.serviceSchedule);
         rec.commit();
         rec.endEdit();
         
@@ -462,7 +534,7 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
 
     //assumption: new route forms already exist in formCards, so they won't get into this case
     if(!formPanel){ //create form and populate current data
-      var config = Ext.apply({}, this.formConfig.schedule, {id:id});
+      var config = Ext.apply({}, this.formConfig.scheduleOff, {id:id});
       config = this.configUniqueIdHelper(id, config);
 
       formPanel = new Ext.FormPanel(config);

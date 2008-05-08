@@ -85,7 +85,9 @@ Sonatype.repoServer.resources.help = {
   
   // Scheduled Services Config help text
   schedules : {
-    name : 'A name for the Scheduled Service.'
+    name : 'A name for the Scheduled Service.',
+    serviceType : 'The Type of service that will be scheduled to run.',
+    serviceSchedule : 'The frequency this service will run.  Off - stop this instance of the service from running. Daily - run the service every day at the specified time. Weekly - run the service every week on the specified day at the specified time. Monthly - run the service every month on the specified day(s) and time. Advanced - run the service using the supplied cron string.'  
   },
 
   // Repositories Config help text

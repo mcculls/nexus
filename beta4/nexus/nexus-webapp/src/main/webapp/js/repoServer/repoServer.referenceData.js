@@ -153,6 +153,8 @@ Sonatype.repoServer.referenceData = {
   schedule : {
     id : "",
     name : "",
+    serviceType : "",
+    serviceSchedule : ""
   }
 };
 
