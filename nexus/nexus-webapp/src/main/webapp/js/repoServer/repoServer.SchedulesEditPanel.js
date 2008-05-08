@@ -31,6 +31,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
   
   //TODO: this will be calling a rest method at some point
   var serviceTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Synchronize Repositories'],['Purge Snapshots']]});
+  var serviceParameterStore = new Ext.data.SimpleStore({fields:['name','value'], data:[['repository.id','central'],['some.other.id','blah']]});
   
   this.loadDataModFuncs = {
     schedule : {
@@ -88,57 +89,100 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
         allowBlank: false    
       },
       {
-        xtype: 'fieldset',
-        checkboxToggle:false,
-        title: 'Schedule',
-        helpText: ht.serviceSchedule,
-        anchor: Sonatype.view.FIELDSET_OFFSET,
-        collapsible: false,
-        autoHeight:true,
-        layoutConfig: {
-          labelSeparator: ''
-        },
-
+	      xtype: 'fieldset',
+	      checkboxToggle:false,
+	      title: 'Schedule',
+	      helpText: ht.serviceSchedule,
+	      anchor: Sonatype.view.FIELDSET_OFFSET,
+	      collapsible: false,
+	      autoHeight:true,
+	      layoutConfig: {
+	        labelSeparator: ''
+	      },
         items: [
-	      {
-	        xtype: 'radio',
-	        fieldLabel: 'Off',
-	        name: 'serviceSchedule',
-	        value: 'off'    
-	      },
-	      {
-	        xtype: 'radio',
-	        fieldLabel: 'One Time',
-	        name: 'serviceSchedule',
-	        value: 'one-time'    
-	      },
-	      {
-	        xtype: 'radio',
-	        fieldLabel: 'Daily',
-	        name: 'serviceSchedule',
-	        value: 'daily'    
-	      },
-	      {
-	        xtype: 'radio',
-	        fieldLabel: 'Weekly',
-	        name: 'serviceSchedule',
-	        value: 'weekly'    
-	      },
-		  {
-		    xtype: 'radio',
-		    fieldLabel: 'Monthly',
-		    name: 'serviceSchedule',
-		    value: 'monthly'    
-		  },
-		  {
-		    xtype: 'radio',
-		    fieldLabel: 'Advanced',
-		    name: 'serviceSchedule',
-		    value: 'advanced'    
-		  }
-        ]
-      }
-    ],
+		      {
+		        xtype: 'radio',
+		        fieldLabel: 'Off',
+		        name: 'serviceSchedule',
+		        value: 'off'    
+		      },
+		      {
+		        xtype: 'radio',
+		        fieldLabel: 'One Time',
+		        name: 'serviceSchedule',
+		        value: 'one-time'    
+		      },
+		      {
+		        xtype: 'radio',
+		        fieldLabel: 'Daily',
+		        name: 'serviceSchedule',
+		        value: 'daily'    
+		      },
+		      {
+		        xtype: 'radio',
+		        fieldLabel: 'Weekly',
+		        name: 'serviceSchedule',
+		        value: 'weekly'    
+		      },
+			    {
+  			    xtype: 'radio',
+	  		    fieldLabel: 'Monthly',
+		  	    name: 'serviceSchedule',
+			      value: 'monthly'    
+			    },
+  			  {
+	  		    xtype: 'radio',
+		  	    fieldLabel: 'Advanced',
+			      name: 'serviceSchedule',
+			      value: 'advanced'    
+  			  }
+	      ]
+	    },
+	    {
+  	    xtype: 'grid',
+	      title: 'Service Parameters',
+        id: 'st-service-parameters-grid',
+        collapsible: true,
+        collapsed: true,
+        split: true,
+        minHeight: 150,
+        maxHeight: 400,
+        frame: false,
+        autoScroll: true,
+        tbar: [
+          {
+            id: 'schedule-add-btn',
+            text:'Add',
+            icon: Sonatype.config.resourcePath + '/images/icons/add.png',
+            cls: 'x-btn-text-icon',
+            scope: this,
+            handler: this.addParameterResourceHandler
+          },
+          {
+            id: 'schedule-delete-btn',
+            text: 'Delete',
+            icon: Sonatype.config.resourcePath + '/images/icons/delete.png',
+            cls: 'x-btn-text-icon',
+            scope:this,
+            handler: this.deleteParameterResourceHandler
+          }
+        ],
+        //grid view options
+        ds: serviceParameterStore,
+        sortInfo:{field: 'name', direction: "ASC"},
+        loadMask: true,
+        deferredRender: false,
+        columns: [
+          {header: 'Name', dataIndex: 'name', width:175, id: 'schedule-config-parameter-name-col'},
+          {header: 'Value', dataIndex: 'value', width:175, id: 'schedule-config-parameter-value-col'}
+        ],
+        autoExpandColumn: 'schedule-config-parameter-name-col',
+        disableSelection: false,
+        viewConfig: {
+          emptyText: 'Click "Add" to create a new parameter.'
+        }
+	    }
+	  ],
     buttons: [
       {
         text: 'Save'
@@ -351,6 +395,9 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     formPanel.doLayout();
   },
   
+  addParameterResourceHandler : function() {
+  },
+  
   afterLayoutFormHandler : function(formPanel, fLayout){
     // register required field quicktip, but have to wait for elements to show up in DOM
     var temp = function(){
@@ -441,6 +488,17 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
       else{
         gridSelectModel.clearSelections();
       }
+    }
+    else {
+      Ext.MessageBox.alert('The server did not delete the scheduled service.');
+    }
+  },
+  
+  deleteParameterHandler : function(){
+  },
+  
+  deleteParameterCallback : function(options, isSuccess, response){
+    if(isSuccess){
     }
     else {
       Ext.MessageBox.alert('The server did not delete the scheduled service.');
