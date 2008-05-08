@@ -89,34 +89,79 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
         allowBlank: false    
       },
       {
-	      xtype: 'fieldset',
-	      checkboxToggle:false,
-	      title: 'Schedule Settings',
-	      anchor: Sonatype.view.FIELDSET_OFFSET,
-	      collapsible: false,
-	      autoHeight:true,
-	      layoutConfig: {
-	        labelSeparator: ''
-	      },
+        xtype: 'combo',
+        fieldLabel: 'Recurrence',
+        itemCls: 'required-field',
+        helpText: ht.serviceSchedule,
+        name: 'serviceSchedule',
+        store: this.scheduleTypeStore,
+        displayField:'value',
+        editable: false,
+        forceSelection: true,
+        mode: 'local',
+        triggerAction: 'all',
+        emptyText:'Select...',
+        selectOnFocus:true,
+        allowBlank: false    
+      },
+      {
+        xtype: 'panel',
+        id: 'schedule-config-card-panel',
+        header: false,
+        layout: 'card',
+        region: 'center',
+        activeItem: 0,
+        bodyStyle: 'padding:15px',
+        deferredRender: false,
+        autoScroll: false,
+        frame: false,
         items: [
-		      {
-		        xtype: 'combo',
-		        fieldLabel: 'Recurrence',
-		        itemCls: 'required-field',
-		        helpText: ht.serviceSchedule,
-		        name: 'serviceSchedule',
-		        store: this.scheduleTypeStore,
-		        displayField:'value',
-		        editable: false,
-		        forceSelection: true,
-		        mode: 'local',
-		        triggerAction: 'all',
-		        emptyText:'Select...',
-		        selectOnFocus:true,
-		        allowBlank: false    
-		      }
-	      ]
-	    },
+          {
+	          xtype: 'fieldset',
+    	      checkboxToggle:false,
+    	      title: 'Schedule Settings',
+    	      anchor: Sonatype.view.FIELDSET_OFFSET,
+    	      collapsible: false,
+    	      autoHeight:true,
+    	      layoutConfig: {
+	            labelSeparator: ''
+	          }
+          },
+          {
+            xtype: 'fieldset',
+    	      checkboxToggle:false,
+    	      title: 'Schedule Settings',
+    	      anchor: Sonatype.view.FIELDSET_OFFSET,
+    	      collapsible: false,
+    	      autoHeight:true,
+    	      layoutConfig: {
+	            labelSeparator: ''
+	          },
+            items: [
+              {
+                xtype: 'textfield',
+                fieldLabel: 'Start Date',
+                itemCls: 'required-field',
+                name: 'startDate',
+                width: 200,
+                allowBlank:false
+              }
+            ]
+          }
+        ]
+      },
+      //{
+//	      xtype: 'fieldset',
+  //      id: 'schedule-config-fieldset',
+	  //    checkboxToggle:false,
+	    //  title: 'Schedule Settings',
+//	      anchor: Sonatype.view.FIELDSET_OFFSET,
+	//      collapsible: false,
+	  //    autoHeight:true,
+	    //  layoutConfig: {
+//	        labelSeparator: ''
+	//      }
+	    //},
       {
         xtype: 'editorgrid',
         title: 'Service Parameters',
@@ -645,7 +690,14 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
   },
   
   serviceScheduleSelectHandler : function(combo, record, index){
-    var disabled = true;
+    var schedulePanel = this.ownerCt.find('id', 'schedule-config-card-panel')[0];
+    if (record.data.value == 'Off'){
+      schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(0));
+    }
+    else if (record.data.value == 'Daily'){
+      schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(1));
+    }
+    schedulePanel.doLayout();
   },
   
   //creates a unique config object with specific IDs on the two grid item
@@ -653,9 +705,8 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     //@note: there has to be a better way to do this.  Depending on offsets is very error prone
     var newConfig = config;
 
-    newConfig.items[4].id = id + '_service_param_grid';
+    newConfig.items[5].id = id + '_service_param_grid';
 
     return newConfig;
-  },
-  
+  }  
 });
