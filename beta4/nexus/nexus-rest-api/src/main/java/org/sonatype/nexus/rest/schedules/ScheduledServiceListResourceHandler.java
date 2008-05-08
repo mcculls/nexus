@@ -7,13 +7,12 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
+import org.sonatype.nexus.rest.model.ScheduledServiceBaseResource;
 import org.sonatype.nexus.rest.model.ScheduledServiceListResourceResponse;
-import org.sonatype.nexus.rest.model.ScheduledServiceResource;
 import org.sonatype.nexus.rest.model.ScheduledServiceResourceResponse;
-import org.sonatype.nexus.rest.routes.AbstractRepositoryRouteResourceHandler;
 
 public class ScheduledServiceListResourceHandler
-    extends AbstractRepositoryRouteResourceHandler
+    extends AbstractScheduledServiceResourceHandler
 {
     /**
      * The default constructor.
@@ -64,7 +63,7 @@ public class ScheduledServiceListResourceHandler
         }
         else
         {
-            ScheduledServiceResource resource = response.getData();
+            ScheduledServiceBaseResource resource = response.getData();
 
             resource.setId( Long.toHexString( System.currentTimeMillis() ) );
 
