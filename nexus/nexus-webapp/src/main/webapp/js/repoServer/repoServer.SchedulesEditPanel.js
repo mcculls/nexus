@@ -77,7 +77,6 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
         itemCls: 'required-field',
         helpText: ht.serviceType,
         name: 'serviceType',
-        width: 75,
         store: serviceTypeStore,
         displayField:'value',
         editable: false,
@@ -130,6 +129,12 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
 		    fieldLabel: 'Monthly',
 		    name: 'serviceSchedule',
 		    value: 'monthly'    
+		  },
+		  {
+		    xtype: 'radio',
+		    fieldLabel: 'Advanced',
+		    name: 'serviceSchedule',
+		    value: 'advanced'    
 		  }
         ]
       }
