@@ -30,8 +30,70 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
   var ht = Sonatype.repoServer.resources.help.schedules;
   
   //TODO: this will be calling a rest method at some point
-  var serviceTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Synchronize Repositories'],['Purge Snapshots']]});
-  var serviceParameterStore = new Ext.data.SimpleStore({fields:['name','value'], data:[['repository.id','central'],['some.other.id','blah']]});
+  this.serviceTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Synchronize Repositories'],['Purge Snapshots']]});
+  this.serviceParameterStore = new Ext.data.SimpleStore({fields:['name','value'], data:[['repository.id','central'],['some.other.id','blah']]});
+  
+  this.servicePropertiesGrid = new Ext.grid.EditorGridPanel({
+    title: 'Service Parameters',
+    id: 'st-service-parameters-grid',
+    collapsible: true,
+    collapsed: true,
+    split: true,
+    height: 200,
+    minHeight: 150,
+    maxHeight: 400,
+    frame: false,
+    autoScroll: true,
+    clicksToEdit:2,
+    tbar: [
+      {
+        id: 'schedule-add-btn',
+        text:'Add',
+        icon: Sonatype.config.resourcePath + '/images/icons/add.png',
+        cls: 'x-btn-text-icon',
+        scope: this,
+        handler: this.addParameterResourceHandler
+      },
+      {
+        id: 'schedule-delete-btn',
+        text: 'Delete',
+        icon: Sonatype.config.resourcePath + '/images/icons/delete.png',
+        cls: 'x-btn-text-icon',
+        scope:this,
+        handler: this.deleteParameterResourceHandler
+      }
+    ],
+    //grid view options
+    ds: this.serviceParameterStore,
+    sortInfo:{field: 'name', direction: "ASC"},
+    loadMask: true,
+    deferredRender: false,
+    columns: [
+      {
+        header: 'Name', 
+        dataIndex: 'name', 
+        width:175, 
+        id: 'schedule-config-parameter-name-col',
+        editor: new Ext.form.TextField({
+           allowBlank: false
+        })
+      },
+      {
+        header: 'Value', 
+        dataIndex: 'value', 
+        width:175, 
+        id: 'schedule-config-parameter-value-col',
+        editor: new Ext.form.TextField({
+          allowBlank: false
+        })
+      }
+    ],
+    autoExpandColumn: 'schedule-config-parameter-name-col',
+    disableSelection: false,
+    viewConfig: {
+      emptyText: 'Click "Add" to create a new parameter.'
+    }
+  });
   
   this.loadDataModFuncs = {
     schedule : {
@@ -78,7 +140,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
         itemCls: 'required-field',
         helpText: ht.serviceType,
         name: 'serviceType',
-        store: serviceTypeStore,
+        store: this.serviceTypeStore,
         displayField:'value',
         editable: false,
         forceSelection: true,
@@ -104,84 +166,41 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
 		        xtype: 'radio',
 		        fieldLabel: 'Off',
 		        name: 'serviceSchedule',
-		        value: 'off'    
+		        value: 'off'
 		      },
 		      {
 		        xtype: 'radio',
 		        fieldLabel: 'One Time',
 		        name: 'serviceSchedule',
-		        value: 'one-time'    
+		        value: 'one-time'
 		      },
 		      {
 		        xtype: 'radio',
 		        fieldLabel: 'Daily',
 		        name: 'serviceSchedule',
-		        value: 'daily'    
+		        value: 'daily'
 		      },
 		      {
 		        xtype: 'radio',
 		        fieldLabel: 'Weekly',
 		        name: 'serviceSchedule',
-		        value: 'weekly'    
+		        value: 'weekly'
 		      },
 			    {
   			    xtype: 'radio',
 	  		    fieldLabel: 'Monthly',
 		  	    name: 'serviceSchedule',
-			      value: 'monthly'    
+			      value: 'monthly'
 			    },
   			  {
 	  		    xtype: 'radio',
 		  	    fieldLabel: 'Advanced',
 			      name: 'serviceSchedule',
-			      value: 'advanced'    
+			      value: 'advanced'
   			  }
 	      ]
 	    },
-	    {
-  	    xtype: 'grid',
-	      title: 'Service Parameters',
-        id: 'st-service-parameters-grid',
-        collapsible: true,
-        collapsed: true,
-        split: true,
-        minHeight: 150,
-        maxHeight: 400,
-        frame: false,
-        autoScroll: true,
-        tbar: [
-          {
-            id: 'schedule-add-btn',
-            text:'Add',
-            icon: Sonatype.config.resourcePath + '/images/icons/add.png',
-            cls: 'x-btn-text-icon',
-            scope: this,
-            handler: this.addParameterResourceHandler
-          },
-          {
-            id: 'schedule-delete-btn',
-            text: 'Delete',
-            icon: Sonatype.config.resourcePath + '/images/icons/delete.png',
-            cls: 'x-btn-text-icon',
-            scope:this,
-            handler: this.deleteParameterResourceHandler
-          }
-        ],
-        //grid view options
-        ds: serviceParameterStore,
-        sortInfo:{field: 'name', direction: "ASC"},
-        loadMask: true,
-        deferredRender: false,
-        columns: [
-          {header: 'Name', dataIndex: 'name', width:175, id: 'schedule-config-parameter-name-col'},
-          {header: 'Value', dataIndex: 'value', width:175, id: 'schedule-config-parameter-value-col'}
-        ],
-        autoExpandColumn: 'schedule-config-parameter-name-col',
-        disableSelection: false,
-        viewConfig: {
-          emptyText: 'Click "Add" to create a new parameter.'
-        }
-	    }
+      this.servicePropertiesGrid
 	  ],
     buttons: [
       {
@@ -192,13 +211,18 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
       }
     ]
   };
-  
+    
   // START: Repo list ******************************************************
   this.scheduleRecordConstructor = Ext.data.Record.create([
     {name:'resourceURI'},
     {name:'name', sortType:Ext.data.SortTypes.asUCString},
     {name:'serviceType'},
     {name:'serviceSchedule'}
+  ]);
+  
+  this.serviceParameterRecordConstructor = Ext.data.Record.create([
+    {name:'name', sortType:Ext.data.SortTypes.asUCString},
+    {name:'value'}
   ]);
 
   this.schedulesReader = new Ext.data.JsonReader({root: 'data', id: 'resourceURI'}, this.scheduleRecordConstructor );
@@ -367,6 +391,9 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     formPanel.on('beforerender', this.beforeFormRenderHandler, this);
     formPanel.on('afterlayout', this.afterLayoutFormHandler, this, {single:true});
     
+    var serviceScheduleField = formPanel.find('name', 'serviceSchedule')[0];
+    serviceScheduleField.on('check', this.serviceScheduleCheckHandler, serviceScheduleField);
+    
     var buttonInfoObj = {
         formPanel : formPanel,
         isNew : true
@@ -396,6 +423,13 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
   },
   
   addParameterResourceHandler : function() {
+    var id = 'new_service_parameter_' + new Date().getTime();
+    var newRec = new this.serviceParameterRecordConstructor({
+        name : 'New Parameter',
+        value : 'New Value'
+      },
+      id);
+    this.serviceParameterStore.insert(0,[newRec]);
   },
   
   afterLayoutFormHandler : function(formPanel, fLayout){
@@ -494,14 +528,10 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     }
   },
   
-  deleteParameterHandler : function(){
-  },
-  
-  deleteParameterCallback : function(options, isSuccess, response){
-    if(isSuccess){
-    }
-    else {
-      Ext.MessageBox.alert('The server did not delete the scheduled service.');
+  deleteParameterResourceHandler : function(){
+    if (this.servicePropertiesGrid.getSelectionModel().hasSelection()){
+      var rec = this.servicePropertiesGrid.getSelectionModel().selection.record;
+      this.servicePropertiesGrid.getStore().remove(rec);
     }
   },
   
@@ -605,6 +635,9 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
       formPanel.form.on('actionfailed', this.actionFailedHandler, this);
       formPanel.on('beforerender', this.beforeFormRenderHandler, this);
       formPanel.on('afterlayout', this.afterLayoutFormHandler, this, {single:true});
+      
+      var serviceScheduleField = formPanel.find('name', 'serviceSchedule')[0];
+      serviceScheduleField.on('check', this.serviceScheduleCheckHandler, serviceScheduleField);
 
       var buttonInfoObj = {
         formPanel : formPanel,
@@ -624,5 +657,9 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     //always set active and re-layout
     this.formCards.getLayout().setActiveItem(formPanel);
     formPanel.doLayout();
+  },
+  
+  serviceScheduleCheckHandler : function(checkbox, checked){
+    var disabled = true;
   }
 });
