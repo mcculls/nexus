@@ -32,6 +32,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
   //TODO: this will be calling a rest method at some point
   this.serviceTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Synchronize Repositories'],['Purge Snapshots']]});  
   this.scheduleTypeStore = new Ext.data.SimpleStore({fields:['value'], data:[['Off'],['Daily'],['Weekly'],['Monthly'],['Advanced']]});
+  this.weekdayStore = new Ext.data.SimpleStore({fields:['value'], data:[['Sunday'],['Monday'],['Tuesday'],['Wednesday'],['Thursday'],['Friday'],['Saturday']]});
   
   this.loadDataModFuncs = {
     schedule : {
@@ -119,7 +120,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
           {
 	          xtype: 'fieldset',
     	      checkboxToggle:false,
-    	      title: 'Schedule Settings',
+    	      title: 'No Schedule Settings',
     	      anchor: Sonatype.view.FIELDSET_OFFSET,
     	      collapsible: false,
     	      autoHeight:true,
@@ -130,7 +131,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
           {
             xtype: 'fieldset',
     	      checkboxToggle:false,
-    	      title: 'Schedule Settings',
+    	      title: 'Daily Schedule Settings',
     	      anchor: Sonatype.view.FIELDSET_OFFSET,
     	      collapsible: false,
     	      autoHeight:true,
@@ -143,6 +144,90 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
                 fieldLabel: 'Start Date',
                 itemCls: 'required-field',
                 name: 'startDate',
+                width: 200,
+                allowBlank:false
+              }
+            ]
+          },
+          {
+            xtype: 'fieldset',
+    	      checkboxToggle:false,
+    	      title: 'Weekly Schedule Settings',
+    	      anchor: Sonatype.view.FIELDSET_OFFSET,
+    	      collapsible: false,
+    	      autoHeight:true,
+    	      layoutConfig: {
+	            labelSeparator: ''
+	          },
+            items: [
+              {
+                xtype: 'textfield',
+                fieldLabel: 'Start Date',
+                itemCls: 'required-field',
+                name: 'startDate',
+                width: 200,
+                allowBlank:false
+              }
+            ]
+          },
+          {
+            xtype: 'fieldset',
+    	      checkboxToggle:false,
+    	      title: 'Monthly Schedule Settings',
+    	      anchor: Sonatype.view.FIELDSET_OFFSET,
+    	      collapsible: false,
+    	      autoHeight:true,
+    	      layoutConfig: {
+	            labelSeparator: ''
+	          },
+            items: [
+              {
+                xtype: 'textfield',
+                fieldLabel: 'Start Date',
+                itemCls: 'required-field',
+                name: 'startDate',
+                width: 200,
+                allowBlank:false
+              }
+            ]
+          },
+          {
+            xtype: 'fieldset',
+		    checkboxToggle:false,
+		    title: 'Monthly Schedule Settings',
+		    anchor: Sonatype.view.FIELDSET_OFFSET,
+		    collapsible: false,
+		    autoHeight:true,
+		    layoutConfig: {
+	          labelSeparator: ''
+	        },
+            items: [
+              {
+                xtype: 'textfield',
+                fieldLabel: 'Start Date',
+                itemCls: 'required-field',
+                name: 'startDate',
+                width: 200,
+                allowBlank:false
+              }
+            ]
+          },
+          {
+            xtype: 'fieldset',
+		    checkboxToggle:false,
+		    title: 'Advanced Schedule Settings',
+		    anchor: Sonatype.view.FIELDSET_OFFSET,
+		    collapsible: false,
+		    autoHeight:true,
+		    layoutConfig: {
+	          labelSeparator: ''
+	        },
+            items: [
+              {
+                xtype: 'textfield',
+                fieldLabel: 'cron command',
+                itemCls: 'required-field',
+                name: 'cronCommand',
                 width: 200,
                 allowBlank:false
               }
@@ -696,6 +781,15 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     }
     else if (record.data.value == 'Daily'){
       schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(1));
+    }
+    else if (record.data.value == 'Weekly'){
+      schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(2));
+    }
+    else if (record.data.value == 'Monthly'){
+      schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(3));
+    }
+    else if (record.data.value == 'Advanced'){
+      schedulePanel.getLayout().setActiveItem(schedulePanel.items.itemAt(4));
     }
     schedulePanel.doLayout();
   },
