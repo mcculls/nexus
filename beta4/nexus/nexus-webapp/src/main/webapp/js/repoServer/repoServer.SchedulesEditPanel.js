@@ -63,6 +63,12 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
       {
         xtype: 'hidden',
         name: 'id'
+      },      
+      {
+        xtype: 'checkbox',
+        fieldLabel: 'Enabled',
+        helpText: ht.enabled,
+        name: 'enabled'    
       },
       {
         xtype: 'textfield',
@@ -143,6 +149,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
                 xtype: 'textfield',
                 fieldLabel: 'Start Date',
                 itemCls: 'required-field',
+                helpText: ht.startDate,
                 name: 'startDate',
                 width: 200,
                 allowBlank:false
@@ -165,6 +172,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
                 fieldLabel: 'Start Date',
                 itemCls: 'required-field',
                 name: 'startDate',
+                helpText: ht.startDate,
                 width: 200,
                 allowBlank:false
               }
@@ -184,6 +192,7 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
               {
                 xtype: 'textfield',
                 fieldLabel: 'Start Date',
+                helpText: ht.startDate,
                 itemCls: 'required-field',
                 name: 'startDate',
                 width: 200,
@@ -193,20 +202,21 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
           },
           {
             xtype: 'fieldset',
-		    checkboxToggle:false,
-		    title: 'Monthly Schedule Settings',
-		    anchor: Sonatype.view.FIELDSET_OFFSET,
-		    collapsible: false,
-		    autoHeight:true,
-		    layoutConfig: {
-	          labelSeparator: ''
-	        },
+    		    checkboxToggle:false,
+    		    title: 'Advanced Schedule Settings',
+    		    anchor: Sonatype.view.FIELDSET_OFFSET,
+    		    collapsible: false,
+    		    autoHeight:true,
+    		    layoutConfig: {
+              labelSeparator: ''
+            },
             items: [
               {
                 xtype: 'textfield',
-                fieldLabel: 'Start Date',
+                fieldLabel: 'CRON command',
                 itemCls: 'required-field',
-                name: 'startDate',
+                name: 'cronCommand',
+                helpText: ht.cronCommand,
                 width: 200,
                 allowBlank:false
               }
@@ -235,18 +245,6 @@ Sonatype.repoServer.SchedulesEditPanel = function(config){
           }
         ]
       },
-      //{
-//	      xtype: 'fieldset',
-  //      id: 'schedule-config-fieldset',
-	  //    checkboxToggle:false,
-	    //  title: 'Schedule Settings',
-//	      anchor: Sonatype.view.FIELDSET_OFFSET,
-	//      collapsible: false,
-	  //    autoHeight:true,
-	    //  layoutConfig: {
-//	        labelSeparator: ''
-	//      }
-	    //},
       {
         xtype: 'editorgrid',
         title: 'Service Parameters',
@@ -799,7 +797,7 @@ Ext.extend(Sonatype.repoServer.SchedulesEditPanel, Ext.Panel, {
     //@note: there has to be a better way to do this.  Depending on offsets is very error prone
     var newConfig = config;
 
-    newConfig.items[5].id = id + '_service_param_grid';
+    newConfig.items[6].id = id + '_service_param_grid';
 
     return newConfig;
   }  
