@@ -81,9 +81,7 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>
-											commons-logging:*
-										</exclude>
+										<!--<exclude>commons-logging:*</exclude>-->
 									</excludes>
 									<message>
 										commons-logging conflicts with
