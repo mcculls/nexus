@@ -20,15 +20,13 @@
  */
 package org.sonatype.nexus.security;
 
-public interface AuthenticationSource
+import java.security.Permission;
+
+public interface AuthorizationSource
 {
-    String ROLE = AuthenticationSource.class.getName();
-    
-    boolean isAnynonymousAllowed();
+    String ROLE = AuthorizationSource.class.getName();
 
-    boolean isKnown( String username );
-    
-    boolean hasPasswordSet( String username );
+    boolean check(User user, Permission permission, String scope);
 
-    User authenticate( String username, String password );
+    boolean check( String roleName, String roleScope, Permission permission, String scope );
 }

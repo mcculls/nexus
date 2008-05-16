@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rbac xmlns="http://geronimo.apache.org/xml/ns/rbac-xml">
+  <user-role>
+    <user>dain</user>
+    <role role-name="developer" scope-name="nexus"/>
+  </user-role>
+  <user-role>
+    <user>jason</user>
+    <role role-name="admin" scope-name="nexus"/>
+  </user-role>
+
+  <scope>
+    <scope-name>sonatype</scope-name>
+    <role>
+      <role-name>sonatype-admin</role-name>
+      <sub-role role-name="admin" scope-name="nexus"/>
+    </role>
+    <role>
+      <role-name>sonatype-developer</role-name>
+      <sub-role role-name="developer" scope-name="nexus"/>
+    </role>
+
+    <scope>
+      <scope-name>nexus</scope-name>
+      <role>
+        <role-name>admin</role-name>
+        <sub-role role-name="developer" scope-name="nexus"/>
+        <permission-id>delete-artifact</permission-id>
+        <permission-id>deploy-artifact</permission-id>
+        <permission-id>index-repository</permission-id>
+      </role>
+      <role>
+        <role-name>developer</role-name>
+        <permission-id>read-artifact</permission-id>
+      </role>
+    </scope>
+  </scope>
+
+</rbac>
