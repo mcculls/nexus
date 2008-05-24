@@ -20,14 +20,16 @@
  */
 package org.sonatype.nexus.security.simple.xml;
 
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlType;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "roleType", propOrder = {
@@ -35,7 +37,7 @@ import java.util.Set;
     "subRoles",
     "permissions"
     })
-public class RoleType
+public class RoleType implements Keyable<String>
 {
     @XmlID
     @XmlElement(name = "role-name", required = true)
@@ -43,18 +45,22 @@ public class RoleType
 
     @XmlIDREF
     @XmlElement(name = "sub-role")
-    private final Set<RoleType> subRoles = new LinkedHashSet<RoleType>();
+    private final KeyedCollection<String, RoleType> subRoles = new KeyedCollection<String, RoleType>();
 
     @XmlIDREF
     @XmlElement(name = "permission")
-    private final Set<PermissionType> permissions = new LinkedHashSet<PermissionType>();
+    private final KeyedCollection<String, PermissionType> permissions = new KeyedCollection<String, PermissionType>();
 
-    public RoleType()
+    protected RoleType()
     {
     }
 
     public RoleType( String roleName )
     {
+        if ( roleName == null )
+        {
+            throw new NullPointerException( "roleName is null" );
+        }
         this.roleName = roleName;
     }
 
@@ -63,14 +69,14 @@ public class RoleType
         return roleName;
     }
 
-    public void setRoleName( String roleName )
+    public String getKey()
     {
-        this.roleName = roleName;
+        return getRoleName();
     }
 
-    public Set<RoleType> getSubRoles()
+    public Map<String, RoleType> getSubRoles()
     {
-        return subRoles;
+        return Collections.unmodifiableMap( subRoles.toMap() );
     }
 
     public void addSubRole( RoleType subRole )
@@ -83,9 +89,9 @@ public class RoleType
         subRoles.remove( subRole );
     }
 
-    public Set<PermissionType> getPermissions()
+    public Map<String, PermissionType> getPermissions()
     {
-        return permissions;
+        return Collections.unmodifiableMap( permissions.toMap() );
     }
 
     public void addPermission( PermissionType permission )
@@ -96,6 +102,34 @@ public class RoleType
     public void removePermission( PermissionType permission )
     {
         permissions.remove( permission );
+    }
+
+    void afterUnmarshal( Unmarshaller unmarshaller, Object parent ) throws UnmarshalException
+    {
+        if ( roleName == null )
+        {
+            throw new UnmarshalException( "roleName is null" );
+        }
+    }
+
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
+
+        RoleType roleType = (RoleType) o;
+        return roleName.equals( roleType.roleName );
+    }
+
+    public int hashCode()
+    {
+        return roleName.hashCode();
     }
 
     public String toString()
