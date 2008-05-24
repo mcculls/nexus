@@ -18,15 +18,26 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.security;
+package org.sonatype.nexus.security.simple.xml;
 
-import java.security.Permission;
-
-public interface AuthorizationSource
+public class InvalidModelException extends RuntimeException
 {
-    String ROLE = AuthorizationSource.class.getName();
+    public InvalidModelException()
+    {
+    }
 
-    boolean check( User user, Permission permission );
+    public InvalidModelException( String message )
+    {
+        super( message );
+    }
 
-    boolean check( String roleName, Permission permission );
+    public InvalidModelException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+
+    public InvalidModelException( Throwable cause )
+    {
+        super( cause );
+    }
 }
