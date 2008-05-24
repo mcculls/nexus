@@ -24,8 +24,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -41,13 +42,13 @@ import java.util.Set;
 public class SecurityType
 {
     @XmlElement(name = "user")
-    private final Set<UserType> users = new LinkedHashSet<UserType>();
+    private final KeyedCollection<String, UserType> users = new KeyedCollection<String, UserType>();
 
     @XmlElement(name = "role")
-    private final Set<RoleType> roles = new LinkedHashSet<RoleType>();
+    private final KeyedCollection<String, RoleType> roles = new KeyedCollection<String, RoleType>();
 
     @XmlElement(name = "permission")
-    private final Set<PermissionType> permissions = new LinkedHashSet<PermissionType>();
+    private final KeyedCollection<String, PermissionType> permissions = new KeyedCollection<String, PermissionType>();
 
     public SecurityType()
     {
@@ -72,10 +73,9 @@ public class SecurityType
             rolesCopy.put( role, roleCopy );
 
             // Role - Permissions
-            Set<PermissionType> permissions = role.getPermissions();
-            for ( PermissionType permission : permissions )
+            for ( PermissionType permission : role.getPermissions().values() )
             {
-                roleCopy.getPermissions().add( permissionsCopy.get( permission ) );
+                roleCopy.addPermission( permissionsCopy.get( permission ) );
             }
         }
         // Role - SubRoles
@@ -84,10 +84,9 @@ public class SecurityType
             RoleType role = entry.getKey();
             RoleType roleCopy = entry.getValue();
 
-            Set<RoleType> subRoles = role.getSubRoles();
-            for ( RoleType subRole : subRoles )
+            for ( RoleType subRole : role.getSubRoles().values() )
             {
-                roleCopy.getSubRoles().add( rolesCopy.get( subRole ) );
+                roleCopy.addSubRole( rolesCopy.get( subRole ) );
             }
         }
         roles.addAll( rolesCopy.values() );
@@ -100,33 +99,45 @@ public class SecurityType
             usersCopy.put( user, userCopy );
 
             // User - Roles
-            Set<RoleType> roles = user.getRoles();
-            for ( RoleType role : roles )
+            for ( RoleType role : user.getRoles().values() )
             {
-                userCopy.getRoles().add( rolesCopy.get( role ) );
+                userCopy.addRole( rolesCopy.get( role ) );
             }
         }
-        users.addAll( usersCopy.values() );
+        for ( UserType userType : usersCopy.values() )
+        {
+            addUser( userType );
+        }
     }
 
-    public Set<UserType> getUsers()
+    public Map<String, UserType> getUsers()
     {
-        return users;
+        return Collections.unmodifiableMap(users.toMap());
+    }
+
+    public Set<UserType> getUserList()
+    {
+        return Collections.unmodifiableSet( new LinkedHashSet<UserType>( users ) );
+    }
+
+    public UserType getUserType( String userName )
+    {
+        return users.toMap().get( userName );
     }
 
     public void addUser( UserType user )
     {
-        users.add( user );
+        users.toMap().put( user.getUserName(), user );
     }
 
-    public void removeUser( UserType user )
+    public void removeUser( String userName )
     {
-        users.remove( user );
+        users.toMap().remove( userName );
     }
 
-    public Set<RoleType> getRoles()
+    public Map<String, RoleType> getRoles()
     {
-        return roles;
+        return Collections.unmodifiableMap( roles.toMap() );
     }
 
     public void addRole( RoleType role )
@@ -139,9 +150,9 @@ public class SecurityType
         roles.remove( role );
     }
 
-    public Set<PermissionType> getPermissions()
+    public Map<String, PermissionType> getPermissions()
     {
-        return permissions;
+        return Collections.unmodifiableMap( permissions.toMap() );
     }
 
     public void addPermission( PermissionType permission )
@@ -164,7 +175,7 @@ public class SecurityType
     {
         for ( UserType user : users )
         {
-            roles.addAll( user.getRoles() );
+            roles.toMap().putAll( user.getRoles() );
         }
         for ( RoleType role : roles )
         {
@@ -175,8 +186,8 @@ public class SecurityType
 
     private void syncRole( RoleType role )
     {
-        permissions.addAll( role.getPermissions() );
-        for ( RoleType subRole : role.getSubRoles() )
+        permissions.toMap().putAll( role.getPermissions() );
+        for ( RoleType subRole : role.getSubRoles().values() )
         {
             if ( !roles.contains( subRole ) )
             {

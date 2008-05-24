@@ -34,6 +34,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import java.lang.reflect.Constructor;
 import java.security.Permission;
@@ -59,12 +60,13 @@ public class SecurityXmlUtil
         try {
             JAXB_CONTEXT = JAXBContext.newInstance(SecurityType.class);
         } catch ( JAXBException e) {
-            throw new RuntimeException("Could not create jaxb contexts for security types");
+            throw new RuntimeException("Could not create jaxb contexts for security types", e);
         }
     }
 
     public static SecurityType readSecurity( URL url) throws ParserConfigurationException, IOException, SAXException, JAXBException, XMLStreamException {
         Unmarshaller unmarshaller = JAXB_CONTEXT.createUnmarshaller();
+        unmarshaller.setEventHandler( new DefaultValidationEventHandler() );
 
         Object element = unmarshaller.unmarshal(url);
         if ( !( element instanceof SecurityType ) )
@@ -78,6 +80,7 @@ public class SecurityXmlUtil
 
     public static SecurityType readSecurity( File file) throws ParserConfigurationException, IOException, SAXException, JAXBException, XMLStreamException {
         Unmarshaller unmarshaller = JAXB_CONTEXT.createUnmarshaller();
+        unmarshaller.setEventHandler( new DefaultValidationEventHandler() );
 
         Object element = unmarshaller.unmarshal(file);
         if ( !( element instanceof SecurityType ) )
@@ -96,6 +99,8 @@ public class SecurityXmlUtil
 
     public static SecurityType readSecurity(XMLStreamReader in) throws ParserConfigurationException, IOException, SAXException, JAXBException, XMLStreamException {
         Unmarshaller unmarshaller = JAXB_CONTEXT.createUnmarshaller();
+        unmarshaller.setEventHandler( new DefaultValidationEventHandler() );
+
         JAXBElement<SecurityType> element = unmarshaller.unmarshal(in, SecurityType.class);
         SecurityType securityType = element.getValue();
         return securityType;
@@ -103,6 +108,8 @@ public class SecurityXmlUtil
 
     public static void writeSecurity(SecurityType securityType, Writer out) throws XMLStreamException, JAXBException {
         Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
+        marshaller.setEventHandler( new DefaultValidationEventHandler() );
+
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.marshal(securityType, out);
     }
@@ -111,21 +118,21 @@ public class SecurityXmlUtil
         securityType.syncModel();
 
         IdentityHashMap<PermissionType, Permission> permissions = new IdentityHashMap<PermissionType, Permission>( securityType.getPermissions().size() );
-        for ( PermissionType permissionType : securityType.getPermissions() )
+        for ( PermissionType permissionType : securityType.getPermissions().values() )
         {
             Permission permission = toPermission(permissionType, classLoader);
             permissions.put( permissionType, permission );
         }
 
         IdentityHashMap<RoleType, SimpleRole> roles = new IdentityHashMap<RoleType, SimpleRole>( securityType.getRoles().size() );
-        for ( RoleType roleType : securityType.getRoles() )
+        for ( RoleType roleType : securityType.getRoles().values() )
         {
             SimpleRole role = toSimpleRole(roleType, permissions);
             roles.put( roleType, role );
         }
 
         Set<SimpleUser> users = new LinkedHashSet<SimpleUser>(securityType.getUsers().size());
-        for ( UserType userType : securityType.getUsers() )
+        for ( UserType userType : securityType.getUsers().values() )
         {
             SimpleUser user = toSimpleUer( userType, roles );
             users.add(user);
@@ -168,9 +175,9 @@ public class SecurityXmlUtil
             // If we haven't already visited the role...
             if (processedRole.add( role )) {
                 // Add it's sub roles to the list of roles to visit
-                unprocessedRoles.addAll( role.getSubRoles() );
+                unprocessedRoles.addAll( role.getSubRoles().values() );
                 // Add the role's permissions to the permission map
-                for ( PermissionType permissionType : role.getPermissions() )
+                for ( PermissionType permissionType : role.getPermissions().values() )
                 {
                     rolePermissions.put(permissionType, allPermissions.get(permissionType));
                 }
@@ -191,7 +198,7 @@ public class SecurityXmlUtil
 
     public static SimpleUser toSimpleUer(UserType userType, Map<RoleType, SimpleRole> allRoles) {
         Set<SimpleRole> roles = new LinkedHashSet<SimpleRole>(userType.getRoles().size());
-        for ( RoleType roleType : userType.getRoles() )
+        for ( RoleType roleType : userType.getRoles().values() )
         {
             roles.add(allRoles.get( roleType ));
         }

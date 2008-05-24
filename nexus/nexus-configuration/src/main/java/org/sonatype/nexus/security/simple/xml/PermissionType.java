@@ -20,6 +20,8 @@
  */
 package org.sonatype.nexus.security.simple.xml;
 
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     "name",
     "actions"
     })
-public class PermissionType
+public class PermissionType implements Keyable<String>
 {
     @XmlID
     @XmlElement(name = "permission-id", required = true)
@@ -48,12 +50,16 @@ public class PermissionType
     @XmlElement(required = true)
     protected String actions;
 
-    public PermissionType()
+    protected PermissionType()
     {
     }
 
     public PermissionType( String permissionId, String clazz, String name, String actions )
     {
+        if ( permissionId == null )
+        {
+            throw new NullPointerException( "permissionId is null" );
+        }
         this.permissionId = permissionId;
         this.clazz = clazz;
         this.name = name;
@@ -65,9 +71,9 @@ public class PermissionType
         return permissionId;
     }
 
-    public void setPermissionId( String permissionId )
+    public String getKey()
     {
-        this.permissionId = permissionId;
+        return getPermissionId();
     }
 
     public String getClazz()
@@ -98,6 +104,34 @@ public class PermissionType
     public void setActions( String actions )
     {
         this.actions = actions;
+    }
+
+    void afterUnmarshal( Unmarshaller unmarshaller, Object parent ) throws UnmarshalException
+    {
+        if ( permissionId == null )
+        {
+            throw new UnmarshalException( "permissionId is null" );
+        }
+    }
+
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
+
+        PermissionType that = (PermissionType) o;
+        return permissionId.equals( that.permissionId );
+    }
+
+    public int hashCode()
+    {
+        return permissionId.hashCode();
     }
 
     public String toString()

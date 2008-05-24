@@ -20,14 +20,16 @@
  */
 package org.sonatype.nexus.security.simple.xml;
 
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlType;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "userType", propOrder = {
@@ -35,7 +37,7 @@ import java.util.Set;
     "password",
     "roles"
     })
-public class UserType
+public class UserType implements Keyable<String>
 {
     @XmlID
     @XmlElement(name = "user-name", required = true)
@@ -45,14 +47,18 @@ public class UserType
 
     @XmlIDREF
     @XmlElement(name = "role")
-    private final Set<RoleType> roles = new LinkedHashSet<RoleType>();
+    private final KeyedCollection<String, RoleType> roles = new KeyedCollection<String, RoleType>();
 
-    public UserType()
+    protected UserType()
     {
     }
 
     public UserType( String userName, String password )
     {
+        if ( userName == null )
+        {
+            throw new NullPointerException( "userName is null" );
+        }
         this.userName = userName;
         this.password = password;
     }
@@ -62,9 +68,9 @@ public class UserType
         return userName;
     }
 
-    public void setUserName( String userName )
+    public String getKey()
     {
-        this.userName = userName;
+        return getUserName();
     }
 
     public String getPassword()
@@ -77,9 +83,9 @@ public class UserType
         this.password = password;
     }
 
-    public Set<RoleType> getRoles()
+    public Map<String, RoleType> getRoles()
     {
-        return roles;
+        return Collections.unmodifiableMap( roles.toMap() );
     }
 
     public void addRole( RoleType role )
@@ -90,6 +96,35 @@ public class UserType
     public void removeRole( RoleType role )
     {
         roles.remove( role );
+    }
+
+    void afterUnmarshal( Unmarshaller unmarshaller, Object parent ) throws UnmarshalException
+    {
+        if ( userName == null )
+        {
+            throw new UnmarshalException( "userName is null" );
+        }
+    }
+
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( o == null || getClass() != o.getClass() )
+        {
+            return false;
+        }
+
+        UserType userType = (UserType) o;
+
+        return userName.equals( userType.userName );
+    }
+
+    public int hashCode()
+    {
+        return userName.hashCode();
     }
 
     public String toString()
