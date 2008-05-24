@@ -18,15 +18,23 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.security;
+package org.sonatype.nexus.security.simple.xml;
 
-import java.security.Permission;
+import junit.framework.TestCase;
 
-public interface AuthorizationSource
+import java.net.URL;
+
+public class SecurityXmlUtilTest extends TestCase
 {
-    String ROLE = AuthorizationSource.class.getName();
+    public void testRead() throws Exception
+    {
+        URL resource = getClass().getClassLoader().getResource( "META-INF/nexus/security.xml" );
+        assertNotNull( "resource is null", resource );
+        SecurityType securityType = SecurityXmlUtil.readSecurity( resource );
 
-    boolean check( User user, Permission permission );
+        assertEquals( 2, securityType.getUsers().size() );
+        assertEquals( 2, securityType.getRoles().size() );
+        assertEquals( 4, securityType.getPermissions().size() );
 
-    boolean check( String roleName, Permission permission );
+    }
 }
