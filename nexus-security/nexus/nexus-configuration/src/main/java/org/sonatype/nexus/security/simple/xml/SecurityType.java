@@ -28,9 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.Collections;
 import java.util.IdentityHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "securityType", propOrder = {
@@ -112,22 +110,18 @@ public class SecurityType
 
     public Map<String, UserType> getUsers()
     {
-        return Collections.unmodifiableMap(users.toMap());
+        return Collections.unmodifiableMap( users.toMap() );
     }
 
-    public Set<UserType> getUserList()
-    {
-        return Collections.unmodifiableSet( new LinkedHashSet<UserType>( users ) );
-    }
-
-    public UserType getUserType( String userName )
+    public UserType getUser( String userName )
     {
         return users.toMap().get( userName );
     }
 
     public void addUser( UserType user )
     {
-        users.toMap().put( user.getUserName(), user );
+        user.setSecurityType( this );
+        users.add( user );
     }
 
     public void removeUser( String userName )
@@ -140,14 +134,30 @@ public class SecurityType
         return Collections.unmodifiableMap( roles.toMap() );
     }
 
+    public RoleType getRole( String roleName )
+    {
+        return roles.toMap().get( roleName );
+    }
+
     public void addRole( RoleType role )
     {
+        role.setSecurityType( this );
         roles.add( role );
     }
 
-    public void removeRole( RoleType role )
+    public void removeRole( String roleName )
     {
-        roles.remove( role );
+        // remove role from local list
+        RoleType roleType = roles.toMap().remove( roleName );
+
+        // remove role from user roles
+        if ( roleType != null )
+        {
+            for ( UserType user : users )
+            {
+                user.removeRole( roleName );
+            }
+        }
     }
 
     public Map<String, PermissionType> getPermissions()
@@ -157,12 +167,23 @@ public class SecurityType
 
     public void addPermission( PermissionType permission )
     {
+        permission.setSecurityType( this );
         permissions.add( permission );
     }
 
-    public void removePermission( PermissionType permission )
+    public void removePermission( String permissionId )
     {
-        permissions.remove( permission );
+        // remove permission from local list
+        PermissionType permissionType = permissions.toMap().remove( permissionId );
+
+        // remove permission from role permissions
+        if ( permissionType != null )
+        {
+            for ( RoleType role : roles )
+            {
+                role.removePermission( permissionId );
+            }
+        }
     }
 
     boolean beforeMarshal( Marshaller marshaller, Object parent )

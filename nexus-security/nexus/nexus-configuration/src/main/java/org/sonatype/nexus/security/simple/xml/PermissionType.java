@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "permissionType", propOrder = {
@@ -49,6 +50,9 @@ public class PermissionType implements Keyable<String>
 
     @XmlElement(required = true)
     protected String actions;
+
+    @XmlTransient
+    private SecurityType securityType;
 
     protected PermissionType()
     {
@@ -106,12 +110,24 @@ public class PermissionType implements Keyable<String>
         this.actions = actions;
     }
 
+    void setSecurityType( SecurityType securityType )
+    {
+        if (this.securityType == securityType) return;
+
+        if (this.securityType == null || securityType == null) {
+            this.securityType = securityType;
+        } else {
+            throw new IllegalStateException("Permission " + permissionId + " is assigned to another SecurityType");
+        }
+    }
+
     void afterUnmarshal( Unmarshaller unmarshaller, Object parent ) throws UnmarshalException
     {
         if ( permissionId == null )
         {
             throw new UnmarshalException( "permissionId is null" );
         }
+        securityType = (SecurityType) parent;
     }
 
     public boolean equals( Object o )

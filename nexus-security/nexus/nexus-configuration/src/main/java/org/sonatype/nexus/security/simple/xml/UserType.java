@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Collections;
 import java.util.Map;
 
@@ -48,6 +49,9 @@ public class UserType implements Keyable<String>
     @XmlIDREF
     @XmlElement(name = "role")
     private final KeyedCollection<String, RoleType> roles = new KeyedCollection<String, RoleType>();
+
+    @XmlTransient
+    private SecurityType securityType;
 
     protected UserType()
     {
@@ -90,12 +94,24 @@ public class UserType implements Keyable<String>
 
     public void addRole( RoleType role )
     {
+        securityType.addRole( role );
         roles.add( role );
     }
 
-    public void removeRole( RoleType role )
+    public void removeRole( String roleName )
     {
-        roles.remove( role );
+        roles.toMap().remove( roleName );
+    }
+
+    void setSecurityType( SecurityType securityType )
+    {
+        if (this.securityType == securityType) return;
+
+        if (this.securityType == null || securityType == null) {
+            this.securityType = securityType;
+        } else {
+            throw new IllegalStateException("User " + userName + " is assigned to another SecurityType");
+        }
     }
 
     void afterUnmarshal( Unmarshaller unmarshaller, Object parent ) throws UnmarshalException
@@ -104,6 +120,7 @@ public class UserType implements Keyable<String>
         {
             throw new UnmarshalException( "userName is null" );
         }
+        securityType = (SecurityType) parent;
     }
 
     public boolean equals( Object o )
