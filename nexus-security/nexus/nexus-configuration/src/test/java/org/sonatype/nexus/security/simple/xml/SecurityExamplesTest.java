@@ -77,7 +77,7 @@ public class SecurityExamplesTest extends TestCase
         // precondition
         assertEquals( 2, securityType.getRoles().size() );
         assertNotNull( securityType.getRoles().get( "admin" ) );
-        assertNotNull( securityType.getUsers().get("jason").getRoles().get("admin"));
+        assertNotNull( securityType.getUsers().get( "jason" ).getRoles().get( "admin" ) );
 
         // change
         securityType.removeRole( "admin" );
@@ -87,7 +87,7 @@ public class SecurityExamplesTest extends TestCase
         assertNull( securityType.getRoles().get( "admin" ) );
 
         // role is removed from user.getRoles() also
-        assertNull( securityType.getUsers().get("jason").getRoles().get("admin"));
+        assertNull( securityType.getUsers().get( "jason" ).getRoles().get( "admin" ) );
     }
 
     public void testAddPermission()
@@ -97,7 +97,7 @@ public class SecurityExamplesTest extends TestCase
         assertNull( securityType.getPermissions().get( "update-artifact" ) );
 
         // change
-        PermissionType updateArtifact = new PermissionType( "update-artifact", "org.sonatype.nexus.security.RestPermission", "/repositories/*", "POST" );
+        PermissionType updateArtifact = new PermissionType( "update-artifact", "org.sonatype.nexus.security.RestPermission", "/repositories/.*", "POST" );
         securityType.addPermission( updateArtifact );
 
         // post-condition
@@ -110,7 +110,7 @@ public class SecurityExamplesTest extends TestCase
         // precondition
         assertEquals( 4, securityType.getPermissions().size() );
         assertNotNull( securityType.getPermissions().get( "delete-artifact" ) );
-        assertNotNull( securityType.getRole("admin").getPermissions().get("delete-artifact"));
+        assertNotNull( securityType.getRole( "admin" ).getPermissions().get( "delete-artifact" ) );
 
         // change
         securityType.removePermission( "delete-artifact" );
@@ -120,7 +120,7 @@ public class SecurityExamplesTest extends TestCase
         assertNull( securityType.getPermissions().get( "delete-artifact" ) );
 
         // permission is removed from role.getPermissions() also
-        assertNull( securityType.getRole("admin").getPermissions().get("delete-artifact"));
+        assertNull( securityType.getRole( "admin" ).getPermissions().get( "delete-artifact" ) );
     }
 
     public void testAddUserRole()
@@ -131,12 +131,12 @@ public class SecurityExamplesTest extends TestCase
 
         // change
         RoleType guest = new RoleType( "guest" );
-        securityType.getUser("dain").addRole( guest );
+        securityType.getUser( "dain" ).addRole( guest );
 
         // post-condition
         assertEquals( 3, securityType.getRoles().size() );
         assertSame( guest, securityType.getRoles().get( "guest" ) );
-        assertSame( guest, securityType.getUser("dain").getRoles().get("guest"));
+        assertSame( guest, securityType.getUser( "dain" ).getRoles().get( "guest" ) );
     }
 
     public void testRemoveUserRole()
@@ -144,7 +144,7 @@ public class SecurityExamplesTest extends TestCase
         // precondition
         assertEquals( 2, securityType.getRoles().size() );
         assertNotNull( securityType.getRoles().get( "developer" ) );
-        assertNotNull( securityType.getUser("dain").getRoles().get("developer"));
+        assertNotNull( securityType.getUser( "dain" ).getRoles().get( "developer" ) );
 
         // change
         securityType.getUser( "dain" ).removeRole( "developer" );
@@ -152,7 +152,7 @@ public class SecurityExamplesTest extends TestCase
         // post-condition
         assertEquals( 2, securityType.getRoles().size() );
         assertNotNull( securityType.getRoles().get( "developer" ) );
-        assertNull( securityType.getUser("dain").getRoles().get("developer"));
+        assertNull( securityType.getUser( "dain" ).getRoles().get( "developer" ) );
     }
 
     public void testAddRolePermission()
@@ -162,13 +162,13 @@ public class SecurityExamplesTest extends TestCase
         assertNull( securityType.getPermissions().get( "update-artifact" ) );
 
         // change
-        PermissionType updateArtifact = new PermissionType( "update-artifact", "org.sonatype.nexus.security.RestPermission", "/repositories/*", "POST" );
-        securityType.getRole("admin").addPermission( updateArtifact );
+        PermissionType updateArtifact = new PermissionType( "update-artifact", "org.sonatype.nexus.security.RestPermission", "/repositories/.*", "POST" );
+        securityType.getRole( "admin" ).addPermission( updateArtifact );
 
         // post-condition
         assertEquals( 5, securityType.getPermissions().size() );
         assertSame( updateArtifact, securityType.getPermissions().get( "update-artifact" ) );
-        assertSame( updateArtifact, securityType.getRole("admin").getPermissions().get("update-artifact"));
+        assertSame( updateArtifact, securityType.getRole( "admin" ).getPermissions().get( "update-artifact" ) );
     }
 
     public void testRemoveRolePermission()
@@ -176,7 +176,7 @@ public class SecurityExamplesTest extends TestCase
         // precondition
         assertEquals( 4, securityType.getPermissions().size() );
         assertNotNull( securityType.getPermissions().get( "delete-artifact" ) );
-        assertNotNull( securityType.getRole("admin").getPermissions().get("delete-artifact"));
+        assertNotNull( securityType.getRole( "admin" ).getPermissions().get( "delete-artifact" ) );
 
         // change
         securityType.getRole( "admin" ).removePermission( "delete-artifact" );
@@ -184,7 +184,7 @@ public class SecurityExamplesTest extends TestCase
         // post-condition
         assertEquals( 4, securityType.getPermissions().size() );
         assertNotNull( securityType.getPermissions().get( "delete-artifact" ) );
-        assertNull( securityType.getRole("admin").getPermissions().get("delete-artifact"));
+        assertNull( securityType.getRole( "admin" ).getPermissions().get( "delete-artifact" ) );
     }
 
     protected void setUp() throws Exception

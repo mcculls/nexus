@@ -20,68 +20,61 @@
  */
 package org.sonatype.nexus.security;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.security.Permission;
-import java.security.PermissionCollection;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
-public final class RestPermission extends Permission implements Serializable
+public final class RestPermission extends Permission
 {
-    private transient int cachedHashCode = 0;
-    private transient URLPatternSpec urlPatternSpec;
-    private transient HTTPMethodSpec httpMethodSpec;
+    private final Pattern uriPattern;
+    private final Set<Verb> verbs;
+    private final int hashCode;
 
-//    public RestPermission( HttpServletRequest request )
-//    {
-//        super( URLPatternSpec.encodeColons( request ) );
-//
-//        urlPatternSpec = new URLPatternSpec( getName() );
-//        httpMethodSpec = new HTTPMethodSpec( request.getMethod(), HTTPMethodSpec.NA );
-//    }
-
-    public RestPermission( String name, String actions )
+    private static enum Verb
     {
-        super( name );
+        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE;
 
-        urlPatternSpec = new URLPatternSpec( name );
-        httpMethodSpec = new HTTPMethodSpec( actions, false );
-    }
-
-    public RestPermission( String urlPattern, String[] HTTPMethods )
-    {
-        super( urlPattern );
-
-        urlPatternSpec = new URLPatternSpec( urlPattern );
-        httpMethodSpec = new HTTPMethodSpec( HTTPMethods );
-    }
-
-    public boolean equals( Object o )
-    {
-        if ( o == null || !( o instanceof RestPermission ) )
+        private static EnumSet<Verb> parse( String... verbs )
         {
-            return false;
+            EnumSet<Verb> verbEnumSet = EnumSet.noneOf( Verb.class );
+            for ( String action : verbs )
+            {
+                try
+                {
+                    Verb verb = Verb.valueOf( action );
+                    verbEnumSet.add( verb );
+                }
+                catch ( IllegalArgumentException e )
+                {
+                    throw new IllegalArgumentException( "Unknown REST verb " + action );
+                }
+            }
+            return verbEnumSet;
         }
-
-        RestPermission other = (RestPermission) o;
-        return urlPatternSpec.equals( other.urlPatternSpec ) && httpMethodSpec.equals( other.httpMethodSpec );
     }
 
-    public String getActions()
+
+    public RestPermission( String name, String actions ) throws IllegalArgumentException
     {
-        return httpMethodSpec.getActions();
+        this( name, Verb.parse( actions.split( "," ) ) );
     }
 
-    public int hashCode()
+    public RestPermission( String uriPattern, String[] verbs ) throws IllegalArgumentException
     {
-        if ( cachedHashCode == 0 )
-        {
-            cachedHashCode = urlPatternSpec.hashCode() ^ httpMethodSpec.hashCode();
-        }
-        return cachedHashCode;
+        this( uriPattern, Verb.parse( verbs ) );
+    }
+
+    public RestPermission( String uriPattern, Set<Verb> verbs ) throws IllegalArgumentException
+    {
+        super( uriPattern );
+
+        this.uriPattern = Pattern.compile( uriPattern );
+
+        this.verbs = Collections.unmodifiableSet( EnumSet.copyOf( verbs ) );
+
+        hashCode = this.uriPattern.pattern().hashCode() ^ verbs.hashCode();
     }
 
     public boolean implies( Permission permission )
@@ -92,91 +85,36 @@ public final class RestPermission extends Permission implements Serializable
         }
 
         RestPermission other = (RestPermission) permission;
-        return urlPatternSpec.implies( other.urlPatternSpec ) && httpMethodSpec.implies( other.httpMethodSpec );
+        return uriPattern.matcher( other.uriPattern.pattern() ).matches() && verbs.containsAll( other.verbs );
     }
 
-    public PermissionCollection newPermissionCollection()
+    public String getActions()
     {
-        return new RestPermissionCollection();
-    }
-
-    private synchronized void readObject( ObjectInputStream in ) throws IOException
-    {
-        urlPatternSpec = new URLPatternSpec( in.readUTF() );
-        httpMethodSpec = new HTTPMethodSpec( in.readUTF(), false );
-    }
-
-    private synchronized void writeObject( ObjectOutputStream out ) throws IOException
-    {
-        out.writeUTF( urlPatternSpec.getPatternSpec() );
-        out.writeUTF( httpMethodSpec.getActions() );
-    }
-
-    private static final class RestPermissionCollection extends PermissionCollection
-    {
-        private Hashtable<Permission, Permission> permissions = new Hashtable<Permission, Permission>();
-
-        /**
-         * Adds a permission object to the current collection of permission objects.
-         *
-         * @param permission the Permission object to add.
-         * @throws SecurityException -  if this PermissionCollection object
-         *                           has been marked readonly
-         */
-        public void add( Permission permission )
+        StringBuffer actions = new StringBuffer();
+        for ( Verb verb : verbs )
         {
-            if ( isReadOnly() )
+            if ( actions.length() > 0 )
             {
-                throw new IllegalArgumentException( "Read only collection" );
+                actions.append( "," );
             }
-
-            if ( !( permission instanceof RestPermission ) )
-            {
-                throw new IllegalArgumentException( "Wrong permission type" );
-            }
-
-            RestPermission p = (RestPermission) permission;
-
-            permissions.put( p, p );
+            actions.append( verb );
         }
+        return actions.toString();
+    }
 
-        /**
-         * Checks to see if the specified permission is implied by
-         * the collection of Permission objects held in this PermissionCollection.
-         *
-         * @param permission the Permission object to compare.
-         * @return true if "permission" is implied by the  permissions in
-         *         the collection, false if not.
-         */
-        public boolean implies( Permission permission )
+    public boolean equals( Object o )
+    {
+        if ( o == null || !( o instanceof RestPermission ) )
         {
-            if ( !( permission instanceof RestPermission ) )
-            {
-                return false;
-            }
-
-            RestPermission p = (RestPermission) permission;
-            Enumeration e = permissions.elements();
-
-            while ( e.hasMoreElements() )
-            {
-                if ( ( (RestPermission) e.nextElement() ).implies( p ) )
-                {
-                    return true;
-                }
-            }
-
             return false;
         }
 
-        /**
-         * Returns an enumeration of all the Permission objects in the collection.
-         *
-         * @return an enumeration of all the Permissions.
-         */
-        public Enumeration<Permission> elements()
-        {
-            return permissions.elements();
-        }
+        RestPermission other = (RestPermission) o;
+        return uriPattern.pattern().equals( other.uriPattern.pattern() ) && verbs.equals( other.verbs );
+    }
+
+    public int hashCode()
+    {
+        return hashCode;
     }
 }
