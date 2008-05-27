@@ -27,27 +27,30 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.util.Collections;
 import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "userType", propOrder = {
-    "userName",
-    "password",
-    "roles"
-    })
+@XmlType(name = "userType",
+    namespace = "http://nexus.sonatype.org/xml/ns/security",
+    propOrder = {
+        "userName",
+        "password",
+        "roles"
+        })
 public class UserType implements Keyable<String>
 {
     @XmlID
-    @XmlElement(name = "user-name", required = true)
+    @XmlElement(name = "user-name", namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     private String userName;
 
+    @XmlElement(namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     private String password;
 
     @XmlIDREF
-    @XmlElement(name = "role")
+    @XmlElement(name = "role", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, RoleType> roles = new KeyedCollection<String, RoleType>();
 
     @XmlTransient
@@ -94,7 +97,10 @@ public class UserType implements Keyable<String>
 
     public void addRole( RoleType role )
     {
-        securityType.addRole( role );
+        if ( securityType != null )
+        {
+            securityType.addRole( role );
+        }
         roles.add( role );
     }
 
@@ -105,12 +111,22 @@ public class UserType implements Keyable<String>
 
     void setSecurityType( SecurityType securityType )
     {
-        if (this.securityType == securityType) return;
+        if ( this.securityType == securityType )
+        {
+            return;
+        }
 
-        if (this.securityType == null || securityType == null) {
+        if ( this.securityType == null || securityType == null )
+        {
             this.securityType = securityType;
-        } else {
-            throw new IllegalStateException("User " + userName + " is assigned to another SecurityType");
+            for ( RoleType role : roles )
+            {
+                role.setSecurityType( securityType );
+            }
+        }
+        else
+        {
+            throw new IllegalStateException( "User " + userName + " is assigned to another SecurityType" );
         }
     }
 

@@ -22,8 +22,9 @@ package org.sonatype.nexus.security.simple.xml;
 
 import junit.framework.TestCase;
 
-import java.net.URL;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Map;
 
 public class SecurityXmlUtilTest extends TestCase
@@ -33,47 +34,84 @@ public class SecurityXmlUtilTest extends TestCase
         URL resource = getClass().getClassLoader().getResource( "META-INF/nexus/security.xml" );
         assertNotNull( "resource is null", resource );
         SecurityType securityType = SecurityXmlUtil.readSecurity( resource );
+        verifySecurityType( securityType );
+    }
 
+    public void testCopy() throws Exception
+    {
+        // load security xml
+        URL resource = getClass().getClassLoader().getResource( "META-INF/nexus/security.xml" );
+        assertNotNull( "resource is null", resource );
+        SecurityType securityType = SecurityXmlUtil.readSecurity( resource );
+
+        // copy securityType
+        securityType = new SecurityType( securityType );
+
+        // verify copy
+        verifySecurityType( securityType );
+    }
+
+
+    public void testReadWrite() throws Exception
+    {
+        // load security xml
+        URL resource = getClass().getClassLoader().getResource( "META-INF/nexus/security.xml" );
+        assertNotNull( "resource is null", resource );
+        SecurityType securityType = SecurityXmlUtil.readSecurity( resource );
+
+        // write securityType to string
+        StringWriter stringWriter = new StringWriter();
+        SecurityXmlUtil.writeSecurity( securityType, stringWriter );
+
+        // read securityType from string
+        securityType = SecurityXmlUtil.readSecurity( new StringReader( stringWriter.toString() ) );
+
+        // verify copy
+        verifySecurityType( securityType );
+    }
+
+    private void verifySecurityType( SecurityType securityType )
+    {
         // Users
-        Map<String,UserType> users = securityType.getUsers();
+        Map<String, UserType> users = securityType.getUsers();
         assertEquals( 2, users.size() );
         UserType dain = users.get( "dain" );
-        assertNotNull("dain is null", dain);
+        assertNotNull( "dain is null", dain );
         assertEquals( "naid", dain.getPassword() );
         UserType jason = users.get( "jason" );
-        assertNotNull("jason is null", jason );
+        assertNotNull( "jason is null", jason );
         assertEquals( "nosaj", jason.getPassword() );
 
         // Roles
         Map<String, RoleType> roles = securityType.getRoles();
         assertEquals( 2, roles.size() );
         RoleType admin = roles.get( "admin" );
-        assertNotNull("admin is null", admin);
+        assertNotNull( "admin is null", admin );
         RoleType developer = roles.get( "developer" );
-        assertNotNull("developer is null", developer );
+        assertNotNull( "developer is null", developer );
 
         // Permissions
         Map<String, PermissionType> permissions = securityType.getPermissions();
         assertEquals( 4, permissions.size() );
         PermissionType readArtifact = permissions.get( "read-artifact" );
-        assertNotNull("readArtifact is null", readArtifact);
+        assertNotNull( "readArtifact is null", readArtifact );
         PermissionType deleteArtifact = permissions.get( "delete-artifact" );
-        assertNotNull("deleteArtifact is null", deleteArtifact );
+        assertNotNull( "deleteArtifact is null", deleteArtifact );
         PermissionType deployArtifact = permissions.get( "deploy-artifact" );
-        assertNotNull("deployArtifact is null", deployArtifact );
+        assertNotNull( "deployArtifact is null", deployArtifact );
         PermissionType indexRepository = permissions.get( "index-repository" );
-        assertNotNull("indexRepository is null", indexRepository );
+        assertNotNull( "indexRepository is null", indexRepository );
 
         // User Roles
         Map<String, RoleType> dainRoles = dain.getRoles();
         assertEquals( 1, dainRoles.size() );
         RoleType dainDeveloperRole = dainRoles.get( "developer" );
-        assertNotNull("dainDeveloperRole is null", dainDeveloperRole);
+        assertNotNull( "dainDeveloperRole is null", dainDeveloperRole );
         assertSame( developer, dainDeveloperRole );
         Map<String, RoleType> jasonRoles = jason.getRoles();
         assertEquals( 1, jasonRoles.size() );
         RoleType jasonAdminRole = jasonRoles.get( "admin" );
-        assertNotNull("jasonAdminRole is null", jasonAdminRole);
+        assertNotNull( "jasonAdminRole is null", jasonAdminRole );
         assertSame( admin, jasonAdminRole );
 
         // Role SubRole
@@ -82,23 +120,14 @@ public class SecurityXmlUtilTest extends TestCase
         Map<String, RoleType> adminSubRoles = admin.getSubRoles();
         assertEquals( 1, adminSubRoles.size() );
         RoleType adminDeveloperSubRole = adminSubRoles.get( "developer" );
-        assertNotNull("adminDeveloperSubRole is null", adminDeveloperSubRole);
+        assertNotNull( "adminDeveloperSubRole is null", adminDeveloperSubRole );
         assertSame( developer, adminDeveloperSubRole );
 
         // Role Permission
         Map<String, PermissionType> adminPermissions = admin.getPermissions();
         assertEquals( 3, adminPermissions.size() );
         PermissionType adminDeleteArtifact = adminPermissions.get( "delete-artifact" );
-        assertNotNull("adminDeleteArtifact is null", adminDeleteArtifact );
+        assertNotNull( "adminDeleteArtifact is null", adminDeleteArtifact );
         assertSame( deleteArtifact, adminDeleteArtifact );
-    }
-
-    public void testWrite() throws Exception
-    {
-        SecurityType securityType = new SecurityType();
-        UserType userType = new UserType( "dain", "naid" );
-        securityType.addUser( userType );
-        StringWriter stringWriter = new StringWriter();
-        SecurityXmlUtil.writeSecurity( securityType, stringWriter );
     }
 }

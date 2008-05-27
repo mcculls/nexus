@@ -31,21 +31,23 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "securityType", propOrder = {
-    "users",
-    "roles",
-    "permissions"
-    })
-@XmlRootElement(name = "security")
+@XmlType(name = "securityType",
+    namespace = "http://nexus.sonatype.org/xml/ns/security",
+    propOrder = {
+        "users",
+        "roles",
+        "permissions"
+        })
+@XmlRootElement(name = "security", namespace = "http://nexus.sonatype.org/xml/ns/security")
 public class SecurityType
 {
-    @XmlElement(name = "user")
+    @XmlElement(name = "user", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, UserType> users = new KeyedCollection<String, UserType>();
 
-    @XmlElement(name = "role")
+    @XmlElement(name = "role", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, RoleType> roles = new KeyedCollection<String, RoleType>();
 
-    @XmlElement(name = "permission")
+    @XmlElement(name = "permission", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, PermissionType> permissions = new KeyedCollection<String, PermissionType>();
 
     public SecurityType()
@@ -156,6 +158,10 @@ public class SecurityType
             for ( UserType user : users )
             {
                 user.removeRole( roleName );
+            }
+            for ( RoleType role : roles )
+            {
+                role.removeSubRole( roleName );
             }
         }
     }

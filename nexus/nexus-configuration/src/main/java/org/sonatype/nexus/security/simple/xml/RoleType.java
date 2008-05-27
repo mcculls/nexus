@@ -27,29 +27,31 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.util.Collections;
 import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "roleType", propOrder = {
-    "roleName",
-    "subRoles",
-    "permissions"
-    })
+@XmlType(name = "roleType",
+    namespace = "http://nexus.sonatype.org/xml/ns/security",
+    propOrder = {
+        "roleName",
+        "subRoles",
+        "permissions"
+        })
 public class RoleType implements Keyable<String>
 {
     @XmlID
-    @XmlElement(name = "role-name", required = true)
+    @XmlElement(name = "role-name", namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     private String roleName;
 
     @XmlIDREF
-    @XmlElement(name = "sub-role")
+    @XmlElement(name = "sub-role", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, RoleType> subRoles = new KeyedCollection<String, RoleType>();
 
     @XmlIDREF
-    @XmlElement(name = "permission")
+    @XmlElement(name = "permission", namespace = "http://nexus.sonatype.org/xml/ns/security")
     private final KeyedCollection<String, PermissionType> permissions = new KeyedCollection<String, PermissionType>();
 
     @XmlTransient
@@ -85,12 +87,16 @@ public class RoleType implements Keyable<String>
 
     public void addSubRole( RoleType subRole )
     {
+        if ( securityType != null )
+        {
+            securityType.addRole( subRole );
+        }
         subRoles.add( subRole );
     }
 
-    public void removeSubRole( RoleType subRole )
+    public void removeSubRole( String subRoleName )
     {
-        subRoles.remove( subRole );
+        subRoles.toMap().remove( subRoleName );
     }
 
     public Map<String, PermissionType> getPermissions()
@@ -100,7 +106,10 @@ public class RoleType implements Keyable<String>
 
     public void addPermission( PermissionType permission )
     {
-        securityType.addPermission( permission );
+        if ( securityType != null )
+        {
+            securityType.addPermission( permission );
+        }
         permissions.add( permission );
     }
 
@@ -111,12 +120,26 @@ public class RoleType implements Keyable<String>
 
     void setSecurityType( SecurityType securityType )
     {
-        if (this.securityType == securityType) return;
+        if ( this.securityType == securityType )
+        {
+            return;
+        }
 
-        if (this.securityType == null || securityType == null) {
+        if ( this.securityType == null || securityType == null )
+        {
             this.securityType = securityType;
-        } else {
-            throw new IllegalStateException("Role " + roleName + " is assigned to another SecurityType");
+            for ( RoleType subRole : subRoles )
+            {
+                subRole.setSecurityType( securityType );
+            }
+            for ( PermissionType permission : permissions )
+            {
+                permission.setSecurityType( securityType );
+            }
+        }
+        else
+        {
+            throw new IllegalStateException( "Role " + roleName + " is assigned to another SecurityType" );
         }
     }
 
