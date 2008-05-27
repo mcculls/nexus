@@ -24,9 +24,7 @@ import java.security.Permission;
 import java.security.Permissions;
 import java.util.Collections;
 
-/**
- * An immutable role.
- */
+/** An immutable role. */
 public class SimpleRole
 {
     private final String roleName;
@@ -49,6 +47,7 @@ public class SimpleRole
         {
             this.permissions.add( permission );
         }
+        permissions.setReadOnly();
     }
 
     public String getRoleName()

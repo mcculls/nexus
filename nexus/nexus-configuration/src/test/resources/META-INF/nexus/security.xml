@@ -28,28 +28,28 @@
   <permission>
     <permission-id>read-artifact</permission-id>
     <class>org.sonatype.nexus.security.RestPermission</class>
-    <name>/repositories/*</name>
+    <name>/repositories/.*</name>
     <actions>GET</actions>
   </permission>
 
   <permission>
     <permission-id>delete-artifact</permission-id>
     <class>org.sonatype.nexus.security.RestPermission</class>
-    <name>/repositories/*</name>
+    <name>/repositories/.*</name>
     <actions>DELETE</actions>
   </permission>
 
   <permission>
     <permission-id>deploy-artifact</permission-id>
     <class>org.sonatype.nexus.security.RestPermission</class>
-    <name>/repositories/*</name>
+    <name>/repositories/.*</name>
     <actions>PUT</actions>
   </permission>
 
   <permission>
     <permission-id>index-repository</permission-id>
     <class>org.sonatype.nexus.security.RestPermission</class>
-    <name>/repository_index/*</name>
+    <name>/repository_index/.*</name>
     <actions>GET</actions>
   </permission>
 

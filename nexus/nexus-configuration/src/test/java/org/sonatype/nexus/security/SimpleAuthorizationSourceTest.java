@@ -100,7 +100,7 @@ public class SimpleAuthorizationSourceTest extends TestCase
     public void testAddPermission() throws Exception
     {
         SecurityType securityType = authorizationSource.getSecurityType();
-        securityType.getRole( "admin" ).addPermission( new PermissionType( "read-unknown", "org.sonatype.nexus.security.RestPermission", "/unknown/*", "GET" ) );
+        securityType.getRole( "admin" ).addPermission( new PermissionType( "read-unknown", "org.sonatype.nexus.security.RestPermission", "/unknown($|(/.*))", "GET" ) );
         authorizationSource.setSecurityType( securityType );
 
         User user = new SimpleUser( "jason" );
@@ -109,6 +109,9 @@ public class SimpleAuthorizationSourceTest extends TestCase
         assertTrue( authorizationSource.check( user, new RestPermission( "/repositories/cheese", "PUT" ) ) );
         assertTrue( authorizationSource.check( user, new RestPermission( "/repository_index/cheese", "GET" ) ) );
         assertTrue( authorizationSource.check( user, new RestPermission( "/unknown", "GET" ) ) );
+        assertTrue( authorizationSource.check( user, new RestPermission( "/unknown/", "GET" ) ) );
+        assertTrue( authorizationSource.check( user, new RestPermission( "/unknown/abcd", "GET" ) ) );
+        assertTrue( !authorizationSource.check( user, new RestPermission( "/unknownFOO", "GET" ) ) );
     }
 
     public void testRemovePermission() throws Exception
@@ -129,7 +132,7 @@ public class SimpleAuthorizationSourceTest extends TestCase
     {
         SecurityType securityType = authorizationSource.getSecurityType();
         securityType.addRole( new RoleType( "root" ) );
-        securityType.getRole( "root" ).addPermission( new PermissionType( "read-unknown", "org.sonatype.nexus.security.RestPermission", "/unknown/*", "GET" ) );
+        securityType.getRole( "root" ).addPermission( new PermissionType( "read-unknown", "org.sonatype.nexus.security.RestPermission", "/unknown($|(/.*))", "GET" ) );
         securityType.getUser( "jason" ).addRole( securityType.getRole( "root" ) );
         authorizationSource.setSecurityType( securityType );
 
