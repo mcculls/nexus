@@ -26,29 +26,31 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "permissionType", propOrder = {
-    "permissionId",
-    "clazz",
-    "name",
-    "actions"
-    })
+@XmlType(name = "permissionType",
+    namespace = "http://nexus.sonatype.org/xml/ns/security",
+    propOrder = {
+        "permissionId",
+        "clazz",
+        "name",
+        "actions"
+        })
 public class PermissionType implements Keyable<String>
 {
     @XmlID
-    @XmlElement(name = "permission-id", required = true)
+    @XmlElement(name = "permission-id", namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     protected String permissionId;
 
-    @XmlElement(name = "class", required = true)
+    @XmlElement(name = "class", namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     protected String clazz;
 
-    @XmlElement(required = true)
+    @XmlElement(namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     protected String name;
 
-    @XmlElement(required = true)
+    @XmlElement(namespace = "http://nexus.sonatype.org/xml/ns/security", required = true)
     protected String actions;
 
     @XmlTransient
@@ -112,12 +114,18 @@ public class PermissionType implements Keyable<String>
 
     void setSecurityType( SecurityType securityType )
     {
-        if (this.securityType == securityType) return;
+        if ( this.securityType == securityType )
+        {
+            return;
+        }
 
-        if (this.securityType == null || securityType == null) {
+        if ( this.securityType == null || securityType == null )
+        {
             this.securityType = securityType;
-        } else {
-            throw new IllegalStateException("Permission " + permissionId + " is assigned to another SecurityType");
+        }
+        else
+        {
+            throw new IllegalStateException( "Permission " + permissionId + " is assigned to another SecurityType" );
         }
     }
 

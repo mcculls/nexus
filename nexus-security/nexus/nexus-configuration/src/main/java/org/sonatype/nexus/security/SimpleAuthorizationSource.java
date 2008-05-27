@@ -33,19 +33,21 @@ public class SimpleAuthorizationSource implements AuthorizationSource
     private final ClassLoader classLoader;
     private SecurityType securityType;
 
-    public SimpleAuthorizationSource(SecurityType securityType, ClassLoader classLoader)
+    public SimpleAuthorizationSource( SecurityType securityType, ClassLoader classLoader )
     {
         SimpleSecurity simpleSecurity = SecurityXmlUtil.toSimpleSecurity( securityType, classLoader );
-        this.simpleSecurity.set(simpleSecurity);
+        this.simpleSecurity.set( simpleSecurity );
         this.classLoader = classLoader;
         this.securityType = securityType;
     }
 
-    public synchronized SecurityType getSecurityType() {
-        return securityType;
+    public synchronized SecurityType getSecurityType()
+    {
+        return new SecurityType( securityType );
     }
 
-    public synchronized void setSecurityType(SecurityType securityType) {
+    public synchronized void setSecurityType( SecurityType securityType )
+    {
         SimpleSecurity simpleSecurity = SecurityXmlUtil.toSimpleSecurity( securityType, classLoader );
         this.simpleSecurity.set( simpleSecurity );
         this.securityType = securityType;
