@@ -34,6 +34,7 @@ import org.sonatype.nexus.configuration.NexusConfiguration;
 import org.sonatype.nexus.security.AuthenticationSource;
 import org.sonatype.nexus.security.SimpleUser;
 import org.sonatype.nexus.security.User;
+import org.sonatype.nexus.security.AuthorizationSource;
 import org.sonatype.nexus.session.Session;
 import org.sonatype.nexus.session.SessionStore;
 import org.sonatype.plexus.rest.PlexusRestletUtils;
@@ -57,6 +58,8 @@ public class NexusAuthenticationGuard
 
     private AuthenticationSource authenticationSource;
 
+    private AuthorizationSource authorizationSource;
+
     private String usernameFilter;
 
     public NexusAuthenticationGuard( Context context )
@@ -72,6 +75,7 @@ public class NexusAuthenticationGuard
                 NexusConfiguration.ROLE );
 
             authenticationSource = nc.getAuthenticationSource();
+            authorizationSource = nc.getAuthorizationSource();
         }
         catch ( ComponentLookupException e )
         {
@@ -98,6 +102,11 @@ public class NexusAuthenticationGuard
     public AuthenticationSource getAuthenticationSource()
     {
         return authenticationSource;
+    }
+
+    public AuthorizationSource getAuthorizationSource()
+    {
+        return authorizationSource;
     }
 
     public String getUsernameFilter()
@@ -233,6 +242,12 @@ public class NexusAuthenticationGuard
         {
             return false;
         }
+    }
+
+    public boolean authorize( Request request )
+    {
+        // todo add authorization check here
+        return super.authorize( request );
     }
 
     protected String getHeader( Request request, String header )

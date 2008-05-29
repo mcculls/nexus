@@ -61,6 +61,8 @@ import org.sonatype.nexus.proxy.storage.remote.DefaultRemoteStorageContext;
 import org.sonatype.nexus.proxy.storage.remote.RemoteRepositoryStorage;
 import org.sonatype.nexus.security.AuthenticationSource;
 import org.sonatype.nexus.security.OpenAuthenticationSource;
+import org.sonatype.nexus.security.AuthorizationSource;
+import org.sonatype.nexus.security.OpenAuthorizationSource;
 
 /**
  * The Class DefaultRuntimeConfigurationBuilder. Todo: all the bad thing is now concentrated in this class. We are
@@ -391,6 +393,28 @@ public class DefaultRuntimeConfigurationBuilder
         else
         {
             return new OpenAuthenticationSource();
+        }
+    }
+
+    public AuthorizationSource getAuthorizationSource( Configuration configuration )
+        throws InvalidConfigurationException
+    {
+        if ( configuration.getSecurity().isEnabled() )
+        {
+            try
+            {
+                return (AuthorizationSource) plexusContainer.lookup( AuthorizationSource.ROLE, configuration
+                    .getSecurity().getAuthenticationSource().getType() );
+            }
+            catch ( ComponentLookupException e )
+            {
+                throw new InvalidConfigurationException( "Unsupported authorization source type: "
+                    + configuration.getSecurity().getAuthenticationSource().getType(), e );
+            }
+        }
+        else
+        {
+            return new OpenAuthorizationSource();
         }
     }
 

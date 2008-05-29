@@ -20,18 +20,40 @@
  */
 package org.sonatype.nexus.security;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.sonatype.nexus.configuration.ApplicationConfiguration;
 import org.sonatype.nexus.security.simple.SimpleSecurity;
 import org.sonatype.nexus.security.simple.xml.SecurityType;
 import org.sonatype.nexus.security.simple.xml.SecurityXmlUtil;
 
+import java.io.File;
 import java.security.Permission;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SimpleAuthorizationSource implements AuthorizationSource
+/**
+ * The Class OpenAuthenticationSource.
+ *
+ * @plexus.component role="org.sonatype.nexus.security.SimpleAuthorizationSource" instantiation-strategy="per-lookup" role-hint="simple"
+ */
+public class SimpleAuthorizationSource implements AuthorizationSource, Initializable
 {
     private final AtomicReference<SimpleSecurity> simpleSecurity = new AtomicReference<SimpleSecurity>();
     private final ClassLoader classLoader;
     private SecurityType securityType;
+
+    /** @plexus.requirement */
+    protected ApplicationConfiguration applicationConfiguration;
+
+    public SimpleAuthorizationSource()
+    {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if ( classLoader == null )
+        {
+            classLoader = getClass().getClassLoader();
+        }
+        this.classLoader = classLoader;
+    }
 
     public SimpleAuthorizationSource( SecurityType securityType, ClassLoader classLoader )
     {
@@ -41,25 +63,79 @@ public class SimpleAuthorizationSource implements AuthorizationSource
         this.securityType = securityType;
     }
 
+    public synchronized void initialize() throws InitializationException
+    {
+        if ( applicationConfiguration == null )
+        {
+            throw new IllegalStateException( "applicationConfiguration is null" );
+        }
+        File securityXmlFile = new File( applicationConfiguration.getConfigurationDirectory(), "security.xml" );
+        try
+        {
+            SecurityType securityType = SecurityXmlUtil.readSecurity( securityXmlFile );
+
+            SimpleSecurity simpleSecurity = SecurityXmlUtil.toSimpleSecurity( securityType, classLoader );
+            this.simpleSecurity.set( simpleSecurity );
+            this.securityType = securityType;
+        }
+        catch ( Exception e )
+        {
+            throw new InitializationException( "Error loading security.xml file", e );
+        }
+    }
+
+    public synchronized ApplicationConfiguration getApplicationConfiguration()
+    {
+        return applicationConfiguration;
+    }
+
+    public synchronized void setApplicationConfiguration( ApplicationConfiguration applicationConfiguration )
+    {
+        this.applicationConfiguration = applicationConfiguration;
+    }
+
     public synchronized SecurityType getSecurityType()
     {
-        return new SecurityType( securityType );
+        if ( securityType != null )
+        {
+            return new SecurityType( securityType );
+        }
+        else
+        {
+            return new SecurityType();
+        }
     }
 
     public synchronized void setSecurityType( SecurityType securityType )
     {
         SimpleSecurity simpleSecurity = SecurityXmlUtil.toSimpleSecurity( securityType, classLoader );
+
+        if ( applicationConfiguration != null )
+        {
+            File securityXmlFile = new File( applicationConfiguration.getConfigurationDirectory(), "security.xml" );
+            try
+            {
+                SecurityXmlUtil.writeSecurity( securityType, securityXmlFile );
+            }
+            catch ( Exception e )
+            {
+                throw new RuntimeException( "Error storing security.xml file", e );
+            }
+        }
+
         this.simpleSecurity.set( simpleSecurity );
         this.securityType = securityType;
     }
 
     public boolean check( User user, Permission permission )
     {
-        return simpleSecurity.get().check( user, permission );
+        SimpleSecurity simpleSecurity = this.simpleSecurity.get();
+        return securityType != null && simpleSecurity.check( user, permission );
     }
 
     public boolean check( String roleName, Permission permission )
     {
-        return simpleSecurity.get().check( roleName, permission );
+        SimpleSecurity simpleSecurity = this.simpleSecurity.get();
+        return securityType != null && simpleSecurity.check( roleName, permission );
     }
 }
