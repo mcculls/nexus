@@ -106,6 +106,14 @@ public class SecurityXmlUtil
         return securityType;
     }
 
+    public static void writeSecurity(SecurityType securityType, File file) throws XMLStreamException, JAXBException {
+        Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
+        marshaller.setEventHandler( new DefaultValidationEventHandler() );
+
+        marshaller.setProperty("jaxb.formatted.output", true);
+        marshaller.marshal(securityType, file);
+    }
+
     public static void writeSecurity(SecurityType securityType, Writer out) throws XMLStreamException, JAXBException {
         Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
         marshaller.setEventHandler( new DefaultValidationEventHandler() );

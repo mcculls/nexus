@@ -28,6 +28,7 @@ import org.sonatype.nexus.configuration.source.ConfigurationSource;
 import org.sonatype.nexus.proxy.access.AccessManager;
 import org.sonatype.nexus.proxy.storage.remote.RemoteStorageContext;
 import org.sonatype.nexus.security.AuthenticationSource;
+import org.sonatype.nexus.security.AuthorizationSource;
 
 /**
  * A component responsible for configuration management.
@@ -83,6 +84,9 @@ public interface NexusConfiguration
     RemoteStorageContext getRemoteStorageContext();
 
     AuthenticationSource getAuthenticationSource()
+        throws ConfigurationException;
+
+    AuthorizationSource getAuthorizationSource()
         throws ConfigurationException;
 
     AccessManager getAccessManagerForRealm( String realmId )
