@@ -40,7 +40,11 @@ public final class RestPermission extends Permission
 
     private static enum Verb
     {
-        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE;
+        // General HTTP verbs
+        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE,
+
+        // Restlet extend verbs
+        CONNECT, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK;
 
         private static EnumSet<Verb> parse( String... verbs )
         {
