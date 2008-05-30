@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * The Class OpenAuthenticationSource.
  *
- * @plexus.component role="org.sonatype.nexus.security.SimpleAuthorizationSource" instantiation-strategy="per-lookup" role-hint="simple"
+ * @plexus.component role="org.sonatype.nexus.security.AuthorizationSource" instantiation-strategy="per-lookup" role-hint="simple"
  */
 public class SimpleAuthorizationSource implements AuthorizationSource, Initializable
 {
@@ -69,7 +69,7 @@ public class SimpleAuthorizationSource implements AuthorizationSource, Initializ
         {
             throw new IllegalStateException( "applicationConfiguration is null" );
         }
-        File securityXmlFile = new File( applicationConfiguration.getConfigurationDirectory(), "security.xml" );
+        File securityXmlFile = new File( applicationConfiguration.getConfigurationDirectory(), "../../../conf/security.xml" );
         try
         {
             SecurityType securityType = SecurityXmlUtil.readSecurity( securityXmlFile );
