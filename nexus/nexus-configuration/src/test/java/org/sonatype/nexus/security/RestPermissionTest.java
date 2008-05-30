@@ -26,7 +26,7 @@ public class RestPermissionTest extends TestCase
 {
     public void testSimplePermission()
     {
-        RestPermission permission = new RestPermission( "/simple/.*", "GET" );
+        RestPermission permission = createTestPermission( "/simple/.*", "GET" );
 
         assertImplies( permission, new RestPermission( "/simple/TEST", "GET" ) );
         assertImplies( permission, new RestPermission( "/simple/", "GET" ) );
@@ -40,9 +40,20 @@ public class RestPermissionTest extends TestCase
         assertNotImplies( permission, new RestPermission( "simple", "GET" ) );
     }
 
+    public void testMultiplePermission()
+    {
+        RestPermission permission = createTestPermission( "/foo/.*:/bar/.*:/baz/.*", "GET" );
+
+        assertImplies( permission, new RestPermission( "/foo/TEST", "GET" ) );
+        assertImplies( permission, new RestPermission( "/bar/TEST", "GET" ) );
+        assertImplies( permission, new RestPermission( "/baz/TEST", "GET" ) );
+
+        assertNotImplies( permission, new RestPermission( "/unknown", "GET" ) );
+    }
+
     public void testComplexPermission()
     {
-        RestPermission permission = new RestPermission( ".*/org/apache/.*", "GET" );
+        RestPermission permission = createTestPermission( ".*/org/apache/.*", "GET" );
 
         assertImplies( permission, new RestPermission( "/repository/org/apache/openejb", "GET" ) );
         assertImplies( permission, new RestPermission( "/repository/org/apache/", "GET" ) );
@@ -54,9 +65,19 @@ public class RestPermissionTest extends TestCase
         assertNotImplies( permission, new RestPermission( "/repository/org/apache", "GET" ) );
     }
 
+    public void testUriExcludes()
+    {
+        RestPermission permission = createTestPermission( "/repository/org/apache/.*:!/repository/org/apache/openejb/.*", "GET" );
+
+        assertImplies( permission, new RestPermission( "/repository/org/apache/", "GET" ) );
+        assertNotImplies( permission, new RestPermission( "/unknown", "GET" ) );
+
+        assertNotImplies( permission, new RestPermission( "/repository/org/apache/openejb/", "GET" ) );
+    }
+
     public void testSingleVerb()
     {
-        RestPermission permission = new RestPermission( "TEST", "GET" );
+        RestPermission permission = createTestPermission( "TEST", "GET" );
 
         assertImplies( permission, new RestPermission( "TEST", "GET" ) );
         assertNotImplies( permission, new RestPermission( "TEST", "POST" ) );
@@ -64,23 +85,35 @@ public class RestPermissionTest extends TestCase
 
     public void testMultipleVerbs()
     {
-        RestPermission permission = new RestPermission( "TEST", "GET,POST" );
+        RestPermission permission = createTestPermission( "TEST", "GET,POST" );
 
         assertImplies( permission, new RestPermission( "TEST", "GET" ) );
         assertImplies( permission, new RestPermission( "TEST", "POST" ) );
         assertImplies( permission, new RestPermission( "TEST", "GET,POST" ) );
+        // white space is allowed in actions (we can change this)
+        assertImplies( permission, new RestPermission( "TEST", "  GET  ,  POST  " ) );
         assertNotImplies( permission, new RestPermission( "TEST", "DELETE" ) );
         assertNotImplies( permission, new RestPermission( "TEST", "GET,DELETE" ) );
         assertNotImplies( permission, new RestPermission( "TEST", "GET,POST,DELETE" ) );
+        // white space is allowed in actions (we can change this)
+        assertNotImplies( permission, new RestPermission( "TEST", "   GET   ,   POST   ,   DELETE   " ) );
     }
 
     public void testInvalidPermission() {
         assertInvalidPermission( "*INVALID", "GET" );
+        assertInvalidPermission( "!*INVALID", "GET" );
+        assertInvalidPermission( "VALID:*INVALID", "GET" );
+        assertInvalidPermission( "VALID:!*INVALID", "GET" );
         assertInvalidPermission( "VALID", "UNKNOWN" );
         assertInvalidPermission( "VALID", "GET,UNKNOWN" );
-        
-        // white space is not allowed in actions (we can change this)
-        assertInvalidPermission( "VALID", "GET, POST" );
+    }
+
+    private RestPermission createTestPermission( String name, String actions )
+    {
+        RestPermission permission = new RestPermission( name, actions );
+        assertEquals( name, permission.getName() );
+        assertEquals( actions, permission.getActions() );
+        return permission;
     }
 
     public static void assertImplies( RestPermission pattern, RestPermission test )
