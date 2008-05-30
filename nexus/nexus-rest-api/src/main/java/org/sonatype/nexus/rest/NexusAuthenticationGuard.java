@@ -35,6 +35,7 @@ import org.sonatype.nexus.security.AuthenticationSource;
 import org.sonatype.nexus.security.SimpleUser;
 import org.sonatype.nexus.security.User;
 import org.sonatype.nexus.security.AuthorizationSource;
+import org.sonatype.nexus.security.RestPermission;
 import org.sonatype.nexus.session.Session;
 import org.sonatype.nexus.session.SessionStore;
 import org.sonatype.plexus.rest.PlexusRestletUtils;
@@ -246,8 +247,13 @@ public class NexusAuthenticationGuard
 
     public boolean authorize( Request request )
     {
-        // todo add authorization check here
-        return super.authorize( request );
+        if (authorizationSource != null) {
+            User user = (User) request.getAttributes().get( REST_USER_KEY );
+            RestPermission permission = new RestPermission( request.getResourceRef().getPath(), request.getMethod().toString() );
+            return authorizationSource.check( user, permission );
+        } else {
+            return super.authorize( request );
+        }
     }
 
     protected String getHeader( Request request, String header )
