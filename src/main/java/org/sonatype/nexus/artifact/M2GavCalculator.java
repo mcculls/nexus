@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Eugene Kuleshov (Sonatype)
- *    Tamás Cservenák (Sonatype)
+ *    Tamï¿½s Cservenï¿½k (Sonatype)
  *    Brian Fox (Sonatype)
  *    Jason Van Zyl (Sonatype)
  *******************************************************************************/
@@ -72,7 +72,17 @@ public class M2GavCalculator
                 return null;
             }
 
-            String ext = s.substring( s.lastIndexOf( '.' ) + 1 );
+            String ext = null;
+            
+            if ( s.contains( "." ) )
+            {
+                ext = s.substring( s.lastIndexOf( '.' ) + 1 );
+            }
+            else
+            {
+                // NX-563: refusing to parse paths without extension as artifacts
+                return null;
+            }
 
             boolean snapshot = v.contains( "-SNAPSHOT" );
 
