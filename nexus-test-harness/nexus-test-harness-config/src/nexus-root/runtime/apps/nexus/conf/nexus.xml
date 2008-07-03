@@ -24,6 +24,16 @@
       <allowWrite>true</allowWrite>
       <checksumPolicy>ignore</checksumPolicy>
     </repository>
+    
+    <repository>
+      <id>release-proxy-repo-1</id>
+      <name>Jetty Test Server</name>
+      <repositoryPolicy>release</repositoryPolicy>
+      <remoteStorage>
+        <url>${proxy-repo-base-url}release-proxy-repo-1</url>
+      </remoteStorage>
+    </repository>
+    
   </repositories>
   <repositoryGrouping>
     <repositoryGroups>
@@ -33,6 +43,7 @@
         <repositories>
           <repository>nexus-test-harness-repo</repository>
           <repository>nexus-test-harness-repo2</repository>
+          <repository>release-proxy-repo-1</repository>
         </repositories>
       </repositoryGroup>
     </repositoryGroups>
