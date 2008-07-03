@@ -118,7 +118,7 @@
         <jsw.binaries.version>3.2.3.2</jsw.binaries.version>
         <plexus.container.version>1.0-alpha-47</plexus.container.version>
         <plx.plugin.version>1.2-SNAPSHOT</plx.plugin.version>
-        <nexus.indexer.version>1.0-beta-4</nexus.indexer.version>
+        <nexus.indexer.version>1.0-beta-4-SNAPSHOT</nexus.indexer.version>
 	</properties>
 
 	<dependencyManagement>
@@ -162,7 +162,7 @@
 			<dependency>
 				<groupId>org.sonatype.plexus</groupId>
 				<artifactId>plexus-restlet-bridge</artifactId>
-				<version>1.1</version>
+				<version>1.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.codehaus.plexus</groupId>
@@ -403,7 +403,7 @@
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
-				<version>4.0-alpha4</version>
+				<version>4.0-alpha3</version>
 				<type>jar</type>
 				<scope>compile</scope>
 				<exclusions>
@@ -416,7 +416,7 @@
             <dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpcore</artifactId>
-				<version>4.0-beta2</version>
+				<version>4.0-beta1</version>
 				<type>jar</type>
 				<scope>compile</scope>
 				<exclusions>
@@ -564,8 +564,6 @@
 								<bannedDependencies>
 									<excludes>
 										<exclude>commons-logging:*</exclude>
-                                   <!--     <exclude>*:velocity:1.4</exclude>
-                                        <exclude>*:velocity-dep:1.4</exclude>-->
 									</excludes>
 									<message>
 										commons-logging conflicts with slf4j. You probably added a dependency that is

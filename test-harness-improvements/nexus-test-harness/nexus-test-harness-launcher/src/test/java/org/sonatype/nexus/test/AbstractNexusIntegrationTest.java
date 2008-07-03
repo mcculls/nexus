@@ -51,6 +51,7 @@ import org.junit.BeforeClass;
 import org.sonatype.appbooter.PlexusContainerHost;
 import org.sonatype.appbooter.ctl.ControlConnectionException;
 import org.sonatype.appbooter.ctl.ControllerClient;
+import org.sonatype.nexus.test.proxy.ProxyRepo;
 
 public abstract class AbstractNexusIntegrationTest
 {
@@ -83,6 +84,7 @@ public abstract class AbstractNexusIntegrationTest
         this.nexusUrl = baseNexusUrl + nexusUrl;
         setupContainer();
     }
+    
 
     protected void complete()
     {
@@ -100,9 +102,12 @@ public abstract class AbstractNexusIntegrationTest
                 if ( manager != null )
                 {
                     manager.close();
+                    
                 }
-
-                manager = new ControllerClient( PlexusContainerHost.DEFAULT_CONTROL_PORT );
+                
+                String controlPortString = ResourceBundle.getBundle( "baseTest" ).getString( "nexus.control.port" );
+                // if this throws the test will fail...
+                manager = new ControllerClient( Integer.parseInt( controlPortString ) );
                 manager.shutdownOnClose();
                 Thread.sleep( MANAGER_WAIT_TIME );
             }
@@ -136,6 +141,7 @@ public abstract class AbstractNexusIntegrationTest
         {
             try
             {
+                //if detach is true, then the tests passed
                 if ( detach )
                 {
                     manager.detachOnClose();
@@ -143,6 +149,9 @@ public abstract class AbstractNexusIntegrationTest
 
                 manager.close();
                 manager = null;
+
+                ProxyRepo.getInstance().disconnect( detach );
+                
                 Thread.sleep( MANAGER_WAIT_TIME );
             }
             catch ( UnknownHostException e )
@@ -294,6 +303,7 @@ public abstract class AbstractNexusIntegrationTest
             url =
                 new URL( nexusUrl + groupId.replace( '.', '/' ) + "/" + artifact + "/" + version + "/" + artifact + "-"
                     + version + "." + type );
+            System.out.println( "Downloading file: " + url );
             out = new BufferedOutputStream( new FileOutputStream( downloadedFile ) );
 
             conn = url.openConnection();
