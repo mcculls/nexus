@@ -279,7 +279,7 @@ public class DefaultSnapshotRemover
                         {                            
                             // if we find a pom, check for delete on release
                             if ( !gav.isHash()
-                                && !gav.isSignature()
+                                && !gav.getExtension().equals( "asc" )
                                 && gav.getExtension().equals( "pom" ) )
                             {
                                 if ( request.isRemoveIfReleaseExists() && releaseExistsForSnapshot( gav ) )
@@ -401,7 +401,7 @@ public class DefaultSnapshotRemover
                                 
                                 // If hash or signature, just junk it
                                 if ( gav.isHash()
-                                    || gav.isSignature())
+                                    || gav.getExtension().equals("asc"))
                                 {
                                     repository.deleteItem( file.getRepositoryItemUid() );
                                 }
