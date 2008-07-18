@@ -33,14 +33,13 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.sonatype.appbooter.ForkedAppBooter;
-import org.sonatype.appbooter.ForkedAppBooterException;
+import org.sonatype.appbooter.ctl.AppBooterServiceException;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.test.utils.DeployUtils;
 
@@ -225,7 +224,6 @@ public class AbstractNexusIntegrationTest
         throws Exception
     {
         ForkedAppBooter appBooter = (ForkedAppBooter) this.lookup( ForkedAppBooter.ROLE, "TestForkedAppBooter" );
-        System.out.println( "getPlatformFile: " + appBooter.getPlatformFile() );
         appBooter.start();
 //        Thread.sleep( 1000 );
     }
@@ -239,7 +237,7 @@ public class AbstractNexusIntegrationTest
         {
             appBooter.stop();
         }
-        catch ( ForkedAppBooterException e )
+        catch ( AppBooterServiceException e )
         {
             Assert.fail( "Test: "
                 + this.getClass().getSimpleName()
