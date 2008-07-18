@@ -277,11 +277,14 @@ public class AbstractNexusIntegrationTest
      */
     protected File getTestResourceAsFile( String relativePath )
     {
-        String packageName = this.getClass().getPackage().getName();
-        String testId = packageName.substring( packageName.lastIndexOf( '.' ) + 1, packageName.length() );
-
-        String resource = testId + "/" + relativePath;
+        String resource = this.getTestId() + "/" + relativePath;
         return this.getResource( resource );
+    }
+    
+    protected String getTestId( )
+    {
+        String packageName = this.getClass().getPackage().getName();
+        return packageName.substring( packageName.lastIndexOf( '.' ) + 1, packageName.length() );
     }
 
     /**
