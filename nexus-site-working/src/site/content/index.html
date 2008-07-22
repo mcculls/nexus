@@ -23,7 +23,9 @@
 
     <h1>Features</h1>
     <ul>
-      <li>Runs out-of-the-box. Unpack it and go!</li>      
+      <li><b>Smallest Memory footprint of all Repository Managers (28mb vs 128mb)</b></li>      
+      <li>Runs out-of-the-box. Unpack it and go!</li>
+      
       <li>Rich UI using the amazing <a href="http://extjs.com">ExtJS</a> library. Take a look at our <a href="http://repository.sonatype.org:8081/nexus">public instance</a>.</li>
       <li>Full <a href="https://docs.sonatype.com/display/Nexus/Nexus+Rest+API">REST APIs</a> made possible using <a href="http://restlet.org">Restlet.</a></li>      
       <li>Full integration with Eclipse using <a href="http://m2eclipse.sonatype.org">m2eclipse</a>.</li>
@@ -32,7 +34,14 @@
         Nexus indices hosted by the remotely proxied repositories.</li>      
       <li>Tool to convert Proximity configurations to Nexus configurations.</li>
       <li>No database required. Nexus uses the filesystem with Lucene and that's it. Amazing things are still possible.</li>
-      <li>Snapshot cleanup</li>
+      <li>Proxy the Nexus Indexer from repositories that publish their own index, and publish the index on proxy repositories that don't.</li>
+      <li>Produce and publish Index of internal company artifacts, for superb integration with M2Eclipse</li>
+      <li>Merge indexes from several repositories, internal, external, etc and publish them as a single Index</li>
+      <li>Upload artifacts directly via the UI, no more deploy:deploy-file needed.</li>
+      <li>Advanced task scheduling</li>
+      <li>Snapshot cleanup based on age, count and when the SNAPSHOT is published as a release</li>
+      <li>Full Management of repositories and contents via the UI, including deleting artifacts</li>
+      <li>RSS Feeds of new artifacts, system changes, etc</li>
       <li>Advanced Repository Proxying and Hosting</li>
       <ul>      
         <li>On-the-fly repository metadata correction: if a proxied repository contains snapshots and releases Nexus 
@@ -52,6 +61,7 @@
         globally or per repository. This means Nexus is able to use more than one HTTP proxy simultaneously.</li>
         <li>Flexible Repository aggregation into multiple logical views without duplicating storage on disk.</li>
        </ul>
+       
     </ul>
       <!-->
       <li>Stand-alone security model with LDAP support</li>
