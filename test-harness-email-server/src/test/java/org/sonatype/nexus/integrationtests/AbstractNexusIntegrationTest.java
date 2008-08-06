@@ -36,10 +36,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.restlet.Client;
 import org.restlet.data.Method;
-import org.restlet.data.Protocol;
-import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.appbooter.ctl.AppBooterServiceException;
@@ -88,7 +85,7 @@ public class AbstractNexusIntegrationTest
     }
 
     public static final String RELATIVE_CONF_DIR = "runtime/apps/nexus/conf";
-    
+
     public static final String RELATIVE_WORK_CONF_DIR = "runtime/work/nexus/conf";
 
     protected AbstractNexusIntegrationTest()
@@ -337,12 +334,12 @@ public class AbstractNexusIntegrationTest
         System.out.println( "copying " + configFile + " to:  "
             + new File( AbstractNexusIntegrationTest.nexusBaseDir + "/" + RELATIVE_CONF_DIR, configFile ) );
 
-        FileTestingUtils.interpolationFileCopy( testConfigFile, new File( AbstractNexusIntegrationTest.nexusBaseDir + "/" + 
+        FileTestingUtils.interpolationFileCopy( testConfigFile, new File( AbstractNexusIntegrationTest.nexusBaseDir + "/" +
                                                                           ( path == null ? RELATIVE_CONF_DIR : path ),
                                                                           destShortName ), variables );
 
     }
-    
+
     //Overloaded helpers
     private void copyConfigFile( String configFile )
         throws IOException
@@ -355,19 +352,19 @@ public class AbstractNexusIntegrationTest
     {
         this.copyConfigFile( configFile, new HashMap<String, String>(), path );
     }
-    
+
     private void copyConfigFile( String configFile, Map<String, String> variables )
         throws IOException
     {
         this.copyConfigFile( configFile, configFile, variables, null );
-    
+
     }
-    
+
     private void copyConfigFile( String configFile, Map<String, String> variables, String path )
         throws IOException
     {
         this.copyConfigFile( configFile, configFile, variables, path );
-    
+
     }
 
     /**
