@@ -1,8 +1,0 @@
-<component-set>
-	<components>
-		<component>
-			<role>org.sonatype.nexus.configuration.ApplicationConfiguration</role>
-			<implementation>org.sonatype.nexus.configuration.SimpleApplicationConfiguration</implementation>
-		</component>
-	</components>
-</component-set>
