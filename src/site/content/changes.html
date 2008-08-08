@@ -10,10 +10,69 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-	Full details can be found in our issue tracker's
+	Full details can be found in our issue trackers
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
      <br>Releases are available on the <a href="http://nexus.sonatype.org/downloads">Download Site</a></p> 
+     <h2>Release Notes - Nexus - Version 1.0-beta-5</h2>
+     <p>8 August, 2008</p>           
+
+     <p><b>New Features:</b>
+     
+       <p>Role based security - A complete over haul of the security. See the update notes below, and the <a href="http://www.sonatype.com/book/reference/repository-manager.html#">user guide</a> for instructions on using the new features.
+
+     
+     <p><b>Key Bugs Fixed:</b>
+
+     <ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-148'>NEXUS-148</a>] -         Need to modify update process of nexus.xml to prevent data loss in extreme conditions
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-161'>NEXUS-161</a>] -         Modify ui to work with automated test tools better
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-189'>NEXUS-189</a>] -         Show classifier in search results in ui
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-192'>NEXUS-192</a>] -         Closing all Open Tabs, then open one, results in a display problem
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-194'>NEXUS-194</a>] -         Lock object held in memory for each repository item
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-195'>NEXUS-195</a>] -         Deleting repository created with automated script creates IndexerManager error in nexus.log
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-196'>NEXUS-196</a>] -         Empty Trash call out not closing when selecting Yes in automated script
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-199'>NEXUS-199</a>] -         Nexus doesn't handle a version of SNAPSHOT properly
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-200'>NEXUS-200</a>] -         NPE on startup having a repositoyGroup without repositories
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-201'>NEXUS-201</a>] -         NPE when storing a repository with proxy server attributes
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-203'>NEXUS-203</a>] -         UI is display repo &amp; group ids without trailing '/' character
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-210'>NEXUS-210</a>] -         Snapshot remover not removing artifacts with packaging type of EAR
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-226'>NEXUS-226</a>] -         Error with Automated Script when attempting to validate outside URL for Help Menu testing
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-236'>NEXUS-236</a>] -         Javascript error when launching Nexus 1.5 in IE
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-237'>NEXUS-237</a>] -         Menus under Administration and Security menus not appearing - producing JS
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-245'>NEXUS-245</a>] -         Upload Artifact javascript error when attempting to open the upload panel with no repo selected (in repo config)
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-253'>NEXUS-253</a>] -         Error with Upload Artifact
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-282'>NEXUS-282</a>] -         Error when attempting to run automated test for Scheduled Services
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-283'>NEXUS-283</a>] -         Unable to get right click on repo in Browse Repositories automated script to work correctly
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-285'>NEXUS-285</a>] -         Need help in validating pop up after selecting download on Logs and Config page for automated scripts
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-322'>NEXUS-322</a>] -         Cannot get right click to work with Selenium to delete Repo Target
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-342'>NEXUS-342</a>] -         resourceURI should be constant throught rest API
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-407'>NEXUS-407</a>] -         Search over several repositories
+</li>
+</ul>
+    <p><b>Upgrade Notes:</b> This release requires an update to the base platform, therefore an upgrade bundle has not been provided.<p> <b>Note:</b> The user passwords are stored with a new hash algorithm that is not compatible with earlier betas. This means that you must reset your admin and deployment passwords after upgrading. In this beta, you must login as the deployment user (default password "deployment123") to change its password. This will be improved in the next release.
      
      <h2>Release Notes - Nexus - Version 1.0-beta-4.2</h2>
      <p>21 July, 2008</p>           
