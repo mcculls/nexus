@@ -126,7 +126,7 @@ Sonatype.repoServer.PrivilegeEditPanel = function(config){
   });
   
   //Datastore that will hold both repos and repogroups
-  this.repoOrGroupDataStore = new Ext.data.SimpleStore({fields:['id','name'], id:'id'});
+  this.repoOrGroupDataStore = new Ext.data.SimpleStore({fields:['id','name','format'], id:'id'});
   
   //Reader and datastore that queries the server for the list of repositories
   this.repositoryReader = new Ext.data.JsonReader({root: 'data', id: 'id'}, this.repositoryRecordConstructor );  
@@ -149,7 +149,8 @@ Sonatype.repoServer.PrivilegeEditPanel = function(config){
           },this);
           var allRec = new this.repositoryRecordConstructor({
             id : 'all_repo',
-            name : 'All Repositories'
+            name : 'All Repositories',
+            format : 'all'
           },
           'all_repo');
           this.repoOrGroupDataStore.insert(0, allRec);
@@ -604,6 +605,21 @@ Ext.extend(Sonatype.repoServer.PrivilegeEditPanel, Ext.Panel, {
     
     var formPanel = new Ext.FormPanel(config);
     
+    //Make the dynamic list for the target list box
+    var repoTargetDynamicStore = new Ext.data.SimpleStore({fields:['id','name','contentClass'], id:'id'});
+    repoTargetDynamicStore.originalStore = this.repoTargetDataStore;
+    this.repoTargetDataStore.each(function(item,i,len){
+        var newRec = new this.repoTargetRecordConstructor({
+            id : item.data.id,
+            name : item.data.name,
+            contentClass : item.data.contentClass
+          },
+          item.id);
+        repoTargetDynamicStore.add([newRec]);
+      },this);
+    
+    formPanel.find('name', 'repositoryTargetId')[0].store = repoTargetDynamicStore;
+        
     this.populateTree(formPanel);
     
     formPanel.form.on('actioncomplete', this.actionCompleteHandler, this);
@@ -947,6 +963,20 @@ Ext.extend(Sonatype.repoServer.PrivilegeEditPanel, Ext.Panel, {
   },
   
   repositorySelectHandler : function(combo, record, index){
-    var a = 0;
+    combo.store.removeAll();
+    var targetCombo = this.find('name', 'repositoryTargetId')[0];
+    targetCombo.originalStore.each(function(item,i,len){
+        if (record.data.format == 'all'
+            || record.data.format == item.data.contentClass){
+          var newRec = new this.repoTargetRecordConstructor({
+              id : item.data.id,
+              name : item.data.name,
+              contentClass : item.data.contentClass
+            },
+          item.id);
+          combo.store.add([newRec]);
+        }
+    },this);
   }
 });
+

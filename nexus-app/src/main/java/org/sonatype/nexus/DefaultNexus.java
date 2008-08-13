@@ -435,17 +435,6 @@ public class DefaultNexus
 
     // Globals are mandatory: RU
 
-    public String readWorkingDirectory()
-    {
-        return nexusConfiguration.readWorkingDirectory();
-    }
-
-    public void updateWorkingDirectory( String settings )
-        throws IOException
-    {
-        nexusConfiguration.updateWorkingDirectory( settings );
-    }
-
     public String readApplicationLogDirectory()
     {
         return nexusConfiguration.readApplicationLogDirectory();
@@ -1121,11 +1110,6 @@ public class DefaultNexus
         throws IOException
     {
         return nexusConfiguration.getConfigurationSource().getDefaultsSource().getConfigurationAsStream();
-    }
-
-    public String readDefaultWorkingDirectory()
-    {
-        return nexusConfiguration.getConfigurationSource().getDefaultsSource().getConfiguration().getWorkingDirectory();
     }
 
     public String readDefaultApplicationLogDirectory()
