@@ -45,7 +45,27 @@
     
     <h2>How can I integrate Nexus with Apache Httpd?</h2>
     
-    <p>While we feel that the best performance for the system is achieved by accessing the embedded container directly, we also understand that some environments are highly integrated with Apache Httpd. There are several ways that Jetty can be tied to Apache. The Jetty team recommends using mod_proxy and you can read more about it <a href="http://docs.codehaus.org/display/JETTY/Configuring+mod_proxy">here</a>. We currently do not support the mod_ajp connection as it requires additional configuration to the embedded container. If demand is high enough, we will make this configurable in the future.</p>
+    <p>While we feel that the best performance for the system is achieved by accessing the embedded container directly, we also understand that some environments are highly integrated with Apache Httpd. There are several ways that Jetty can be tied to Apache. The Jetty team recommends using mod_proxy and you can read more about it <a href="http://docs.codehaus.org/display/JETTY/Configuring+mod_proxy">here</a>.</p>
+    
+    <p>A proper Mod_jk configuration is shown below:</p>
+    <pre>    ProxyPass /nexus http://localhost:8081/nexus/
+    ProxyPassReverse /nexus http://localhost:8081/nexus/
+    ProxyPreserveHost On
+</pre>
+
+    <p>If you wish to host Nexus at the root of a system, the config might look like this:</p>
+    <pre>&lt;VirtualHost *:80&gt;
+    ServerName nexus.bogushost.com
+    ServerAdmin webmaster@bogushost.com
+    ProxyPass / http://localhost:8081/
+    ProxyPassReverse / http://localhost:8081/
+    ErrorLog logs/bogus/nexus/error.log
+    CustomLog logs/bogus/nexus/access.log common
+&lt;/VirtualHost&gt;
+</pre>
+ 
+   <p><b>Note:</b> you must also edit the /conf/plexus.xml to change the context of Nexus from /nexus to / if you want to host at the root url. We currently do not support proxying from / to /nexus</p>
+    
   </body>
 </html>
 
