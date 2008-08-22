@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Upgrade Notes</title>
+  </head>
+  <body>
+
+    <h2>To Release 1.0.0 from 1.0.0-beta-5/5.1</h2>
+    <p>
+    <p>In the Nexus betas, the configuration was stored in ${basedir}/runtime/apps/nexus/conf/nexus.xml and the configuration pointed to the nexus work folder, which had a default of ${basedir}/runtime/work/nexus. This made upgrades between versions troublesome as the work folder and config were located inside the path of the bundle and required manual moving of that data.
+
+<p>In 1.0+, this has been greatly simplified. The work folder has a new default of ${basedir}/../sonatype-work/nexus. That is, it is now a sibling of the bundle folder by default. The location can be overridden two ways: 1st by setting the PLEXUS_NEXUS_WORK environment variable to the work folder, or by editing the ${basedir}/conf/plexus.properties nexus-work variable. The first method is preferred as it eliminates the manual file moving/editing that was present in pre 1.0 betas.
+
+<p>The nexus.xml file is now located in the ${nexus-work}/conf/ folder. This means that it should actually be very easy in the future to upgrade as you can unpack the new bundle. Shutdown the old version and startup the new version without moving any files around. 
+
+<p>If you are upgrading from an earlier beta version, you will need to take a few steps to get to the new 1.0 layout. 
+
+
+<p>The default recommended configuration would look like this:
+<pre>
+/Nexus
++--/nexus-1.0.0
+    +/runtime/apps/nexus
+|
++--/sonatype-work
+    +/nexus
+       +/storage
+       +/conf/nexus.xml
+</pre>        
+<p>If this acceptable to you, then you would perform the following steps.
+<ol>
+<li>Make a folder that will contain the work folder and the bundles (if you don't already have one). We will refer to this as ${nexus_home} in the instructions. We will refer to the current location of your nexus bundle as ${nexus-beta-bundle}</li>
+
+<li>Move (or copy) the contents of ${nexus-beta-bundle}/runtime/work to ${nexus_home}/sonatype-work/nexus</li>
+<li>When this is done you should have ${nexus_home}/sonatype-work/nexus/conf and ${nexus_home}/sonatype-work/nexus/storage etc.</li>
+
+<li>Move (or copy) the ${nexus-beta-bundle}/runtime/apps/nexus/conf/nexus.xml to ${nexus_home}/sonatype-work/nexus/conf</li>
+<li>Unpack the new 1.0 bundle in ${nexus_home}. This should produce a folder called nexus-1.0.0-webapp-bundle in ${nexus_home}.</li>
+<li>The startup scripts will be located in ${nexus_home}/nexus-1.0.0-webapp-bundle/bin/jsw/[os folder]</li>
+<li>You can now startup the new installation and it should find the work folder and upgrade the configuration.</li>
+</ol>
+<p>If you want to specify another location for your work folder, perform the following steps.
+<p>We will refer to the current location of your nexus bundle as ${nexus-beta-bundle}
+<ol>
+<li>define the environment variable PLEXUS_NEXUS_WORK to contain the value of your existing nexus-work folder. (this would be the location you previously specified in your nexus.xml file).</li>
+
+<li>Move (or copy) the ${nexus-beta-bundle}/runtime/apps/nexus/conf/nexus.xml to ${PLEXUS_NEXUS_WORK}/sonatype-work/nexus/conf</li>
+<li>Unpack the new 1.0 bundle in ${nexus_home}. This should produce a folder called nexus-1.0.0-webapp-bundle in ${nexus_home}.</li>
+<li>The startup scripts will be located in ${nexus_home}/nexus-1.0.0-webapp-bundle/bin/jsw/[os folder]</li>
+<li>You can now startup the new installation and it should find the work folder and upgrade the configuration.</li>
+</ol>
+
+    
+    <h2>To Release 1.0.0-beta-5/5.1 from 1.0.0-beta-4/4.2</h2>
+    <p>The user passwords are stored with a new hash algorithm that is not compatible with earlier betas. This means that you must reset your admin and deployment passwords after upgrading. In this beta, you must login as the deployment user (default password "deployment123") to change its password.
+    
+    <h2>To Release 1.0.0-beta-4 to 1.0.0-beta-3</h2>
+    <p>No manual steps required.
+
+    <h2>To Release 1.0.0-beta-3 from 1.0.0-beta-2</h2>
+    <p>After starting the system, run "rebuild attributes" on all hosted repositories. This is done to migrate the checksums to the proper location in the repository data.
+
+    <h2>To Release 1.0.0-beta-2 From 1.0.0-beta-1</h2>
+     <p>No manual steps required
+  </body>
+</html>
