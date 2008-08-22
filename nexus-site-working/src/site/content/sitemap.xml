@@ -7,6 +7,7 @@
     <page>faq.html</page>
     <page>news.html</page>
     <page>changes.html</page>
+    <page>upgrade.html</page>
     <page>history.html</page>
     <link title="Product Roadmap">https://docs.sonatype.com/display/NX/Nexus+RoadMap</link>
    <!-- <page>versioning.html</page>    -->

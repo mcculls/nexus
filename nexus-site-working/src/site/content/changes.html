@@ -14,7 +14,229 @@
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
      <br>Releases are available on the <a href="http://nexus.sonatype.org/downloads">Download Site</a></p> 
-          <h2>Release Notes - Nexus - Version 1.0-beta-5.1</h2>
+ 
+       <h2>Nexus - Version 1.0</h2>
+        <b>August 22, 2008</b>
+    
+    
+<b>Bug</b>
+<ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-18'>NEXUS-18</a>] -         Wrong download link for snapshots in search results
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-45'>NEXUS-45</a>] -         Remote Repository Access -&gt; Download Remote Indexes
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-65'>NEXUS-65</a>] -         Cannot proxy/mirror an https repository
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-79'>NEXUS-79</a>] -         .sha1 files not removed from attributes when evicted by evict task
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-93'>NEXUS-93</a>] -         If a task gets into a broken state, it is viewable in list, but cant be edited, or deleted
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-94'>NEXUS-94</a>] -         After Evicting all artifacts in all repositories, sync shadow repositories fail.
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-103'>NEXUS-103</a>] -         Snapshot Remover not handling metadata
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-124'>NEXUS-124</a>] -         A scheduled task with the Recurrence of Once is removed from the Scheduled Tasks window after it is completed.
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-126'>NEXUS-126</a>] -         Running out of pool connections, causing repo status checks to fail
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-188'>NEXUS-188</a>] -         Search results download link always contains .pom extension
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-206'>NEXUS-206</a>] -         Error when selecting multiple Days on Monthly Scheduled Task
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-207'>NEXUS-207</a>] -         Next Run column for Monthly scheduled task shows next day as day the task will run nexrt
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-208'>NEXUS-208</a>] -         NPE creating repo with override storage location
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-220'>NEXUS-220</a>] -         Create better logging capabilities with scheduled tasks
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-222'>NEXUS-222</a>] -         Unable to scroll through or save log file with downloaded log on FF
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-223'>NEXUS-223</a>] -         Welcome text is removed after log in
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-246'>NEXUS-246</a>] -         Got I/O exception while searching for query &quot;maven&quot; when Reindexing not complete
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-251'>NEXUS-251</a>] -         Nexus Keeps Failed Download
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-255'>NEXUS-255</a>] -         Clarify error returned when attempting to navigate in Nexus when the service has stoped
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-264'>NEXUS-264</a>] -         Change hyperlink for under help to 'Report Issue'
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-265'>NEXUS-265</a>] -         Change URL for Report Issue to point to Create New Issue page
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-266'>NEXUS-266</a>] -         Create distinction in Scheduled Tasks page to display status (Disabled or Enabled) of task
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-268'>NEXUS-268</a>] -         Recent storage changes in all Nexus repositories feed not logging changes
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-269'>NEXUS-269</a>] -         Uploaded artifacts to repos not appearing in the New artifacts appearing in all Nexus repositories system feed
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-282'>NEXUS-282</a>] -         Error when attempting to run automated test for Scheduled Services
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-305'>NEXUS-305</a>] -         Invalid maven deploy url, causes error, rather than 404 not found
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-307'>NEXUS-307</a>] -         New Target appears in Target panel after selecting Refresh on unsaved Repository Target
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-309'>NEXUS-309</a>] -         Repository Targets: Pattern Expression should be cleared after you click the add button
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-312'>NEXUS-312</a>] -         Able to select Application Server Settings checkbox and save on Server Admin page without entering a value
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-346'>NEXUS-346</a>] -         Targets: Validation errors to not respond with an error message
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-348'>NEXUS-348</a>] -         Restrict ability to delete admin user
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-349'>NEXUS-349</a>] -         Restrict ability to delete Nexus Administrator Role
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-354'>NEXUS-354</a>] -         Screen on Role Configuration duplicates Available and Selected windows when multiple tabs open
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-355'>NEXUS-355</a>] -         Repository Types not appearing in the drop down list of the Repository Target tab
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-356'>NEXUS-356</a>] -         Updating existing Target does not update when target just added is updated
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-357'>NEXUS-357</a>] -         Repo Target drop down on Privileges menu not showing any options in FF
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-359'>NEXUS-359</a>] -         JS error when logging out of Nexus
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-367'>NEXUS-367</a>] -         Proxy config does not work with authentication
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-375'>NEXUS-375</a>] -         Delete of Scheduled Service produces JS error 
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-379'>NEXUS-379</a>] -         virtual repository can have same id as existing repository
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-386'>NEXUS-386</a>] -         Routes: Validation errors
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-388'>NEXUS-388</a>] -         Error when creating Virtual repo
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-430'>NEXUS-430</a>] -         System Feed logging incorrect time in System Changes in Nexus 
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-447'>NEXUS-447</a>] -         Creating objects in Nexus should return a 201, not a 200
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-448'>NEXUS-448</a>] -         Privileges: GET fails for PrivilegeApplicationStatusResource
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-459'>NEXUS-459</a>] -         Nexus does not have a pre-defined role with Login Privilege
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-462'>NEXUS-462</a>] -         download links from search results give 404 error
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-469'>NEXUS-469</a>] -         A user without reset priv can reset it's own password
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-474'>NEXUS-474</a>] -         missing permission implication for browse repository
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-486'>NEXUS-486</a>] -         Editing password on Users screen should e-mail out new password to new e-mail address
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-487'>NEXUS-487</a>] -         make remember me cookie work
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-512'>NEXUS-512</a>] -         Privileges: if a user does not have access to a repository, a 200 is returned
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-514'>NEXUS-514</a>] -         Adminstration -&gt; Server shows all empty values except Security Setting
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-516'>NEXUS-516</a>] -         JS error when refreshing Privilege page
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-520'>NEXUS-520</a>] -         Problems with Anonymous user
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-524'>NEXUS-524</a>] -         Authentication Error on Nexus main page when Anonymous user is not enabled abnd unable to log in to app
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-535'>NEXUS-535</a>] -         It seems that the Scheduled Tasks panel control uses the 12hr AM/PM time formats, but the grid is using 24h format
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-539'>NEXUS-539</a>] -         jsecurity-ehcache still being placed in old runtime/work directory
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-569'>NEXUS-569</a>] -         Nexus random id generator, needs a bit of refactoring 
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-570'>NEXUS-570</a>] -         improve nexus-indexer to handle archetypes
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-571'>NEXUS-571</a>] -         Browse artifacts -&gt; Download ctx link does opens a new window, but the originating windows go to the target too
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-573'>NEXUS-573</a>] -         Repository Targets / Privileges DELETE should imply READ
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-574'>NEXUS-574</a>] -         Error 500 when running automated script
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-587'>NEXUS-587</a>] -         ui version is not correct
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-588'>NEXUS-588</a>] -         Proxy Repository, doesn't download files
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-589'>NEXUS-589</a>] -         Nexus changes broke the test-harness 
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-590'>NEXUS-590</a>] -         internal server error proxying artifact
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-594'>NEXUS-594</a>] -         Routers does not behave consistently when handling non-repo backed paths
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-607'>NEXUS-607</a>] -         Nexus won't let me get past invalid cookie (as user was deleted)
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-612'>NEXUS-612</a>] -         Services /artifact/maven and /artifact/maven/content should be disabled
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-613'>NEXUS-613</a>] -         Snapshot Remover no longer available as Task Type
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-614'>NEXUS-614</a>] -         POST of route with invalid regex, 400 response doesn't contain proper field, so no validation error shown
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-616'>NEXUS-616</a>] -         Metadata is not pulled from remote on resolving using /artifact/maven/redirect service.
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-618'>NEXUS-618</a>] -         Clicking on a repo put out of service in Browse Repositories throws UI 503 error
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-619'>NEXUS-619</a>] -         Downloading group index from a remote Nexus breaks the search on local Nexus
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-622'>NEXUS-622</a>] -         Need to revamp plexus environment variable handling
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-630'>NEXUS-630</a>] -         LogOut link not always logs out on UI
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-633'>NEXUS-633</a>] -         Implement username validation for anonymous access
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-644'>NEXUS-644</a>] -         Group indexes has no hashes published, and interference exists with other hashes from group member reposes
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-645'>NEXUS-645</a>] -         Tycho redirect still not working
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-646'>NEXUS-646</a>] -         The indexer has the wrong information for classifier and packaging in some instances
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-650'>NEXUS-650</a>] -         Change Password For Admin Doesn't Work
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-658'>NEXUS-658</a>] -         Still some inconsistencies in the indexer, with packaging as sha1?
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-662'>NEXUS-662</a>] -         deleting all the repos leaves an empty route rule that stops nexus from restarting
+</li>
+</ul>
+                            
+<h2>        User Story
+</h2>
+<ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-338'>NEXUS-338</a>] -         Add ability to view artifacts' poms from the browse/search screens
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-406'>NEXUS-406</a>] -         List aritfact deployed with Arifact Upload form in recentrly deployed RSS feed
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-473'>NEXUS-473</a>] -         display privilege description as a tool tip in the role screen list
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-485'>NEXUS-485</a>] -         Make JSec filters able to differentiate between PUT for &quot;create&quot; and &quot;update&quot; perms
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-496'>NEXUS-496</a>] -         Locking issues withing Nexus Proxy module
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-503'>NEXUS-503</a>] -         Extend the Search UI to support all functionalities that Search REST API offers
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-506'>NEXUS-506</a>] -         make nexus easier to upgrade
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-519'>NEXUS-519</a>] -         Saving the Nexus config needs to validate the anonymous user information
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-528'>NEXUS-528</a>] -         Make the log and config panel more &quot;user responsive&quot;
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-544'>NEXUS-544</a>] -         When adding virtual repo, there should be a drop down listing existing &quot;real&quot; reposes instead of simple edit box to enter target repo ID
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-596'>NEXUS-596</a>] -         Move local storage url validation into runtime, and modify how validation is done
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-599'>NEXUS-599</a>] -         Since indexer is not storing &quot;timestamped&quot; values for snapshots, only the &quot;base version&quot;, we must somehow change the search UI to make users able to download snapshots too.
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-604'>NEXUS-604</a>] -         emptying trash is a sync process and the ui times out
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-608'>NEXUS-608</a>] -         Add roles for each screen, bundling together required privileges
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-620'>NEXUS-620</a>] -         Create sample targets for &quot;source exclusion&quot; and &quot;metadata&quot; RW perms.
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-621'>NEXUS-621</a>] -         Increase JSecurity log level to WARN
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-638'>NEXUS-638</a>] -         Nexus user's email uniqueness constraint should be removed
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-657'>NEXUS-657</a>] -         Add new column to the search results grid
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-661'>NEXUS-661</a>] -         Nexus should clearly write out in log where is it's current workstorage to ease config and setup
+</li>
+</ul>
+
+ <p><b>Upgrade Notes:</b> This release has changed the location of the configuration storage to make it easier to upgrade in the future. Please see the <a href="upgrade.html">upgrade notes page</a> for more information.
+ 
+ <h2>Release Notes - Nexus - Version 1.0-beta-5.1</h2>
      <p>14 August, 2008</p>           
  
      <p><b>Key Bugs Fixed:</b>
