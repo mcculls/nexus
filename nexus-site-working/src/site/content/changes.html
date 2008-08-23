@@ -10,16 +10,16 @@
       <li><b>API changes</b>: Any changes to the API that could impact existing users.</li>
     </ul>
 
-	Full details can be found in our issue trackers
+	Full details can be found in our issue tracker's
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
      <br>Releases are available on the <a href="http://nexus.sonatype.org/downloads">Download Site</a></p> 
  
        <h2>Nexus - Version 1.0</h2>
-        <b>August 22, 2008</b>
+        <p>August 22, 2008</p>
+     <p><b>Upgrade Notes:</b> This release has changed the location of the configuration storage to make it easier to upgrade in the future. Please see the <a href="upgrade.html">upgrade notes page</a> for more information.
     
-    
-<b>Bug</b>
+<p><b>Bugs Fixed</b>
 <ul>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-18'>NEXUS-18</a>] -         Wrong download link for snapshots in search results
 </li>
@@ -61,15 +61,11 @@
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-264'>NEXUS-264</a>] -         Change hyperlink for under help to 'Report Issue'
 </li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-265'>NEXUS-265</a>] -         Change URL for Report Issue to point to Create New Issue page
-</li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-266'>NEXUS-266</a>] -         Create distinction in Scheduled Tasks page to display status (Disabled or Enabled) of task
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-268'>NEXUS-268</a>] -         Recent storage changes in all Nexus repositories feed not logging changes
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-269'>NEXUS-269</a>] -         Uploaded artifacts to repos not appearing in the New artifacts appearing in all Nexus repositories system feed
-</li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-282'>NEXUS-282</a>] -         Error when attempting to run automated test for Scheduled Services
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-305'>NEXUS-305</a>] -         Invalid maven deploy url, causes error, rather than 404 not found
 </li>
@@ -92,8 +88,6 @@
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-356'>NEXUS-356</a>] -         Updating existing Target does not update when target just added is updated
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-357'>NEXUS-357</a>] -         Repo Target drop down on Privileges menu not showing any options in FF
-</li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-359'>NEXUS-359</a>] -         JS error when logging out of Nexus
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-367'>NEXUS-367</a>] -         Proxy config does not work with authentication
 </li>
@@ -163,8 +157,6 @@
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-613'>NEXUS-613</a>] -         Snapshot Remover no longer available as Task Type
 </li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-614'>NEXUS-614</a>] -         POST of route with invalid regex, 400 response doesn't contain proper field, so no validation error shown
-</li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-616'>NEXUS-616</a>] -         Metadata is not pulled from remote on resolving using /artifact/maven/redirect service.
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-618'>NEXUS-618</a>] -         Clicking on a repo put out of service in Browse Repositories throws UI 503 error
@@ -189,18 +181,23 @@
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-662'>NEXUS-662</a>] -         deleting all the repos leaves an empty route rule that stops nexus from restarting
 </li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-670'>NEXUS-670</a>] -         Default targets are not added on upgrade from pre1.0
+</li>
 </ul>
                             
-<h2>        User Story
-</h2>
+<p><b>User Stories Implemented</b>
 <ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-22'>NEXUS-22</a>] -         Setup Nexus as a root application within Jetty
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-46'>NEXUS-46</a>] -         Add the capability of automatic purging to snapshot repositories
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-98'>NEXUS-98</a>] -         Repository targets
+</li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-338'>NEXUS-338</a>] -         Add ability to view artifacts' poms from the browse/search screens
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-406'>NEXUS-406</a>] -         List aritfact deployed with Arifact Upload form in recentrly deployed RSS feed
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-473'>NEXUS-473</a>] -         display privilege description as a tool tip in the role screen list
-</li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-485'>NEXUS-485</a>] -         Make JSec filters able to differentiate between PUT for &quot;create&quot; and &quot;update&quot; perms
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-496'>NEXUS-496</a>] -         Locking issues withing Nexus Proxy module
 </li>
@@ -210,13 +207,9 @@
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-519'>NEXUS-519</a>] -         Saving the Nexus config needs to validate the anonymous user information
 </li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-528'>NEXUS-528</a>] -         Make the log and config panel more &quot;user responsive&quot;
-</li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-544'>NEXUS-544</a>] -         When adding virtual repo, there should be a drop down listing existing &quot;real&quot; reposes instead of simple edit box to enter target repo ID
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-596'>NEXUS-596</a>] -         Move local storage url validation into runtime, and modify how validation is done
-</li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-599'>NEXUS-599</a>] -         Since indexer is not storing &quot;timestamped&quot; values for snapshots, only the &quot;base version&quot;, we must somehow change the search UI to make users able to download snapshots too.
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-604'>NEXUS-604</a>] -         emptying trash is a sync process and the ui times out
 </li>
@@ -230,11 +223,7 @@
 </li>
 <li>[<a href='http://issues.sonatype.org/browse/NEXUS-657'>NEXUS-657</a>] -         Add new column to the search results grid
 </li>
-<li>[<a href='http://issues.sonatype.org/browse/NEXUS-661'>NEXUS-661</a>] -         Nexus should clearly write out in log where is it's current workstorage to ease config and setup
-</li>
 </ul>
-
- <p><b>Upgrade Notes:</b> This release has changed the location of the configuration storage to make it easier to upgrade in the future. Please see the <a href="upgrade.html">upgrade notes page</a> for more information.
  
  <h2>Release Notes - Nexus - Version 1.0-beta-5.1</h2>
      <p>14 August, 2008</p>           
