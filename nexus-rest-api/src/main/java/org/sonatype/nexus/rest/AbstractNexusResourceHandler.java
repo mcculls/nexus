@@ -238,7 +238,7 @@ public abstract class AbstractNexusResourceHandler
 
         if ( result == null )
         {
-            ApplicationBridge application = (ApplicationBridge) getContext().getAttributes().get( Application.KEY );
+            ApplicationBridge application = (ApplicationBridge) Application.getCurrent();
 
             result = application.getCreatedOn();
         }
