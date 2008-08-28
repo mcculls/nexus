@@ -46,7 +46,9 @@ public class ContentRestServlet
 
         try
         {
-            ApplicationContentBridge app = new ApplicationContentBridge( servletConverter.getContext() );
+            ApplicationContentBridge app = new ApplicationContentBridge();
+            
+            app.setContext( servletConverter.getContext() );
             
             app.setPlexusContainer( getPlexusContainer() );
 

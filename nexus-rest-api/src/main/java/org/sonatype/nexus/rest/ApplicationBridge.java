@@ -126,10 +126,9 @@ public class ApplicationBridge
      * 
      * @param context
      */
-    public ApplicationBridge( Context context )
+    public ApplicationBridge()
     {
-        super( context );
-
+        super();
         this.createdOn = new Date();
     }
 

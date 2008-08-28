@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+ <component xmlns="http://www.restlet.org/schemas/1.1/Component"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.restlet.org/schemas/1.1/Component">
+    <defaultHost>
+       <attach uriPattern="/nexus/content" 
+                  targetClass="org.sonatype.nexus.rest.ApplicationContentBridge" />
+       <attach uriPattern="/nexus/service" 
+                  targetClass="org.sonatype.nexus.rest.ApplicationBridge" />
+    </defaultHost>
+ </component>

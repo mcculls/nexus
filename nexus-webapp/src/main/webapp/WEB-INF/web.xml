@@ -147,40 +147,23 @@
 		<filter-name>contentFilter</filter-name>
 		<url-pattern>/content/*</url-pattern>
 	</filter-mapping>
-
-	<!-- REST Content -->
+	
 	<servlet>
-		<servlet-name>content</servlet-name>
-		<servlet-class>org.sonatype.plexus.rest.ServletRestletApplicationBridge</servlet-class>
-		<init-param>
-			<!-- A stupid hack to avoid OneServletServerPerWebapp limitation, see ServletRestletApplicationBridge#getInitParameter
--->
-			<param-name>content.org.restlet.application</param-name>
-			<param-value>org.sonatype.nexus.rest.ApplicationContentBridge</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
+	    <servlet-name>rest</servlet-name>
+	    <servlet-class>org.sonatype.plexus.rest.ServletRestletApplicationBridge</servlet-class>
+	    <init-param>
+	        <param-name>org.restlet.autoWire</param-name>
+	        <param-value>false</param-value>
+	    </init-param>
 	</servlet>
+	
+	<servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/content/*</url-pattern>
+    </servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>content</servlet-name>
-		<url-pattern>/content/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- REST Service -->
-	<servlet>
-		<servlet-name>service</servlet-name>
-		<servlet-class>org.sonatype.plexus.rest.ServletRestletApplicationBridge</servlet-class>
-		<init-param>
-			<!-- A stupid hack to avoid OneServletServerPerWebapp limitation, see ServletRestletApplicationBridge#getInitParameter
--->
-			<param-name>service.org.restlet.application</param-name>
-			<param-value>org.sonatype.nexus.rest.ApplicationBridge</param-value>
-		</init-param>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>service</servlet-name>
+		<servlet-name>rest</servlet-name>
 		<url-pattern>/service/*</url-pattern>
 	</servlet-mapping>
 
