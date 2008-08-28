@@ -38,10 +38,9 @@ public class ApplicationContentBridge
      * 
      * @param context
      */
-    public ApplicationContentBridge( Context context )
+    public ApplicationContentBridge()
     {
-        super( context );
-
+        super();
     }
 
     /**
