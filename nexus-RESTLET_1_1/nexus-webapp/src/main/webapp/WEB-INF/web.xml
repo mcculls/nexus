@@ -151,10 +151,6 @@
 	<servlet>
 	    <servlet-name>rest</servlet-name>
 	    <servlet-class>org.sonatype.plexus.rest.ServletRestletApplicationBridge</servlet-class>
-	    <init-param>
-	        <param-name>org.restlet.autoWire</param-name>
-	        <param-value>false</param-value>
-	    </init-param>
 	</servlet>
 	
 	<servlet-mapping>
