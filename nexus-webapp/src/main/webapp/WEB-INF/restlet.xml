@@ -3,9 +3,9 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.restlet.org/schemas/1.1/Component">
     <defaultHost>
-       <attach uriPattern="/nexus/content" 
+       <attach uriPattern="/content" 
                   targetClass="org.sonatype.nexus.rest.ApplicationContentBridge" />
-       <attach uriPattern="/nexus/service" 
+       <attach uriPattern="/service" 
                   targetClass="org.sonatype.nexus.rest.ApplicationBridge" />
     </defaultHost>
  </component>
