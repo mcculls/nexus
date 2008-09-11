@@ -66,6 +66,61 @@
 </pre>
  
    <p><b>Note:</b> you must also edit the /conf/plexus.xml to change the context of Nexus from /nexus to / if you want to host at the root url. We currently do not support proxying from / to /nexus</p>
+   
+   <h2>How can I control nexus configurations in my environment?</h2>
+   
+   <p>Nexus will pull in some configuration data from environment variables, currently the following can be defined:</p>
+   
+   <ul>   
+     <li>PLEXUS_NEXUS_WORK
+       <ul>
+         <li>The location of the nexus work directory, where nexus stores all of its configurations and repository contents.</li>
+         <li>Defaults to $(basedir)/../sonatype-work/nexus</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_RUNTIME
+       <ul>
+         <li>The location of the nexus runtime directory</li>
+         <li>Defaults to ${basedir}/runtime</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_APPS
+       <ul>
+         <li>The location of the nexus application directory</li>
+         <li>Defaults to ${basedir}/runtime/apps</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_WEBAPP
+       <ul>
+         <li>The location of the nexus webapp directory</li>
+         <li>Defaults to ${basedir}/runtime/apps/nexus/webapp</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_APPLICATION_HOST   
+       <ul>
+         <li>The host that the <a href="http://www.mortbay.org/jetty/" target="_new">Jetty Web Server</a> will be bound to</li>
+         <li>Defaults to 0.0.0.0</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_APPLICATION_PORT
+       <ul>
+         <li>The port that the <a href="http://www.mortbay.org/jetty/" target="_new">Jetty Web Server</a> will be listening on</li>
+         <li>Defaults to 8081</li>
+       </ul>
+     </li>
+     <br>
+     <li>PLEXUS_CONTEXT_PATH
+       <ul>
+         <li>The context path in <a href="http://www.mortbay.org/jetty/" target="_new">Jetty Web Server</a> that nexus webapp will be served at</li>
+         <li>Defaults to /nexus</li>
+       </ul>
+     </li>
+   </ul>
     
   </body>
 </html>
