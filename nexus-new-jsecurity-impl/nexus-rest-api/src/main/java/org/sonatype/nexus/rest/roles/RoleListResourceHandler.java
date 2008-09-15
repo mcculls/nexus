@@ -20,17 +20,13 @@
  */
 package org.sonatype.nexus.rest.roles;
 
-import java.io.IOException;
-import java.util.logging.Level;
-
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
-import org.sonatype.nexus.configuration.ConfigurationException;
-import org.sonatype.nexus.configuration.security.model.CRole;
+import org.sonatype.jsecurity.model.CRole;
 import org.sonatype.nexus.rest.model.RoleListResourceResponse;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.RoleResourceRequest;
@@ -67,7 +63,7 @@ extends AbstractRoleResourceHandler
     {
         RoleListResourceResponse response = new RoleListResourceResponse();
 
-        for ( CRole role : getNexusSecurityConfiguration().listRoles() )
+        for ( CRole role : getNexusSecurity().listRoles() )
         {
             RoleResource res = nexusToRestModel( role );
             
@@ -102,32 +98,19 @@ extends AbstractRoleResourceHandler
             
             CRole role = restToNexusModel( null, resource );
             
-            try
-            {
-                getNexusSecurityConfiguration().createRole( role );
-                
-                RoleResourceResponse response = new RoleResourceResponse();
-                
-                resource.setId( role.getId() );
-                
-                resource.setResourceURI( calculateSubReference( resource.getId() ).toString() );
-                
-                response.setData( resource );
-                
-                getResponse().setEntity( serialize( representation, response ) );
-                
-                getResponse().setStatus( Status.SUCCESS_CREATED );
-            }
-            catch ( ConfigurationException e )
-            {
-                handleConfigurationException( e, representation );
-            }
-            catch ( IOException e )
-            {
-                getResponse().setStatus( Status.SERVER_ERROR_INTERNAL );
-
-                getLogger().log( Level.SEVERE, "Got IO Exception!", e );
-            }
+            getNexusSecurity().createRole( role );
+            
+            RoleResourceResponse response = new RoleResourceResponse();
+            
+            resource.setId( role.getId() );
+            
+            resource.setResourceURI( calculateSubReference( resource.getId() ).toString() );
+            
+            response.setData( resource );
+            
+            getResponse().setEntity( serialize( representation, response ) );
+            
+            getResponse().setStatus( Status.SUCCESS_CREATED );
         }
     }
 }

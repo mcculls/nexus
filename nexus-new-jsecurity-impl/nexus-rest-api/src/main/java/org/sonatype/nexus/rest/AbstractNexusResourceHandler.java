@@ -50,6 +50,7 @@ import org.sonatype.nexus.configuration.validator.InvalidConfigurationException;
 import org.sonatype.nexus.configuration.validator.ValidationMessage;
 import org.sonatype.nexus.configuration.validator.ValidationResponse;
 import org.sonatype.nexus.index.ArtifactInfo;
+import org.sonatype.nexus.jsecurity.NexusSecurity;
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
 import org.sonatype.nexus.proxy.item.RepositoryItemUid;
 import org.sonatype.nexus.proxy.maven.MavenRepository;
@@ -99,6 +100,11 @@ public abstract class AbstractNexusResourceHandler
     protected NexusSecurityConfiguration getNexusSecurityConfiguration()
     {
         return (NexusSecurityConfiguration) getRequest().getAttributes().get( NexusSecurityConfiguration.ROLE );
+    }
+    
+    protected NexusSecurity getNexusSecurity()
+    {
+        return (NexusSecurity) getRequest().getAttributes().get( NexusSecurity.ROLE );
     }
 
     protected SecurityManager getSecurityManager()

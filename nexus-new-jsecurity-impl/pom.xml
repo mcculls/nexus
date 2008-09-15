@@ -134,6 +134,7 @@
     <jsw.binaries.version>3.2.3.2</jsw.binaries.version>
     <plexus.container.version>1.0-alpha-47</plexus.container.version>
     <plexus.jsecurity.version>1.0</plexus.jsecurity.version>
+    <plexus-jsecurity-realms.version>1.0-SNAPSHOT</plexus-jsecurity-realms.version>
     <plx.plugin.version>1.3</plx.plugin.version>
     <plexus.jetty.testsuite.version>1.1</plexus.jetty.testsuite.version>
     <plexus.jetty.version>1.1</plexus.jetty.version>
@@ -263,6 +264,16 @@
       </dependency>
 
 			<!-- JSecurity -->
+      <dependency>
+        <groupId>org.sonatype.jsecurity</groupId>
+        <artifactId>security-xml-realm</artifactId>
+        <version>${plexus-jsecurity-realms.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.jsecurity</groupId>
+        <artifactId>method-realm</artifactId>
+        <version>${plexus-jsecurity-realms.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.sonatype.plexus</groupId>
         <artifactId>plexus-jsecurity</artifactId>

@@ -66,6 +66,7 @@ import org.sonatype.nexus.index.ArtifactInfo;
 import org.sonatype.nexus.index.FlatSearchResponse;
 import org.sonatype.nexus.index.IndexerManager;
 import org.sonatype.nexus.index.context.IndexContextInInconsistentStateException;
+import org.sonatype.nexus.jsecurity.NexusSecurity;
 import org.sonatype.nexus.maven.tasks.SnapshotRemovalRequest;
 import org.sonatype.nexus.maven.tasks.SnapshotRemovalResult;
 import org.sonatype.nexus.maven.tasks.SnapshotRemover;
@@ -201,6 +202,11 @@ public class DefaultNexus
      * @plexus.requirement
      */
     private NexusSecurityConfiguration securityConfiguration;
+    
+    /**
+     * @plexus.requirement
+     */
+    private NexusSecurity security;
 
     /**
      * The SecurityConfiguration component.
@@ -1453,6 +1459,8 @@ public class DefaultNexus
             nexusConfiguration.notifyConfigurationChangeListeners();
 
             securityConfiguration.startService();
+            
+            security.startService();
 
             cacheManager.startService();
 
@@ -1554,6 +1562,8 @@ public class DefaultNexus
         nexusScheduler.stopService();
 
         securityConfiguration.stopService();
+        
+        security.stopService();
 
         try
         {
