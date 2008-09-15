@@ -20,17 +20,12 @@
  */
 package org.sonatype.nexus.rest.privileges;
 
-import java.io.IOException;
-import java.util.logging.Level;
-
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
-import org.sonatype.nexus.configuration.security.NoSuchPrivilegeException;
-import org.sonatype.nexus.configuration.security.model.CPrivilege;
+import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.nexus.rest.model.PrivilegeStatusResourceResponse;
 
 public class PrivilegeResourceHandler
@@ -72,25 +67,7 @@ public class PrivilegeResourceHandler
     {
         PrivilegeStatusResourceResponse response = new PrivilegeStatusResourceResponse();
         
-        CPrivilege priv = null;
-        
-        try
-        {
-            priv = getNexusSecurityConfiguration().readRepoTargetPrivilege( getPrivilegeId() );
-        }
-        catch ( NoSuchPrivilegeException e )
-        {
-            try
-            {
-                priv = getNexusSecurityConfiguration().readApplicationPrivilege( getPrivilegeId() );
-            }
-            catch ( NoSuchPrivilegeException e1 )
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
-
-                return null;
-            }
-        }
+        CPrivilege priv = getNexusSecurity().readPrivilege( getPrivilegeId() );
         
         response.setData( nexusToRestModel( priv ) );
         
@@ -110,32 +87,11 @@ public class PrivilegeResourceHandler
      */
     public void delete()
     {
-        try
-        {
-            getNexusSecurityConfiguration().readApplicationPrivilege( getPrivilegeId() );
-            
-            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Cannot delete an application type privilege" );
-        }
-        catch ( NoSuchPrivilegeException e )
-        {
-            //This is ok
-        }
+        CPrivilege privilege = getNexusSecurity().readPrivilege( getPrivilegeId() );
         
-        try
-        {            
-            getNexusSecurityConfiguration().deleteRepoTargetPrivilege( getPrivilegeId() );
-            
-            getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
-        }
-        catch ( NoSuchPrivilegeException e )
+        if ( !privilege.getType().equals( "application" ) )
         {
-            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
-        }
-        catch ( IOException e )
-        {
-            getResponse().setStatus( Status.SERVER_ERROR_INTERNAL );
-
-            getLogger().log( Level.SEVERE, "Got IO Exception!", e );
+            getNexusSecurity().deletePrivilege( getPrivilegeId() );
         }
     }
 }
