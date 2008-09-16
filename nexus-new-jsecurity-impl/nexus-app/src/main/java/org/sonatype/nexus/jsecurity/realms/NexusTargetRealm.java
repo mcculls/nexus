@@ -9,10 +9,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.jsecurity.authz.Permission;
 import org.jsecurity.authz.permission.WildcardPermission;
 import org.sonatype.jsecurity.model.CPrivilege;
-import org.sonatype.jsecurity.realms.SecurityXmlRealm;
 import org.sonatype.nexus.Nexus;
-import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
-import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 import org.sonatype.nexus.proxy.NoSuchRepositoryGroupException;
 import org.sonatype.nexus.proxy.repository.Repository;
 
@@ -21,9 +18,13 @@ import org.sonatype.nexus.proxy.repository.Repository;
  *
  */
 public class NexusTargetRealm
-    extends SecurityXmlRealm
-    implements ConfigurationChangeListener
+    extends NexusMethodRealm
 {
+    public static final String PRIVILEGE_TYPE_TARGET = "target";
+    
+    public static final String PRIVILEGE_PROPERTY_REPOSITORY_TARGET = "repositoryTarget";
+    public static final String PRIVILEGE_PROPERTY_REPOSITORY_ID = "repositoryId";
+    public static final String PRIVILEGE_PROPERTY_REPOSITORY_GROUP_ID = "repositoryGroupId";
     /**
      * @plexus.requirement
      */
@@ -34,12 +35,12 @@ public class NexusTargetRealm
     {
         CPrivilege privilege = getConfigurationManager().readPrivilege( privilegeId );
         
-        if ( privilege != null )
+        if ( privilege != null && privilege.getType().equals( PRIVILEGE_TYPE_TARGET ) )
         {            
-            String repositoryTarget = getConfigurationManager().getPrivilegeProperty( privilege, "repositoryTarget" );
-            String method = getConfigurationManager().getPrivilegeProperty( privilege, "method" );
-            String repositoryId = getConfigurationManager().getPrivilegeProperty( privilege, "repositoryId" );
-            String repositoryGroupId = getConfigurationManager().getPrivilegeProperty( privilege, "repositoryGroupId" );
+            String repositoryTarget = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_TARGET );
+            String method = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_METHOD );
+            String repositoryId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_ID );
+            String repositoryGroupId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_GROUP_ID );
          
             StringBuilder basePermString = new StringBuilder();
             
@@ -91,10 +92,5 @@ public class NexusTargetRealm
         }       
 
         return Collections.emptySet();
-    }
-    
-    public void onConfigurationChange( ConfigurationChangeEvent evt )
-    {
-        this.clearCache();
     }
 }

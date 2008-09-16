@@ -1,13 +1,11 @@
 package org.sonatype.nexus.rest.users;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.sonatype.nexus.configuration.security.NoSuchUserException;
 
 public class UserResetResourceHandler
     extends AbstractUserResourceHandler
@@ -35,32 +33,19 @@ public class UserResetResourceHandler
     @Override
     public void delete()
     {
-        try
+        if ( !isAnonymousUser( getUserId() ) )
         {
-            if ( !isAnonymousUser( getUserId() ) )
-            {
-                getNexusSecurityConfiguration().resetPassword( getUserId() );
-                
-                getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
-            }
-            else
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot reset password!" );
-
-                getLogger().log( Level.FINE, "Anonymous user password reset is blocked!" );
-            }
+            /* TODO
+            getNexusSecurityConfiguration().resetPassword( getUserId() );
+            */
+            
+            getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
         }
-        catch ( IOException e )
+        else
         {
-            getResponse().setStatus( Status.SERVER_ERROR_INTERNAL );
+            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot reset password!" );
 
-            getLogger().log( Level.SEVERE, "Got IO Exception!", e );
-        }
-        catch ( NoSuchUserException e )
-        {
-            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "User ID not found!" );
-
-            getLogger().log( Level.FINE, "Invalid userid: " + getUserId(), e );
+            getLogger().log( Level.FINE, "Anonymous user password reset is blocked!" );
         }
     }
 }

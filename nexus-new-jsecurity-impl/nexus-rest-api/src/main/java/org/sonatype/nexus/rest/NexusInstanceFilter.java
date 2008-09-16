@@ -31,7 +31,6 @@ import org.restlet.data.Response;
 import org.sonatype.jsecurity.realms.PlexusSecurity;
 import org.sonatype.nexus.Nexus;
 import org.sonatype.nexus.configuration.model.CRemoteNexusInstance;
-import org.sonatype.nexus.configuration.security.NexusSecurityConfiguration;
 import org.sonatype.nexus.jsecurity.NexusSecurity;
 import org.sonatype.plexus.rest.PlexusRestletUtils;
 
@@ -81,8 +80,6 @@ public class NexusInstanceFilter
         request.getAttributes().put( Nexus.ROLE, nexus );
         
         request.getAttributes().put( NexusSecurity.ROLE, getNexusSecurity() );
-        
-        request.getAttributes().put( NexusSecurityConfiguration.ROLE, getNexusSecurityConfiguration() );
 
         request.getAttributes().put( SecurityManager.class.getName(), getSecurityManager() );
     }
@@ -98,20 +95,6 @@ public class NexusInstanceFilter
         catch ( ComponentLookupException e )
         {
             throw new IllegalStateException( "Cannot lookup NexusSecurity!", e );
-        }
-    }
-    
-    protected NexusSecurityConfiguration getNexusSecurityConfiguration()
-    {
-        try
-        {
-            return ( NexusSecurityConfiguration ) PlexusRestletUtils.plexusLookup(
-                getContext(),
-                NexusSecurityConfiguration.ROLE );
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new IllegalStateException( "Cannot lookup NexusSecurityConfiguration!", e );
         }
     }
 
