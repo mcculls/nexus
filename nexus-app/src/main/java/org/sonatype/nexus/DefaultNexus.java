@@ -57,7 +57,6 @@ import org.sonatype.nexus.configuration.model.CRepositoryShadow;
 import org.sonatype.nexus.configuration.model.CRepositoryTarget;
 import org.sonatype.nexus.configuration.model.CRouting;
 import org.sonatype.nexus.configuration.model.CSmtpConfiguration;
-import org.sonatype.nexus.configuration.security.NexusSecurityConfiguration;
 import org.sonatype.nexus.feeds.FeedRecorder;
 import org.sonatype.nexus.feeds.NexusArtifactEvent;
 import org.sonatype.nexus.feeds.SystemEvent;
@@ -195,13 +194,6 @@ public class DefaultNexus
      * @plexus.requirement
      */
     private CacheManager cacheManager;
-
-    /**
-     * The SecurityConfiguration component.
-     * 
-     * @plexus.requirement
-     */
-    private NexusSecurityConfiguration securityConfiguration;
     
     /**
      * @plexus.requirement
@@ -1457,8 +1449,6 @@ public class DefaultNexus
             nexusConfiguration.createInternals();
 
             nexusConfiguration.notifyConfigurationChangeListeners();
-
-            securityConfiguration.startService();
             
             security.startService();
 
@@ -1560,8 +1550,6 @@ public class DefaultNexus
         httpProxyService.stopService();
 
         nexusScheduler.stopService();
-
-        securityConfiguration.stopService();
         
         security.stopService();
 
