@@ -26,6 +26,7 @@ import org.restlet.data.Response;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CPrivilege;
+import org.sonatype.nexus.jsecurity.realms.NexusMethodRealm;
 import org.sonatype.nexus.rest.model.PrivilegeStatusResourceResponse;
 
 public class PrivilegeResourceHandler
@@ -89,7 +90,7 @@ public class PrivilegeResourceHandler
     {
         CPrivilege privilege = getNexusSecurity().readPrivilege( getPrivilegeId() );
         
-        if ( !privilege.getType().equals( "application" ) )
+        if ( !privilege.getType().equals( NexusMethodRealm.PRIVILEGE_TYPE_METHOD ) )
         {
             getNexusSecurity().deletePrivilege( getPrivilegeId() );
         }

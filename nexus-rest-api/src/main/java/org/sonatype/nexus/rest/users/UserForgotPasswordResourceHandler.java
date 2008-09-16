@@ -20,7 +20,6 @@
  */
 package org.sonatype.nexus.rest.users;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
 import org.restlet.Context;
@@ -28,8 +27,6 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
-import org.sonatype.nexus.configuration.security.NoSuchEmailException;
-import org.sonatype.nexus.configuration.security.NoSuchUserException;
 import org.sonatype.nexus.rest.model.UserForgotPasswordRequest;
 import org.sonatype.nexus.rest.model.UserForgotPasswordResource;
 
@@ -60,38 +57,19 @@ public class UserForgotPasswordResourceHandler
         {
             UserForgotPasswordResource resource = request.getData();
 
-            try
+            if ( !isAnonymousUser( resource.getUserId() ) )
             {
-                if ( !isAnonymousUser( resource.getUserId() ) )
-                {
-                    getNexusSecurityConfiguration().forgotPassword( resource.getUserId(), resource.getEmail() );
-                    
-                    getResponse().setStatus( Status.SUCCESS_ACCEPTED );
-                }
-                else
-                {
-                    getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot forgot password!" );
-
-                    getLogger().log( Level.FINE, "Anonymous user forgot password is blocked!" );
-                }
+                /* TODO
+                getNexusSecurityConfiguration().forgotPassword( resource.getUserId(), resource.getEmail() );
+                */
+                
+                getResponse().setStatus( Status.SUCCESS_ACCEPTED );
             }
-            catch ( IOException e )
+            else
             {
-                getResponse().setStatus( Status.SERVER_ERROR_INTERNAL );
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot forgot password!" );
 
-                getLogger().log( Level.SEVERE, "Got IO Exception!", e );
-            }
-            catch ( NoSuchUserException e )
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Invalid user ID!" );
-
-                getLogger().log( Level.FINE, "Invalid user ID!", e );
-            }
-            catch ( NoSuchEmailException e )
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Email address not found!" );
-
-                getLogger().log( Level.FINE, "Invalid email!", e );
+                getLogger().log( Level.FINE, "Anonymous user forgot password is blocked!" );
             }
         }
     }

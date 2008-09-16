@@ -45,7 +45,6 @@ import org.sonatype.nexus.Nexus;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.artifact.VersionUtils;
 import org.sonatype.nexus.configuration.ConfigurationException;
-import org.sonatype.nexus.configuration.security.NexusSecurityConfiguration;
 import org.sonatype.nexus.configuration.validator.InvalidConfigurationException;
 import org.sonatype.nexus.configuration.validator.ValidationMessage;
 import org.sonatype.nexus.configuration.validator.ValidationResponse;
@@ -95,11 +94,6 @@ public abstract class AbstractNexusResourceHandler
     protected Nexus getNexus()
     {
         return (Nexus) getRequest().getAttributes().get( Nexus.ROLE );
-    }
-
-    protected NexusSecurityConfiguration getNexusSecurityConfiguration()
-    {
-        return (NexusSecurityConfiguration) getRequest().getAttributes().get( NexusSecurityConfiguration.ROLE );
     }
     
     protected NexusSecurity getNexusSecurity()
