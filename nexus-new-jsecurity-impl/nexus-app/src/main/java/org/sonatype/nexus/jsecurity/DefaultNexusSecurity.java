@@ -13,8 +13,13 @@ import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
 import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
 import org.sonatype.nexus.configuration.ConfigurationChangeListener;
+import org.sonatype.nexus.configuration.ConfigurationException;
 import org.sonatype.nexus.configuration.NotifiableConfiguration;
+import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
 
+/**
+ *  @plexus.component
+ */
 public class DefaultNexusSecurity
     extends AbstractLogEnabled
     implements NexusSecurity, 
@@ -25,11 +30,31 @@ public class DefaultNexusSecurity
      */
     private ConfigurationManager manager;
     
+    /**
+     * @plexus.requirement role-hint="file"
+     */
+    private SecurityConfigurationSource configSource;
+    
     private List<ConfigurationChangeListener> listeners = new ArrayList<ConfigurationChangeListener>();
     
     public void startService()
         throws StartingException
     {
+        // Do this simply to upgrade the configuration if necessary
+        try
+        {
+            configSource.loadConfiguration();
+            getLogger().info( "Security Configuration loaded properly." );
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().fatalError( "Security Configuration is invalid!!!", e );
+        }
+        catch ( IOException e )
+        {
+            getLogger().fatalError( "Security Configuration is invalid!!!", e );
+        }
+        
         getLogger().info( "Started Nexus Security" );
     }
     
@@ -180,7 +205,7 @@ public class DefaultNexusSecurity
     }
     
     /**
-     * @deprecated
+     * @deprecated Use save()
      */
     public void saveConfiguration()
         throws IOException

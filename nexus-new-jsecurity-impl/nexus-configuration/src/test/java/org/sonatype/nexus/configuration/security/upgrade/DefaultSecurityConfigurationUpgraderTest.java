@@ -55,17 +55,7 @@ public class DefaultSecurityConfigurationUpgraderTest
 
         w.write( sw, configuration );
 
-        // System.out.println(sw.toString());
-
         String shouldBe = IOUtil.toString( getClass().getResourceAsStream( path + ".result" ) );
-        
-        System.out.println("**************************************************************");
-        System.out.print(shouldBe);
-        System.out.println("**************************************************************");
-        
-        System.out.println("**************************************************************");
-        System.out.print(sw.toString());
-        System.out.println("**************************************************************");
 
         assertEquals( shouldBe, sw.toString() );
     }
