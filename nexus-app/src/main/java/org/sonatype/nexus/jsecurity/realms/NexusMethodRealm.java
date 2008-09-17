@@ -5,7 +5,7 @@ import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
 import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 
 /**
- * @plexus.component role="org.jsecurity.realm.Realm" role-hint="TargetRealm"
+ * @plexus.component role="org.jsecurity.realm.Realm" role-hint="NexusMethodRealm"
  */
 public class NexusMethodRealm
     extends MethodRealm
