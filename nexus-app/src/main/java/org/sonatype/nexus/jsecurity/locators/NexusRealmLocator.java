@@ -4,17 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.ServiceLocator;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Serviceable;
 import org.jsecurity.realm.Realm;
 import org.sonatype.jsecurity.locators.RealmLocator;
 import org.sonatype.nexus.configuration.application.NexusConfiguration;
-import org.sonatype.nexus.jsecurity.realms.NexusMethodRealm;
-import org.sonatype.nexus.jsecurity.realms.NexusTargetRealm;
 
 /**
  * The nexus implementation of the realm locator
@@ -25,23 +20,14 @@ import org.sonatype.nexus.jsecurity.realms.NexusTargetRealm;
 public class NexusRealmLocator
     extends AbstractLogEnabled
     implements
-    RealmLocator, Contextualizable, Serviceable
-{
-    private static final String PLEXUS_SECURITY_XML_FILE = "security-xml-file";
-    
+    RealmLocator, Serviceable
+{    
     /**
      * @plexus.requirement
      */
     NexusConfiguration configuration;
     
     private ServiceLocator container;
-    
-    public void contextualize( Context context )
-        throws ContextException
-    {
-        // Simply add the path of the config file
-        context.put( PLEXUS_SECURITY_XML_FILE, configuration.getWorkingDirectory() + "/conf/security.xml" );
-    }
     
     public void service( ServiceLocator locator )
     {
@@ -56,7 +42,6 @@ public class NexusRealmLocator
         
         try
         {
-            realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusMethodRealm" ) );
             realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusTargetRealm" ) );
         }
         catch ( ComponentLookupException e )
