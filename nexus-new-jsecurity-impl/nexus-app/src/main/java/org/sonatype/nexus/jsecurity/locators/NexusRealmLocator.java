@@ -56,8 +56,8 @@ public class NexusRealmLocator
         
         try
         {
-            realms.add( ( Realm ) container.lookup( NexusMethodRealm.class.getName() ) );
-            realms.add( ( Realm ) container.lookup( NexusTargetRealm.class.getName() ) );
+            realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusMethodRealm" ) );
+            realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusTargetRealm" ) );
         }
         catch ( ComponentLookupException e )
         {

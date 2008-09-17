@@ -14,7 +14,7 @@ import org.sonatype.nexus.proxy.NoSuchRepositoryGroupException;
 import org.sonatype.nexus.proxy.repository.Repository;
 
 /**
- * @plexus.component role="org.jsecurity.realm.Realm" role-hint="TargetRealm"
+ * @plexus.component role="org.jsecurity.realm.Realm" role-hint="NexusTargetRealm"
  *
  */
 public class NexusTargetRealm
