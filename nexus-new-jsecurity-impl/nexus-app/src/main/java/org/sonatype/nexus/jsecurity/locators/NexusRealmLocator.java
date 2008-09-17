@@ -40,13 +40,34 @@ public class NexusRealmLocator
         
         List<Realm> realms = new ArrayList<Realm>();
         
-        try
+        List<String> realmIds = configuration.getRealms();
+        
+        
+        for ( String realmId : realmIds )
         {
-            realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusTargetRealm" ) );
-        }
-        catch ( ComponentLookupException e )
-        {
-            getLogger().error( "Unable to lookup security realms", e );
+            try
+            {
+                realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusTargetRealm" ) );
+            }
+            catch ( ComponentLookupException e )
+            {
+                try
+                {
+                    realms.add( ( Realm ) Class.forName( realmId ).newInstance() );
+                }
+                catch ( InstantiationException e1 )
+                {
+                    getLogger().error( "Unable to lookup security realms", e );
+                }
+                catch ( IllegalAccessException e1 )
+                {
+                    getLogger().error( "Unable to lookup security realms", e );
+                }
+                catch ( ClassNotFoundException e1 )
+                {
+                    getLogger().error( "Unable to lookup security realms", e );
+                }
+            }
         }
         
         return realms;

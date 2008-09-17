@@ -1,23 +1,3 @@
-/*
- * Nexus: Maven Repository Manager
- * Copyright (C) 2008 Sonatype Inc.                                                                                                                          
- * 
- * This file is part of Nexus.                                                                                                                                  
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/.
- *
- */
 package org.sonatype.nexus.configuration.application.upgrade;
 
 import java.io.File;
@@ -30,39 +10,39 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.sonatype.nexus.configuration.model.v1_0_5.CGroupsSetting;
-import org.sonatype.nexus.configuration.model.v1_0_5.CGroupsSettingPathMappingItem;
-import org.sonatype.nexus.configuration.model.v1_0_5.CHttpProxySettings;
-import org.sonatype.nexus.configuration.model.v1_0_5.CLocalStorage;
-import org.sonatype.nexus.configuration.model.v1_0_5.CProps;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRemoteAuthentication;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRemoteConnectionSettings;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRemoteHttpProxySettings;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRemoteStorage;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRepository;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryGroup;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryGrouping;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryShadow;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryTarget;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRestApiSettings;
-import org.sonatype.nexus.configuration.model.v1_0_5.CRouting;
-import org.sonatype.nexus.configuration.model.v1_0_5.CScheduleConfig;
-import org.sonatype.nexus.configuration.model.v1_0_5.CScheduledTask;
-import org.sonatype.nexus.configuration.model.v1_0_5.CSecurity;
-import org.sonatype.nexus.configuration.model.v1_0_5.CSmtpConfiguration;
-import org.sonatype.nexus.configuration.model.v1_0_4.Configuration;
-import org.sonatype.nexus.configuration.model.v1_0_4.io.xpp3.NexusConfigurationXpp3Reader;
+import org.sonatype.nexus.configuration.model.v1_0_5.Configuration;
+import org.sonatype.nexus.configuration.model.v1_0_5.io.xpp3.NexusConfigurationXpp3Reader;
+import org.sonatype.nexus.configuration.model.CGroupsSetting;
+import org.sonatype.nexus.configuration.model.CGroupsSettingPathMappingItem;
+import org.sonatype.nexus.configuration.model.CHttpProxySettings;
+import org.sonatype.nexus.configuration.model.CLocalStorage;
+import org.sonatype.nexus.configuration.model.CProps;
+import org.sonatype.nexus.configuration.model.CRemoteAuthentication;
+import org.sonatype.nexus.configuration.model.CRemoteConnectionSettings;
+import org.sonatype.nexus.configuration.model.CRemoteHttpProxySettings;
+import org.sonatype.nexus.configuration.model.CRemoteStorage;
+import org.sonatype.nexus.configuration.model.CRepository;
+import org.sonatype.nexus.configuration.model.CRepositoryGroup;
+import org.sonatype.nexus.configuration.model.CRepositoryGrouping;
+import org.sonatype.nexus.configuration.model.CRepositoryShadow;
+import org.sonatype.nexus.configuration.model.CRepositoryTarget;
+import org.sonatype.nexus.configuration.model.CRestApiSettings;
+import org.sonatype.nexus.configuration.model.CRouting;
+import org.sonatype.nexus.configuration.model.CScheduleConfig;
+import org.sonatype.nexus.configuration.model.CScheduledTask;
+import org.sonatype.nexus.configuration.model.CSecurity;
+import org.sonatype.nexus.configuration.model.CSmtpConfiguration;
 import org.sonatype.nexus.configuration.upgrade.ConfigurationIsCorruptedException;
 import org.sonatype.nexus.configuration.upgrade.UpgradeMessage;
 import org.sonatype.nexus.configuration.upgrade.Upgrader;
 
 /**
- * Upgrades configuration model from version 1.0.4 to 1.0.5.
+ * Upgrades configuration model from version 1.0.5 to 1.0.6.
  * 
  * @author cstamas
- * @plexus.component role="org.sonatype.nexus.configuration.upgrade.Upgrader" role-hint="1.0.4"
+ * @plexus.component role="org.sonatype.nexus.configuration.upgrade.Upgrader" role-hint="1.0.5"
  */
-public class Upgrade104to105
+public class Upgrade105to106
     extends AbstractLogEnabled
     implements Upgrader
 {
@@ -102,33 +82,33 @@ public class Upgrade104to105
         throws ConfigurationIsCorruptedException
     {
         Configuration oldc = (Configuration) message.getConfiguration();
-        org.sonatype.nexus.configuration.model.v1_0_5.Configuration newc = new org.sonatype.nexus.configuration.model.v1_0_5.Configuration();
+        org.sonatype.nexus.configuration.model.Configuration newc = new org.sonatype.nexus.configuration.model.Configuration();
 
-        newc.setVersion( org.sonatype.nexus.configuration.model.v1_0_5.Configuration.MODEL_VERSION );
+        newc.setVersion( org.sonatype.nexus.configuration.model.Configuration.MODEL_VERSION );
         // Working & log directories removed in this revision
         // newc.setWorkingDirectory( oldc.getWorkingDirectory() );
         // newc.setApplicationLogDirectory( oldc.getApplicationLogDirectory() );
 
-        newc.setSmtpConfiguration( copyCSmtpConfiguration1_0_4( oldc.getSmtpConfiguration() ) );
+        newc.setSmtpConfiguration( copyCSmtpConfiguration1_0_5( oldc.getSmtpConfiguration() ) );
 
-        newc.setSecurity( copyCSecurity1_0_4( oldc.getSecurity() ) );
+        newc.setSecurity( copyCSecurity1_0_5( oldc.getSecurity() ) );
 
-        newc.setGlobalConnectionSettings( copyCRemoteConnectionSettings1_0_4( oldc.getGlobalConnectionSettings() ) );
+        newc.setGlobalConnectionSettings( copyCRemoteConnectionSettings1_0_5( oldc.getGlobalConnectionSettings() ) );
 
-        newc.setGlobalHttpProxySettings( copyCRemoteHttpProxySettings1_0_4( oldc.getGlobalHttpProxySettings() ) );
+        newc.setGlobalHttpProxySettings( copyCRemoteHttpProxySettings1_0_5( oldc.getGlobalHttpProxySettings() ) );
 
-        newc.setRouting( copyCRouting1_0_4( oldc.getRouting() ) );
+        newc.setRouting( copyCRouting1_0_5( oldc.getRouting() ) );
 
-        newc.setRestApi( copyCRestApi1_0_4( oldc.getRestApi() ) );
+        newc.setRestApi( copyCRestApi1_0_5( oldc.getRestApi() ) );
 
-        newc.setHttpProxy( copyCHttpProxySettings1_0_4( oldc.getHttpProxy() ) );
+        newc.setHttpProxy( copyCHttpProxySettings1_0_5( oldc.getHttpProxy() ) );
 
         List<CRepositoryTarget> targets = new ArrayList<CRepositoryTarget>( oldc.getRepositoryTargets().size() );
 
-        for ( org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryTarget oldtargets : (List<org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryTarget>) oldc
+        for ( org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryTarget oldtargets : (List<org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryTarget>) oldc
             .getRepositoryTargets() )
         {
-            targets.add( copyCRepositoryTarget1_0_4( oldtargets ) );
+            targets.add( copyCRepositoryTarget1_0_5( oldtargets ) );
         }
 
         newc.setRepositoryTargets( targets );
@@ -137,19 +117,19 @@ public class Upgrade104to105
 
         List<CScheduledTask> tasks = new ArrayList<CScheduledTask>( oldc.getTasks().size() );
 
-        for ( org.sonatype.nexus.configuration.model.v1_0_4.CScheduledTask oldtasks : (List<org.sonatype.nexus.configuration.model.v1_0_4.CScheduledTask>) oldc
+        for ( org.sonatype.nexus.configuration.model.v1_0_5.CScheduledTask oldtasks : (List<org.sonatype.nexus.configuration.model.v1_0_5.CScheduledTask>) oldc
             .getTasks() )
         {
-            tasks.add( copyCScheduledTask1_0_4( oldtasks ) );
+            tasks.add( copyCScheduledTask1_0_5( oldtasks ) );
         }
 
         newc.setTasks( tasks );
 
         List<CRepository> repositories = new ArrayList<CRepository>( oldc.getRepositories().size() );
-        for ( org.sonatype.nexus.configuration.model.v1_0_4.CRepository oldrepos : (List<org.sonatype.nexus.configuration.model.v1_0_4.CRepository>) oldc
+        for ( org.sonatype.nexus.configuration.model.v1_0_5.CRepository oldrepos : (List<org.sonatype.nexus.configuration.model.v1_0_5.CRepository>) oldc
             .getRepositories() )
         {
-            CRepository newrepos = copyCRepository1_0_4( oldrepos );
+            CRepository newrepos = copyCRepository1_0_5( oldrepos );
             newrepos.setRepositoryPolicy( oldrepos.getRepositoryPolicy() );
             repositories.add( newrepos );
         }
@@ -160,10 +140,10 @@ public class Upgrade104to105
         {
             List<CRepositoryShadow> repositoryShadows = new ArrayList<CRepositoryShadow>( oldc
                 .getRepositoryShadows().size() );
-            for ( org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryShadow oldshadow : (List<org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryShadow>) oldc
+            for ( org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryShadow oldshadow : (List<org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryShadow>) oldc
                 .getRepositoryShadows() )
             {
-                repositoryShadows.add( copyCRepositoryShadow1_0_4( oldshadow ) );
+                repositoryShadows.add( copyCRepositoryShadow1_0_5( oldshadow ) );
             }
             newc.setRepositoryShadows( repositoryShadows );
         }
@@ -173,31 +153,31 @@ public class Upgrade104to105
             CRepositoryGrouping repositoryGrouping = new CRepositoryGrouping();
             if ( oldc.getRepositoryGrouping().getPathMappings() != null )
             {
-                for ( org.sonatype.nexus.configuration.model.v1_0_4.CGroupsSettingPathMappingItem oldItem : (List<org.sonatype.nexus.configuration.model.v1_0_4.CGroupsSettingPathMappingItem>) oldc
+                for ( org.sonatype.nexus.configuration.model.v1_0_5.CGroupsSettingPathMappingItem oldItem : (List<org.sonatype.nexus.configuration.model.v1_0_5.CGroupsSettingPathMappingItem>) oldc
                     .getRepositoryGrouping().getPathMappings() )
                 {
-                    repositoryGrouping.addPathMapping( copyCGroupsSettingPathMappingItem1_0_4( oldItem ) );
+                    repositoryGrouping.addPathMapping( copyCGroupsSettingPathMappingItem1_0_5( oldItem ) );
                 }
             }
             List<CRepositoryGroup> repositoryGroups = new ArrayList<CRepositoryGroup>( oldc
                 .getRepositoryGrouping().getRepositoryGroups().size() );
-            for ( org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryGroup oldgroup : (List<org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryGroup>) oldc
+            for ( org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryGroup oldgroup : (List<org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryGroup>) oldc
                 .getRepositoryGrouping().getRepositoryGroups() )
             {
-                repositoryGroups.add( copyCRepositoryGroup1_0_4( oldgroup ) );
+                repositoryGroups.add( copyCRepositoryGroup1_0_5( oldgroup ) );
             }
             repositoryGrouping.setRepositoryGroups( repositoryGroups );
             newc.setRepositoryGrouping( repositoryGrouping );
         }
 
-        message.setModelVersion( org.sonatype.nexus.configuration.model.v1_0_5.Configuration.MODEL_VERSION );
+        message.setModelVersion( org.sonatype.nexus.configuration.model.Configuration.MODEL_VERSION );
         message.setConfiguration( newc );
     }
 
-    protected List<CProps> copyCProps1_0_4( List<org.sonatype.nexus.configuration.model.v1_0_4.CProps> oldprops )
+    protected List<CProps> copyCProps1_0_5( List<org.sonatype.nexus.configuration.model.v1_0_5.CProps> oldprops )
     {
         List<CProps> properties = new ArrayList<CProps>( oldprops.size() );
-        for ( org.sonatype.nexus.configuration.model.v1_0_4.CProps oldprop : oldprops )
+        for ( org.sonatype.nexus.configuration.model.v1_0_5.CProps oldprop : oldprops )
         {
             CProps newprop = new CProps();
             newprop.setKey( oldprop.getKey() );
@@ -207,8 +187,8 @@ public class Upgrade104to105
         return properties;
     }
 
-    protected CRemoteAuthentication copyCRemoteAuthentication1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRemoteAuthentication oldauth )
+    protected CRemoteAuthentication copyCRemoteAuthentication1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRemoteAuthentication oldauth )
     {
         if ( oldauth != null )
         {
@@ -227,8 +207,8 @@ public class Upgrade104to105
         }
     }
 
-    protected CRemoteConnectionSettings copyCRemoteConnectionSettings1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRemoteConnectionSettings old )
+    protected CRemoteConnectionSettings copyCRemoteConnectionSettings1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRemoteConnectionSettings old )
     {
         CRemoteConnectionSettings cs = new CRemoteConnectionSettings();
 
@@ -248,8 +228,8 @@ public class Upgrade104to105
         return cs;
     }
 
-    protected CRemoteHttpProxySettings copyCRemoteHttpProxySettings1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRemoteHttpProxySettings old )
+    protected CRemoteHttpProxySettings copyCRemoteHttpProxySettings1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRemoteHttpProxySettings old )
     {
         if ( old == null )
         {
@@ -259,11 +239,11 @@ public class Upgrade104to105
         CRemoteHttpProxySettings cs = new CRemoteHttpProxySettings();
         cs.setProxyHostname( old.getProxyHostname() );
         cs.setProxyPort( old.getProxyPort() );
-        cs.setAuthentication( copyCRemoteAuthentication1_0_4( old.getAuthentication() ) );
+        cs.setAuthentication( copyCRemoteAuthentication1_0_5( old.getAuthentication() ) );
         return cs;
     }
 
-    protected CRepository copyCRepository1_0_4( org.sonatype.nexus.configuration.model.v1_0_4.CRepository oldrepos )
+    protected CRepository copyCRepository1_0_5( org.sonatype.nexus.configuration.model.v1_0_5.CRepository oldrepos )
     {
         CRepository newrepos = new CRepository();
         newrepos.setId( oldrepos.getId() );
@@ -294,17 +274,17 @@ public class Upgrade104to105
             remoteStorage.setUrl( oldrepos.getRemoteStorage().getUrl() );
             if ( oldrepos.getRemoteStorage().getAuthentication() != null )
             {
-                remoteStorage.setAuthentication( copyCRemoteAuthentication1_0_4( oldrepos
+                remoteStorage.setAuthentication( copyCRemoteAuthentication1_0_5( oldrepos
                     .getRemoteStorage().getAuthentication() ) );
             }
             if ( oldrepos.getRemoteStorage().getConnectionSettings() != null )
             {
-                remoteStorage.setConnectionSettings( copyCRemoteConnectionSettings1_0_4( oldrepos
+                remoteStorage.setConnectionSettings( copyCRemoteConnectionSettings1_0_5( oldrepos
                     .getRemoteStorage().getConnectionSettings() ) );
             }
             if ( oldrepos.getRemoteStorage().getHttpProxySettings() != null )
             {
-                remoteStorage.setHttpProxySettings( copyCRemoteHttpProxySettings1_0_4( oldrepos
+                remoteStorage.setHttpProxySettings( copyCRemoteHttpProxySettings1_0_5( oldrepos
                     .getRemoteStorage().getHttpProxySettings() ) );
             }
             newrepos.setRemoteStorage( remoteStorage );
@@ -312,8 +292,8 @@ public class Upgrade104to105
         return newrepos;
     }
 
-    protected CSmtpConfiguration copyCSmtpConfiguration1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CSmtpConfiguration oldsmtp )
+    protected CSmtpConfiguration copyCSmtpConfiguration1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CSmtpConfiguration oldsmtp )
     {
         CSmtpConfiguration smtp = new CSmtpConfiguration();
 
@@ -332,7 +312,7 @@ public class Upgrade104to105
         return smtp;
     }
 
-    protected CSecurity copyCSecurity1_0_4( org.sonatype.nexus.configuration.model.v1_0_4.CSecurity oldsecurity )
+    protected CSecurity copyCSecurity1_0_5( org.sonatype.nexus.configuration.model.v1_0_5.CSecurity oldsecurity )
     {
         CSecurity security = new CSecurity();
 
@@ -342,13 +322,13 @@ public class Upgrade104to105
             security.setAnonymousPassword( oldsecurity.getAnonymousPassword() );
             security.setAnonymousUsername( oldsecurity.getAnonymousUsername() );
             security.setEnabled( oldsecurity.isEnabled() );
-            security.setRealms( oldsecurity.getRealms() );
+            security.addRealm( "NexusTargetRealm" );
         }
 
         return security;
     }
 
-    protected CRouting copyCRouting1_0_4( org.sonatype.nexus.configuration.model.v1_0_4.CRouting oldrouting )
+    protected CRouting copyCRouting1_0_5( org.sonatype.nexus.configuration.model.v1_0_5.CRouting oldrouting )
     {
         CRouting routing = new CRouting();
 
@@ -368,8 +348,8 @@ public class Upgrade104to105
         return routing;
     }
 
-    protected CRestApiSettings copyCRestApi1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRestApiSettings oldrestapi )
+    protected CRestApiSettings copyCRestApi1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRestApiSettings oldrestapi )
     {
         CRestApiSettings restapi = new CRestApiSettings();
 
@@ -382,8 +362,8 @@ public class Upgrade104to105
         return restapi;
     }
 
-    protected CHttpProxySettings copyCHttpProxySettings1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CHttpProxySettings oldproxy )
+    protected CHttpProxySettings copyCHttpProxySettings1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CHttpProxySettings oldproxy )
     {
         CHttpProxySettings proxy = new CHttpProxySettings();
 
@@ -397,8 +377,8 @@ public class Upgrade104to105
         return proxy;
     }
 
-    protected CRepositoryTarget copyCRepositoryTarget1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryTarget oldtarget )
+    protected CRepositoryTarget copyCRepositoryTarget1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryTarget oldtarget )
     {
         CRepositoryTarget target = new CRepositoryTarget();
 
@@ -470,8 +450,8 @@ public class Upgrade104to105
 
     }
 
-    protected CScheduledTask copyCScheduledTask1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CScheduledTask oldtask )
+    protected CScheduledTask copyCScheduledTask1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CScheduledTask oldtask )
     {
         CScheduledTask task = new CScheduledTask();
 
@@ -484,16 +464,16 @@ public class Upgrade104to105
             task.setName( oldtask.getName() );
             task.setStatus( oldtask.getStatus() );
             task.setType( oldtask.getType() );
-            task.setProperties( copyCProps1_0_4( (List<org.sonatype.nexus.configuration.model.v1_0_4.CProps>) oldtask
+            task.setProperties( copyCProps1_0_5( (List<org.sonatype.nexus.configuration.model.v1_0_5.CProps>) oldtask
                 .getProperties() ) );
-            task.setSchedule( copyCScheduleConfig1_0_4( oldtask.getSchedule() ) );
+            task.setSchedule( copyCScheduleConfig1_0_5( oldtask.getSchedule() ) );
         }
 
         return task;
     }
 
-    protected CScheduleConfig copyCScheduleConfig1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CScheduleConfig oldschedule )
+    protected CScheduleConfig copyCScheduleConfig1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CScheduleConfig oldschedule )
     {
         CScheduleConfig schedule = new CScheduleConfig();
 
@@ -510,8 +490,8 @@ public class Upgrade104to105
         return schedule;
     }
 
-    protected CRepositoryShadow copyCRepositoryShadow1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryShadow oldshadow )
+    protected CRepositoryShadow copyCRepositoryShadow1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryShadow oldshadow )
     {
         CRepositoryShadow shadow = new CRepositoryShadow();
 
@@ -528,8 +508,8 @@ public class Upgrade104to105
         return shadow;
     }
 
-    protected CGroupsSettingPathMappingItem copyCGroupsSettingPathMappingItem1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CGroupsSettingPathMappingItem oldpathmapping )
+    protected CGroupsSettingPathMappingItem copyCGroupsSettingPathMappingItem1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CGroupsSettingPathMappingItem oldpathmapping )
     {
         CGroupsSettingPathMappingItem pathmapping = new CGroupsSettingPathMappingItem();
 
@@ -545,8 +525,8 @@ public class Upgrade104to105
         return pathmapping;
     }
 
-    protected CRepositoryGroup copyCRepositoryGroup1_0_4(
-        org.sonatype.nexus.configuration.model.v1_0_4.CRepositoryGroup oldgroup )
+    protected CRepositoryGroup copyCRepositoryGroup1_0_5(
+        org.sonatype.nexus.configuration.model.v1_0_5.CRepositoryGroup oldgroup )
     {
         CRepositoryGroup group = new CRepositoryGroup();
 
@@ -560,3 +540,4 @@ public class Upgrade104to105
         return group;
     }
 }
+
