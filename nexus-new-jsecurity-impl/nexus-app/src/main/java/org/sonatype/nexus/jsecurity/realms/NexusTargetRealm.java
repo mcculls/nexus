@@ -22,7 +22,7 @@ public class NexusTargetRealm
 {
     public static final String PRIVILEGE_TYPE_TARGET = "target";
     
-    public static final String PRIVILEGE_PROPERTY_REPOSITORY_TARGET = "repositoryTarget";
+    public static final String PRIVILEGE_PROPERTY_REPOSITORY_TARGET = "repositoryTargetId";
     public static final String PRIVILEGE_PROPERTY_REPOSITORY_ID = "repositoryId";
     public static final String PRIVILEGE_PROPERTY_REPOSITORY_GROUP_ID = "repositoryGroupId";
     /**
@@ -35,62 +35,70 @@ public class NexusTargetRealm
     {
         CPrivilege privilege = getConfigurationManager().readPrivilege( privilegeId );
         
-        if ( privilege != null && privilege.getType().equals( PRIVILEGE_TYPE_TARGET ) )
-        {            
-            String repositoryTarget = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_TARGET );
-            String method = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_METHOD );
-            String repositoryId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_ID );
-            String repositoryGroupId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_GROUP_ID );
-         
-            StringBuilder basePermString = new StringBuilder();
-            
-            basePermString.append( "nexus:target:" );            
-            basePermString.append( repositoryTarget );            
-            basePermString.append( ":" );
-            
-            StringBuilder postPermString = new StringBuilder();
-            
-            if ( StringUtils.isEmpty( method ) )
+        if ( privilege == null )
+        {
+            return Collections.emptySet();
+        }
+        
+        if ( !privilege.getType().equals( PRIVILEGE_TYPE_TARGET ) )
+        {
+            return super.getPermissions( privilegeId );
+        }
+        
+        String repositoryTarget = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_TARGET );
+        String method = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_METHOD );
+        String repositoryId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_ID );
+        String repositoryGroupId = getConfigurationManager().getPrivilegeProperty( privilege, PRIVILEGE_PROPERTY_REPOSITORY_GROUP_ID );
+     
+        StringBuilder basePermString = new StringBuilder();
+        
+        basePermString.append( "nexus:target:" );            
+        basePermString.append( repositoryTarget );            
+        basePermString.append( ":" );
+        
+        StringBuilder postPermString = new StringBuilder();
+        
+        postPermString.append( ":" );
+        
+        if ( StringUtils.isEmpty( method ) )
+        {
+            postPermString.append( "*" );
+        }
+        else
+        {
+            postPermString.append( method );
+        }
+        
+        if ( !StringUtils.isEmpty( repositoryId ) )
+        {
+            return Collections.singleton( ( Permission ) new WildcardPermission( basePermString + repositoryId + postPermString ) );
+        }
+        else if ( !StringUtils.isEmpty( repositoryGroupId ) )
+        {
+            try
             {
-                postPermString.append( "*" );
-            }
-            else
-            {
-                postPermString.append( method );
-            }
-            
-            if ( !StringUtils.isEmpty( repositoryId ) )
-            {
-                return Collections.singleton( ( Permission ) new WildcardPermission( basePermString + repositoryId + postPermString ) );
-            }
-            else if ( !StringUtils.isEmpty( repositoryGroupId ) )
-            {
-                try
+                Set<Permission> permissions = new HashSet<Permission>();
+                
+                List<Repository> repositories = nexus.getRepositoryGroup( repositoryGroupId );
+                
+                for ( Repository repository : repositories )
                 {
-                    Set<Permission> permissions = new HashSet<Permission>();
-                    
-                    List<Repository> repositories = nexus.getRepositoryGroup( repositoryGroupId );
-                    
-                    for ( Repository repository : repositories )
-                    {
-                        WildcardPermission permission = new WildcardPermission( basePermString + repository.getId() + postPermString );
+                    WildcardPermission permission = new WildcardPermission( basePermString + repository.getId() + postPermString );
 
-                        permissions.add( permission );
-                    }
-                    
-                    return permissions;
+                    permissions.add( permission );
                 }
-                catch ( NoSuchRepositoryGroupException e )
-                {
-                    // If there is no such group you don't have permission to it
-                }
+                
+                return permissions;
             }
-            else
+            catch ( NoSuchRepositoryGroupException e )
             {
-                return Collections.singleton( ( Permission ) new WildcardPermission( basePermString + "*" + postPermString ) );
+                // If there is no such group you don't have permission to it
+                return Collections.emptySet();
             }
-        }       
-
-        return Collections.emptySet();
+        }
+        else
+        {
+            return Collections.singleton( ( Permission ) new WildcardPermission( basePermString + "*" + postPermString ) );
+        }
     }
 }
