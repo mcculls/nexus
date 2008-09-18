@@ -14,6 +14,73 @@
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:roadmap-panel">Roadmap</a>  and
 	<a href="http://issues.sonatype.org/browse/nexus?report=com.atlassian.jira.plugin.system.project:changelog-panel">Change Log</a>.
      <br>Releases are available on the <a href="http://nexus.sonatype.org/downloads">Download Site</a></p> 
+
+
+       <h2>Nexus - Version 1.0.1</h2>
+        <p>Sept 14, 2008</p>
+        <p><b>Upgrade Notes:</b> No significant changes since 1.0.0. It is possible to configure the host ip and port and context as an env var along with the work folder now. Please see the <a href="upgrade.html">upgrade notes page</a> for more information.
+
+<p><b>Bug</b></p>
+<ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-466'>NEXUS-466</a>] -          (The system cannot find the file specified) when doing a Checksum 
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-671'>NEXUS-671</a>] -         RClick on repo in Repo Config and Re-Index, re-indexes all repos
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-675'>NEXUS-675</a>] -         Mixed case plexus parameters not supported by environment variables
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-679'>NEXUS-679</a>] -         Artifact Upload (via UI) is renaming the artifact extension based upon pom packaging
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-685'>NEXUS-685</a>] -         Tone down INFO logging a bit
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-686'>NEXUS-686</a>] -         Scheduled weekly task shows wrong next run day and for a sunday CPU hits 100% and service requires reboot
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-696'>NEXUS-696</a>] -         UI Repo Browser not being restricted by security
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-708'>NEXUS-708</a>] -         Unnecessary pom file created for attached artifact upload
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-711'>NEXUS-711</a>] -         Artifact Upload not functioning in FF3
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-715'>NEXUS-715</a>] -         Anonymous user can't perform right click actions in repo browser
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-716'>NEXUS-716</a>] -         The Upload Artifact does not work properly
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-717'>NEXUS-717</a>] -         UI issues in Artifact Upload pane
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-719'>NEXUS-719</a>] -         &quot;Bad Login or Password&quot; for a correct password
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-722'>NEXUS-722</a>] -         Recreate attributes doesn't appear to be recreating the checksum files
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-723'>NEXUS-723</a>] -         Include sonatype-work in the bundle
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-724'>NEXUS-724</a>] -         Upload of jar and pom (with packaging type maven-plugin) is uploading the artifact with a .pom extension
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-743'>NEXUS-743</a>] -         java.lang.OutOfMemoryError: Java heap space
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-777'>NEXUS-777</a>] -         upload validation test is wrapping
+</li>
+</ul>
+                            
+<p><b>User Story</b></p>
+
+<ul>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-209'>NEXUS-209</a>] -         conf/plexus.{properties,xml} applicationHost to complement applicationPort
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-596'>NEXUS-596</a>] -         Move local storage url validation into runtime, and modify how validation is done
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-676'>NEXUS-676</a>] -         Move default location of log file into the new nexus work folder
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-677'>NEXUS-677</a>] -         Make contextPath a plexus parameter defined in plexus.properties (thus overridable in ENVIRONMENT)
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-682'>NEXUS-682</a>] -         Possibility to (re-)create checksum for artifact
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-706'>NEXUS-706</a>] -         More Consistent Log Messages
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-710'>NEXUS-710</a>] -         Enhance logging for security related stuff
+</li>
+<li>[<a href='http://issues.sonatype.org/browse/NEXUS-746'>NEXUS-746</a>] -         UI should auto-populate the upload fields after selecting a file to upload
+</li>
+</ul>
+
  
        <h2>Nexus - Version 1.0</h2>
         <p>August 22, 2008</p>
