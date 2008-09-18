@@ -11,6 +11,10 @@ import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.jsecurity.model.CRole;
 import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
+import org.sonatype.jsecurity.realms.tools.NoSuchPrivilegeException;
+import org.sonatype.jsecurity.realms.tools.NoSuchRoleException;
+import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
 import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 import org.sonatype.nexus.configuration.ConfigurationException;
@@ -69,37 +73,43 @@ public class DefaultNexusSecurity
         manager.clearCache();
     }
 
-    public void createPrivilege( CPrivilege privilege )
+    public void createPrivilege( CPrivilege privilege ) 
+        throws InvalidConfigurationException
     {
         manager.createPrivilege( privilege );
         save();
     }
 
     public void createRole( CRole role )
+        throws InvalidConfigurationException
     {
         manager.createRole( role );
         save();
     }
 
     public void createUser( CUser user )
+        throws InvalidConfigurationException
     {
         manager.createUser( user );
         save();
     }
 
     public void deletePrivilege( String id )
+        throws NoSuchPrivilegeException
     {
         manager.deletePrivilege( id );
         save();
     }
 
     public void deleteRole( String id )
+        throws NoSuchRoleException
     {
         manager.deleteRole( id );
         save();
     }
 
     public void deleteUser( String id )
+        throws NoSuchUserException
     {
         manager.deleteUser( id );
         save();
@@ -111,6 +121,7 @@ public class DefaultNexusSecurity
     }
 
     public String getPrivilegeProperty( String id, String key )
+        throws NoSuchPrivilegeException
     {
         return manager.getPrivilegeProperty( id, key );
     }
@@ -131,16 +142,19 @@ public class DefaultNexusSecurity
     }
 
     public CPrivilege readPrivilege( String id )
+        throws NoSuchPrivilegeException
     {
         return manager.readPrivilege( id );
     }
 
     public CRole readRole( String id )
+        throws NoSuchRoleException
     {
         return manager.readRole( id );
     }
 
     public CUser readUser( String id )
+        throws NoSuchUserException
     {
         return manager.readUser( id );
     }
@@ -152,18 +166,24 @@ public class DefaultNexusSecurity
     }
 
     public void updatePrivilege( CPrivilege privilege )
+        throws InvalidConfigurationException,
+        NoSuchPrivilegeException
     {
         manager.updatePrivilege( privilege );
         save();
     }
 
     public void updateRole( CRole role )
+        throws InvalidConfigurationException,
+        NoSuchRoleException
     {
         manager.updateRole( role );
         save();
     }
 
     public void updateUser( CUser user )
+        throws InvalidConfigurationException,
+        NoSuchUserException
     {
         manager.updateUser( user );
         save();

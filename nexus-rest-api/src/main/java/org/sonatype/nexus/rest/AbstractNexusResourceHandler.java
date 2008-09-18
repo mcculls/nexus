@@ -550,6 +550,26 @@ public abstract class AbstractNexusResourceHandler
 
         return ref.getTargetRef();
     }
+    
+    protected void handleInvalidConfigurationException( org.sonatype.jsecurity.realms.tools.InvalidConfigurationException e, Representation representation )
+    {
+        getLogger().log( Level.WARNING, "Configuration error!", e );
+
+        getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Configuration error." );
+        
+        org.sonatype.jsecurity.realms.validator.ValidationResponse vr = e.getValidationResponse();
+
+        if ( vr != null && vr.getValidationErrors().size() > 0 )
+        {
+            org.sonatype.jsecurity.realms.validator.ValidationMessage vm = vr.getValidationErrors().get( 0 );
+            getResponse().setEntity(
+                serialize( representation, getNexusErrorResponse( vm.getKey(), vm.getShortMessage() ) ) );
+        }
+        else
+        {
+            getResponse().setEntity( serialize( representation, getNexusErrorResponse( "*", e.getMessage() ) ) );
+        }
+    }
 
     protected void handleConfigurationException( ConfigurationException e, Representation representation )
     {

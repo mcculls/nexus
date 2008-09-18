@@ -27,6 +27,8 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CRole;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
+import org.sonatype.jsecurity.realms.tools.NoSuchRoleException;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.RoleResourceRequest;
 import org.sonatype.nexus.rest.model.RoleResourceResponse;
@@ -70,9 +72,18 @@ public class RoleResourceHandler
     {
         RoleResourceResponse response = new RoleResourceResponse();
         
-        response.setData( nexusToRestModel( getNexusSecurity().readRole( getRoleId() ) ) );
-        
-        return serialize( variant, response );
+        try
+        {
+            response.setData( nexusToRestModel( getNexusSecurity().readRole( getRoleId() ) ) );
+            
+            return serialize( variant, response );
+        }
+        catch ( NoSuchRoleException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
+
+            return null;
+        }
     }
 
     /**
@@ -98,17 +109,28 @@ public class RoleResourceHandler
         {
             RoleResource resource = request.getData();
             
-            CRole role = restToNexusModel( getNexusSecurity().readRole( resource.getId() ), resource );
-            
-            getNexusSecurity().updateRole( role );
-            
-            RoleResourceResponse response = new RoleResourceResponse();
-            
-            response.setData( request.getData() );
-            
-            response.getData().setResourceURI( calculateSubReference( resource.getId() ).toString() );
-            
-            getResponse().setEntity( serialize( representation, response ) );
+            try
+            {
+                CRole role = restToNexusModel( getNexusSecurity().readRole( resource.getId() ), resource );
+                
+                getNexusSecurity().updateRole( role );
+                
+                RoleResourceResponse response = new RoleResourceResponse();
+                
+                response.setData( request.getData() );
+                
+                response.getData().setResourceURI( calculateSubReference( resource.getId() ).toString() );
+                
+                getResponse().setEntity( serialize( representation, response ) );
+            }
+            catch ( NoSuchRoleException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
+            }
+            catch ( InvalidConfigurationException e )
+            {
+                handleInvalidConfigurationException( e, representation );
+            }
         }
     }
 
@@ -125,9 +147,16 @@ public class RoleResourceHandler
      */
     public void delete()
     {
-        getNexusSecurity().deleteRole( getRoleId() );
-        
-        getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+        try
+        {            
+            getNexusSecurity().deleteRole( getRoleId() );
+            
+            getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+        }
+        catch ( NoSuchRoleException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
+        }
     }
 
 }

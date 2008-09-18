@@ -27,6 +27,7 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CUser;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
 import org.sonatype.nexus.rest.model.UserListResourceResponse;
 import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.rest.model.UserResourceRequest;
@@ -98,20 +99,27 @@ extends AbstractUserResourceHandler
             
             CUser user = restToNexusModel( null, resource );
             
-            getNexusSecurity().createUser( user );
-            
-            UserResourceResponse response = new UserResourceResponse();
-            
-            // Update the status, as that may have changed
-            resource.setStatus( user.getStatus() );
-            
-            resource.setResourceURI( calculateSubReference( resource.getUserId() ).toString() );
-            
-            response.setData( resource );
-            
-            getResponse().setEntity( serialize( representation, response ) );
-            
-            getResponse().setStatus( Status.SUCCESS_CREATED );
+            try
+            {
+                getNexusSecurity().createUser( user );
+                
+                UserResourceResponse response = new UserResourceResponse();
+                
+                // Update the status, as that may have changed
+                resource.setStatus( user.getStatus() );
+                
+                resource.setResourceURI( calculateSubReference( resource.getUserId() ).toString() );
+                
+                response.setData( resource );
+                
+                getResponse().setEntity( serialize( representation, response ) );
+                
+                getResponse().setStatus( Status.SUCCESS_CREATED );
+            }
+            catch ( InvalidConfigurationException e )
+            {
+                handleInvalidConfigurationException( e, representation );
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CRole;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
 import org.sonatype.nexus.rest.model.RoleListResourceResponse;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.RoleResourceRequest;
@@ -98,19 +99,26 @@ extends AbstractRoleResourceHandler
             
             CRole role = restToNexusModel( null, resource );
             
-            getNexusSecurity().createRole( role );
-            
-            RoleResourceResponse response = new RoleResourceResponse();
-            
-            resource.setId( role.getId() );
-            
-            resource.setResourceURI( calculateSubReference( resource.getId() ).toString() );
-            
-            response.setData( resource );
-            
-            getResponse().setEntity( serialize( representation, response ) );
-            
-            getResponse().setStatus( Status.SUCCESS_CREATED );
+            try
+            {
+                getNexusSecurity().createRole( role );
+                
+                RoleResourceResponse response = new RoleResourceResponse();
+                
+                resource.setId( role.getId() );
+                
+                resource.setResourceURI( calculateSubReference( resource.getId() ).toString() );
+                
+                response.setData( resource );
+                
+                getResponse().setEntity( serialize( representation, response ) );
+                
+                getResponse().setStatus( Status.SUCCESS_CREATED );
+            }
+            catch ( InvalidConfigurationException e )
+            {
+                handleInvalidConfigurationException( e, representation );
+            }
         }
     }
 }

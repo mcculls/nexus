@@ -7,7 +7,7 @@ import org.sonatype.jsecurity.locators.RememberMeLocator;
 
 /**
  * The nexus remember me locator, will simply return the default JSecurity
- * WebRememberMeManager (for now)
+ * WebRememberMeManager
  *
  * @plexus.component role="org.sonatype.jsecurity.locators.RememberMeLocator"
  */

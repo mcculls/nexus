@@ -23,9 +23,11 @@ package org.sonatype.nexus.rest.privileges;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CPrivilege;
+import org.sonatype.jsecurity.realms.tools.NoSuchPrivilegeException;
 import org.sonatype.nexus.jsecurity.realms.NexusMethodRealm;
 import org.sonatype.nexus.rest.model.PrivilegeStatusResourceResponse;
 
@@ -68,7 +70,18 @@ public class PrivilegeResourceHandler
     {
         PrivilegeStatusResourceResponse response = new PrivilegeStatusResourceResponse();
         
-        CPrivilege priv = getNexusSecurity().readPrivilege( getPrivilegeId() );
+        CPrivilege priv = null;
+        
+        try
+        {
+            priv = getNexusSecurity().readPrivilege( getPrivilegeId() );
+        }
+        catch ( NoSuchPrivilegeException e )
+        {            
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
+
+            return null;
+        }
         
         response.setData( nexusToRestModel( priv ) );
         
@@ -88,11 +101,26 @@ public class PrivilegeResourceHandler
      */
     public void delete()
     {
-        CPrivilege privilege = getNexusSecurity().readPrivilege( getPrivilegeId() );
+        CPrivilege priv;
         
-        if ( !privilege.getType().equals( NexusMethodRealm.PRIVILEGE_TYPE_METHOD ) )
+        try
         {
-            getNexusSecurity().deletePrivilege( getPrivilegeId() );
+            priv = getNexusSecurity().readPrivilege( getPrivilegeId() );
+            
+            if ( priv.getType().equals( NexusMethodRealm.PRIVILEGE_TYPE_METHOD ) )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Cannot delete an application type privilege" );
+            }
+            else
+            {
+                getNexusSecurity().deletePrivilege( getPrivilegeId() );
+                
+                getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+            }
+        }
+        catch ( NoSuchPrivilegeException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
         }
     }
 }

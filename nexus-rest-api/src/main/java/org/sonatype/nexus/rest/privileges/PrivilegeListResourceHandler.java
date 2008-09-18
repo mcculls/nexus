@@ -31,6 +31,7 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.jsecurity.model.CProperty;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
 import org.sonatype.nexus.rest.model.PrivilegeBaseResource;
 import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
 import org.sonatype.nexus.rest.model.PrivilegeListResourceResponse;
@@ -125,65 +126,72 @@ public class PrivilegeListResourceHandler
             }
             else
             {
-                boolean success = true;
-                // Add a new privilege for each method
-                for ( String method : methods )
+                try
                 {
-                    // Currently can only add new target types, application types are hardcoded
-                    if ( PrivilegeTargetResource.class.isAssignableFrom( resource.getClass() ) )
+                    boolean success = true;
+                    // Add a new privilege for each method
+                    for ( String method : methods )
                     {
-                        PrivilegeTargetResource res = (PrivilegeTargetResource) resource;
-
-                        CPrivilege priv = new CPrivilege();
-                        
-                        priv.setName( res.getName() != null ? res.getName() + " - (" + method + ")" : null );
-                        priv.setDescription( res.getDescription() );
-                        
-                        CProperty prop = new CProperty();
-                        prop.setKey( "method" );
-                        prop.setValue( method );
-                        
-                        priv.addProperty( prop );
-                        
-                        prop = new CProperty();
-                        prop.setKey( "repositoryTargetId" );
-                        prop.setValue( res.getRepositoryTargetId() );
-                        
-                        priv.addProperty( prop );
-                        
-                        prop = new CProperty();
-                        prop.setKey( "repositoryId" );
-                        prop.setValue( res.getRepositoryId() );
-                        
-                        priv.addProperty( prop );
-                        
-                        prop = new CProperty();
-                        prop.setKey( "repositoryGroupId" );
-                        prop.setValue( res.getRepositoryGroupId() );
-                        
-                        priv.addProperty( prop );
-
-                        getNexusSecurity().createPrivilege( priv );
-
-                        response.addData( nexusToRestModel( priv ) );
+                        // Currently can only add new target types, application types are hardcoded
+                        if ( PrivilegeTargetResource.class.isAssignableFrom( resource.getClass() ) )
+                        {
+                            PrivilegeTargetResource res = (PrivilegeTargetResource) resource;
+    
+                            CPrivilege priv = new CPrivilege();
+                            
+                            priv.setName( res.getName() != null ? res.getName() + " - (" + method + ")" : null );
+                            priv.setDescription( res.getDescription() );
+                            
+                            CProperty prop = new CProperty();
+                            prop.setKey( "method" );
+                            prop.setValue( method );
+                            
+                            priv.addProperty( prop );
+                            
+                            prop = new CProperty();
+                            prop.setKey( "repositoryTargetId" );
+                            prop.setValue( res.getRepositoryTargetId() );
+                            
+                            priv.addProperty( prop );
+                            
+                            prop = new CProperty();
+                            prop.setKey( "repositoryId" );
+                            prop.setValue( res.getRepositoryId() );
+                            
+                            priv.addProperty( prop );
+                            
+                            prop = new CProperty();
+                            prop.setKey( "repositoryGroupId" );
+                            prop.setValue( res.getRepositoryGroupId() );
+                            
+                            priv.addProperty( prop );
+    
+                            getNexusSecurity().createPrivilege( priv );
+    
+                            response.addData( nexusToRestModel( priv ) );
+                        }
+                        else
+                        {
+                            success = false;
+                            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Configuration error." );
+                            getResponse().setEntity(
+                                serialize( representation, getNexusErrorResponse(
+                                    "type",
+                                    "An invalid type was entered." ) ) );
+                            break;
+                        }
                     }
-                    else
+                    
+                    if ( success )
                     {
-                        success = false;
-                        getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Configuration error." );
-                        getResponse().setEntity(
-                            serialize( representation, getNexusErrorResponse(
-                                "type",
-                                "An invalid type was entered." ) ) );
-                        break;
+                        getResponse().setEntity( serialize( representation, response ) );
+                        
+                        getResponse().setStatus( Status.SUCCESS_CREATED );
                     }
                 }
-
-                if ( success )
+                catch ( InvalidConfigurationException e )
                 {
-                    getResponse().setEntity( serialize( representation, response ) );
-                    
-                    getResponse().setStatus( Status.SUCCESS_CREATED );
+                    handleInvalidConfigurationException( e, representation );
                 }
             }
         }
