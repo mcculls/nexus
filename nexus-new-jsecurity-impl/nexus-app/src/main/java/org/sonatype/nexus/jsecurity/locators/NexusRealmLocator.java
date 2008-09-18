@@ -47,10 +47,12 @@ public class NexusRealmLocator
         {
             try
             {
+                //First will load from plexus container
                 realms.add( ( Realm ) container.lookup( "org.jsecurity.realm.Realm", "NexusTargetRealm" ) );
             }
             catch ( ComponentLookupException e )
             {
+                //If that fails, will simply use reflection to load
                 try
                 {
                     realms.add( ( Realm ) Class.forName( realmId ).newInstance() );

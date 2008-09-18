@@ -31,6 +31,8 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.model.CUser;
+import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
+import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.rest.model.UserResourceRequest;
 import org.sonatype.nexus.rest.model.UserResourceResponse;
@@ -73,10 +75,19 @@ public class UserResourceHandler
     public Representation getRepresentationHandler( Variant variant )
     {
         UserResourceResponse response = new UserResourceResponse();
+        
+        try
+        {
+            response.setData( nexusToRestModel( getNexusSecurity().readUser( getUserId() ) ) );
 
-        response.setData( nexusToRestModel( getNexusSecurity().readUser( getUserId() ) ) );
+            return serialize( variant, response );
+        }
+        catch ( NoSuchUserException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
 
-        return serialize( variant, response );
+            return null;
+        }
     }
 
     /**
@@ -101,20 +112,31 @@ public class UserResourceHandler
         else
         {
             UserResource resource = request.getData();
-
-            CUser user = restToNexusModel(
-                getNexusSecurity().readUser( resource.getUserId() ),
-                resource );
-
-            getNexusSecurity().updateUser( user );
-
-            UserResourceResponse response = new UserResourceResponse();
-
-            response.setData( request.getData() );
             
-            response.getData().setResourceURI( calculateSubReference( resource.getUserId() ).toString() );
+            try
+            {
+                CUser user = restToNexusModel(
+                    getNexusSecurity().readUser( resource.getUserId() ),
+                    resource );
 
-            getResponse().setEntity( serialize( representation, response ) );
+                getNexusSecurity().updateUser( user );
+
+                UserResourceResponse response = new UserResourceResponse();
+
+                response.setData( request.getData() );
+              
+                response.getData().setResourceURI( calculateSubReference( resource.getUserId() ).toString() );
+
+                getResponse().setEntity( serialize( representation, response ) );
+            }
+            catch ( NoSuchUserException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
+            }
+            catch ( InvalidConfigurationException e )
+            {
+                handleInvalidConfigurationException( e, representation );
+            }
         }
     }
 
@@ -131,28 +153,35 @@ public class UserResourceHandler
      */
     public void delete()
     {
-        if ( !isAnonymousUser( getUserId() ) )
+        try
         {
-            getNexusSecurity().deleteUser( getUserId() );
-            
-            getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+            if ( !isAnonymousUser( getUserId() ) )
+            {
+                getNexusSecurity().deleteUser( getUserId() );
+                
+                getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+            }
+            else
+            {
+                getResponse()
+                    .setEntity(
+                        new StringRepresentation(
+                            "The user with user ID ["
+                                + getUserId()
+                                + "] cannot be deleted, since it is marked user used for Anonymous access in Server Administration. To delete this user, disable anonymous access or, change the anonymous username and password to another valid values!",
+                            MediaType.TEXT_HTML ) );
+
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST );
+
+                getLogger()
+                    .log(
+                        Level.INFO,
+                        "Anonymous user cannot be deleted! Unset the Allow Anonymous access first in Server Administration!" );
+            }
         }
-        else
+        catch ( NoSuchUserException e )
         {
-            getResponse()
-                .setEntity(
-                    new StringRepresentation(
-                        "The user with user ID ["
-                            + getUserId()
-                            + "] cannot be deleted, since it is marked user used for Anonymous access in Server Administration. To delete this user, disable anonymous access or, change the anonymous username and password to another valid values!",
-                        MediaType.TEXT_HTML ) );
-
-            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST );
-
-            getLogger()
-                .log(
-                    Level.INFO,
-                    "Anonymous user cannot be deleted! Unset the Allow Anonymous access first in Server Administration!" );
+            getResponse().setStatus( Status.CLIENT_ERROR_NOT_FOUND, e.getMessage() );
         }
     }
 }
