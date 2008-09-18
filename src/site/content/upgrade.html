@@ -3,7 +3,12 @@
     <title>Upgrade Notes</title>
   </head>
   <body>
+ 
+    <h2>To Release 1.0.1 from 1.0.0</h2>
+    <p> There are no significant changes to system and upgrade is relatively easy. Simply unpack the bundle in the same folder that contains your nexus-webapp-1.0.0-bundle and sonatype-work folders. This will create a new folder called nexus-webapp-1.0.1-bundle. Shutdown the old Nexus, switch any symlinks you may have and start Nexus from the new folder. That's it.</p>
 
+<p>If you currently modify the host, ports or context in plexus.xml, these are now settable via environment properties. Simply set plexus-application-port, plexus-application-host or plexus-webapp-context-path in the env before starting Nexus. More details are shown on the <a href="faq.html">FAQ</a> page.</p>   
+  
     <h2>To Release 1.0.0 from 1.0.0-beta-5/5.1</h2>
     <p>
     <p>In the Nexus betas, the configuration was stored in ${basedir}/runtime/apps/nexus/conf/nexus.xml and the configuration pointed to the nexus work folder, which had a default of ${basedir}/runtime/work/nexus. This made upgrades between versions troublesome as the work folder and config were located inside the path of the bundle and required manual moving of that data.
@@ -30,7 +35,7 @@
 <ol>
 <li>Make a folder that will contain the work folder and the bundles (if you don't already have one). We will refer to this as ${nexus_home} in the instructions. We will refer to the current location of your nexus bundle as ${nexus-beta-bundle}</li>
 
-<li>Move (or copy) the contents of ${nexus-beta-bundle}/runtime/work to ${nexus_home}/sonatype-work/nexus</li>
+<li>Move (or copy) the contents of ${nexus-beta-bundle}/runtime/work/nexus to ${nexus_home}/sonatype-work/nexus</li>
 <li>When this is done you should have ${nexus_home}/sonatype-work/nexus/conf and ${nexus_home}/sonatype-work/nexus/storage etc.</li>
 
 <li>Move (or copy) the ${nexus-beta-bundle}/runtime/apps/nexus/conf/nexus.xml to ${nexus_home}/sonatype-work/nexus/conf</li>

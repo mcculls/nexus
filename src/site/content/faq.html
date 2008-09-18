@@ -121,7 +121,25 @@
        </ul>
      </li>
    </ul>
+    <h2>I'm having trouble installing Nexus on Solaris!</h2>
+    <p>We are aware of two potential issues that are specific to Solaris:</p>
+    <ol>
+      <li>There are some known incompatibilities with the version of tar provided by Solaris and the gzip tar format. If you are installing Nexus on Solaris, you must use the GNU tar application, or you will end up with corrupted files.
+Please see this
+<a href="http://sunsolarisadmin.blogspot.com/2007/03/how-to-install-gnu-tar-in-solaris.html">post</a> for more information.
+</li>
+      <li>It has been reported that the HeapDumpOnOutOfMemoryError option is not supported on some JVMs. The fix for this is to edit $nexus_home/conf/wrapper.conf to remove "wrapper.java.additional.3=-XX:+HeapDumpOnOutOfMemoryError". Be sure to renumber wrapper.java.additional.4 to .3.</li>
+    </ol>
     
+    <h2>What if my OS doesn't have JSW scripts in the Nexus bundle?</h2>
+    <p>Nexus is a java application so it should be runnable on any OS with a supported jvm. JSW provides startup and monitoring of JVMs so they can be treated like a service. The bundle only contains the most common OS scripts, but more can be retrieved from the <a href="http://wrapper.tanukisoftware.org/doc/english/download.jsp">JSW</a> project directly.</p>
+    
+    <p>Alternatively, Nexus can be launched with a simple java command like:</p>
+    <pre>java -Dbasedir=$nexus_home -Djava.io.tmpdir=$nexus_home/runtime/tmp
+-Djava.library.path="./lib" -classpath"$nexus_home/lib/plexus-platform-jsw-1.4.jar;$nexus_home/conf/"
+org.codehaus.plexus.classworlds.launcher.Launcher
+</pre>
+ <p>Note: the plexus-platform-jsw-xxx.jar version may change. You can find the exact file in $nexus_home/lib.</p>
   </body>
 </html>
 
