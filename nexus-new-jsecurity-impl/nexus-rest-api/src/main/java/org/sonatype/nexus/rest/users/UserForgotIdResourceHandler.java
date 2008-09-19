@@ -20,11 +20,14 @@
  */
 package org.sonatype.nexus.rest.users;
 
+import java.util.logging.Level;
+
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
+import org.sonatype.nexus.jsecurity.NoSuchEmailException;
 
 public class UserForgotIdResourceHandler
     extends AbstractUserResourceHandler
@@ -51,10 +54,17 @@ public class UserForgotIdResourceHandler
     
     public void post( Representation representation )
     {
-        /* TODO
-        getNexusSecurityConfiguration().forgotUserId( getEmail() );
-        */ 
-        
-        getResponse().setStatus( Status.SUCCESS_ACCEPTED );
+        try
+        {
+            getNexusSecurity().forgotUsername( getEmail() );
+            
+            getResponse().setStatus( Status.SUCCESS_ACCEPTED );
+        }
+        catch ( NoSuchEmailException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Email address not found!" );
+            
+            getLogger().log( Level.FINE, "Invalid email received: " + getEmail(), e );
+        }
     }
 }

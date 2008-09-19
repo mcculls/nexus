@@ -139,6 +139,7 @@
     <plexus.jetty.version>1.1</plexus.jetty.version>
     <plexus.restlet.bridge.version>1.2</plexus.restlet.bridge.version>
     <nexus.indexer.version>1.0.1-SNAPSHOT</nexus.indexer.version>
+    <plexus.micromailer.version>1.0.0-SNAPSHOT</plexus.micromailer.version>
     <apache.commons.email.version>1.1</apache.commons.email.version>
   </properties>
   <dependencyManagement>
@@ -191,6 +192,17 @@
             <artifactId>plexus-component-api</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>org.sonatype.micromailer</groupId>
+          <artifactId>micromailer</artifactId>
+          <version>${plexus.micromailer.version}</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.codehaus.plexus</groupId>
+                  <artifactId>plexus-component-api</artifactId>
+              </exclusion>
+          </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

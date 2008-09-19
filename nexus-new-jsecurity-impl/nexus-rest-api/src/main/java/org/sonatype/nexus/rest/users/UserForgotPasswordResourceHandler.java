@@ -27,6 +27,8 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
+import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
+import org.sonatype.nexus.jsecurity.NoSuchEmailException;
 import org.sonatype.nexus.rest.model.UserForgotPasswordRequest;
 import org.sonatype.nexus.rest.model.UserForgotPasswordResource;
 
@@ -57,19 +59,32 @@ public class UserForgotPasswordResourceHandler
         {
             UserForgotPasswordResource resource = request.getData();
 
-            if ( !isAnonymousUser( resource.getUserId() ) )
+            try
             {
-                /* TODO
-                getNexusSecurityConfiguration().forgotPassword( resource.getUserId(), resource.getEmail() );
-                */
-                
-                getResponse().setStatus( Status.SUCCESS_ACCEPTED );
-            }
-            else
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot forgot password!" );
+                if ( !isAnonymousUser( resource.getUserId() ) )
+                {
+                    getNexusSecurity().forgotPassword( resource.getUserId(), resource.getEmail() );
+                    
+                    getResponse().setStatus( Status.SUCCESS_ACCEPTED );
+                }
+                else
+                {
+                    getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot forgot password!" );
 
-                getLogger().log( Level.FINE, "Anonymous user forgot password is blocked!" );
+                    getLogger().log( Level.FINE, "Anonymous user forgot password is blocked!" );
+                }
+            }
+            catch ( NoSuchUserException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Invalid user ID!" );
+
+                getLogger().log( Level.FINE, "Invalid user ID!", e );
+            }
+            catch ( NoSuchEmailException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Email address not found!" );
+
+                getLogger().log( Level.FINE, "Invalid email!", e );
             }
         }
     }

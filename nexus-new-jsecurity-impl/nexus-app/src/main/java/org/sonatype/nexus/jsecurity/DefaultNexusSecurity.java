@@ -22,6 +22,7 @@ import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 import org.sonatype.nexus.configuration.ConfigurationException;
 import org.sonatype.nexus.configuration.NotifiableConfiguration;
 import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
+import org.sonatype.nexus.email.NexusEmailer;
 
 /**
  *  @plexus.component
@@ -46,6 +47,16 @@ public class DefaultNexusSecurity
      */
     private PrivilegeInheritanceManager privInheritance;
     
+    /**
+     * @plexus.requirement
+     */
+    private PasswordGenerator pwGenerator;
+    
+    /**
+     * @plexus.requirement
+     */
+    private NexusEmailer emailer;
+    
     private List<ConfigurationChangeListener> listeners = new ArrayList<ConfigurationChangeListener>();
     
     public void startService()
@@ -53,7 +64,7 @@ public class DefaultNexusSecurity
     {
         // Do this simply to upgrade the configuration if necessary
         try
-        {
+        {            
             clearCache();
             configSource.loadConfiguration();
             getLogger().info( "Security Configuration loaded properly." );
@@ -99,6 +110,8 @@ public class DefaultNexusSecurity
     public void createUser( CUser user )
         throws InvalidConfigurationException
     {
+        String password = generatePassword( user );
+        emailer.sendNewUserCreated( user.getEmail(), user.getId(), password );
         manager.createUser( user );
         save();
     }
@@ -242,6 +255,87 @@ public class DefaultNexusSecurity
         // Don't use this for security
     }
     
+    public void changePassword( String userId, String oldPassword, String newPassword ) 
+        throws NoSuchUserException, 
+            InvalidCredentialsException
+    {
+        CUser user = readUser( userId );
+        
+        String validate = pwGenerator.hashPassword( oldPassword );
+
+        if ( !validate.equals( user.getPassword() ) )
+        {
+            throw new InvalidCredentialsException();
+        }
+
+        user.setPassword( pwGenerator.hashPassword( newPassword ) );
+        
+        try
+        {
+            updateUser( user );
+        }
+        catch ( InvalidConfigurationException e )
+        {
+            // Just changing password, can't get into this state
+        }
+    }
+    
+    public void forgotPassword( String userId, String email ) 
+        throws NoSuchUserException,
+            NoSuchEmailException
+    {
+        CUser user = readUser( userId );
+        
+        if ( !user.getEmail().equals( email ) )
+        {
+            throw new NoSuchEmailException( email );
+        }
+        
+        resetPassword( userId );
+    }
+    
+    public void forgotUsername( String email )
+        throws NoSuchEmailException
+    {
+        List<String> userIds = new ArrayList<String>();
+        
+        for ( CUser user : listUsers() )
+        {
+            if ( user.getEmail().equals( email ) )
+            {
+                userIds.add( user.getId() );
+            }
+        }
+        
+        if ( userIds.size() > 0 )
+        {
+            emailer.sendForgotUsername( email, userIds );
+        }
+        else
+        {
+            throw new NoSuchEmailException( email );
+        }
+    }
+    
+    public void resetPassword( String userId ) 
+        throws NoSuchUserException
+    {
+        CUser user = readUser( userId );
+        
+        String password = generatePassword( user );
+        
+        emailer.sendResetPassword( user.getEmail(), password );
+        
+        try
+        {
+            updateUser( user );
+        }
+        catch ( InvalidConfigurationException e )
+        {
+            // cant get here, just reseting password
+        }
+    }
+    
     private void addInheritedPrivileges( CPrivilege privilege )
     {
         CProperty methodProperty = null;
@@ -274,5 +368,14 @@ public class DefaultNexusSecurity
                 methodProperty.setValue( buf.toString() );
             }
         }
+    }
+    
+    private String generatePassword( CUser user )
+    {
+        String password = pwGenerator.generatePassword( 10, 10 );
+        
+        user.setPassword( pwGenerator.hashPassword( password ) );
+        
+        return password;
     }
 }

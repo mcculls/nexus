@@ -27,6 +27,8 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.Representation;
+import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
+import org.sonatype.nexus.jsecurity.InvalidCredentialsException;
 import org.sonatype.nexus.rest.model.UserChangePasswordRequest;
 import org.sonatype.nexus.rest.model.UserChangePasswordResource;
 
@@ -57,21 +59,35 @@ public class UserChangePasswordResourceHandler
         {
             UserChangePasswordResource resource = request.getData();
 
-            if ( !isAnonymousUser( resource.getUserId() ) )
+            try
             {
-                /* TODO
-                  getNexusSecurityConfiguration().changePassword(
-                    resource.getUserId(),
-                    resource.getOldPassword(),
-                    resource.getNewPassword() );
-                */
-                getResponse().setStatus( Status.SUCCESS_ACCEPTED );
-            }
-            else
-            {
-                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot change password!" );
+                if ( !isAnonymousUser( resource.getUserId() ) )
+                {
+                    getNexusSecurity().changePassword(
+                        resource.getUserId(),
+                        resource.getOldPassword(),
+                        resource.getNewPassword() );
+                    
+                    getResponse().setStatus( Status.SUCCESS_ACCEPTED );
+                }
+                else
+                {
+                    getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot change password!" );
 
-                getLogger().log( Level.FINE, "Anonymous user password change is blocked!" );
+                    getLogger().log( Level.FINE, "Anonymous user password change is blocked!" );
+                }
+            }
+            catch ( NoSuchUserException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Invalid credentials supplied." );
+
+                getLogger().log( Level.FINE, "Invalid user ID!", e );
+            }
+            catch ( InvalidCredentialsException e )
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Invalid credentials supplied." );
+
+                getLogger().log( Level.FINE, "Invalid credentials!", e );
             }
         }
     }
