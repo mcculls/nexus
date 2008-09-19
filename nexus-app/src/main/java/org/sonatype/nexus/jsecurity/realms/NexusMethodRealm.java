@@ -1,18 +1,10 @@
 package org.sonatype.nexus.jsecurity.realms;
 
-import org.sonatype.jsecurity.realms.MethodRealm;
-import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
-import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 
 /**
  * @plexus.component role="org.jsecurity.realm.Realm" role-hint="NexusMethodRealm"
  */
 public class NexusMethodRealm
-    extends MethodRealm
-    implements ConfigurationChangeListener
+    extends AbstractNexusRealm
 {
-    public void onConfigurationChange( ConfigurationChangeEvent evt )
-    {
-        this.clearCache();
-    }
 }

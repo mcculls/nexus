@@ -6,6 +6,7 @@ import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 
 public class UserResetResourceHandler
     extends AbstractUserResourceHandler
@@ -33,19 +34,26 @@ public class UserResetResourceHandler
     @Override
     public void delete()
     {
-        if ( !isAnonymousUser( getUserId() ) )
+        try
         {
-            /* TODO
-            getNexusSecurityConfiguration().resetPassword( getUserId() );
-            */
-            
-            getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
-        }
-        else
-        {
-            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot reset password!" );
+            if ( !isAnonymousUser( getUserId() ) )
+            {
+                getNexusSecurity().resetPassword( getUserId() );
+                
+                getResponse().setStatus( Status.SUCCESS_NO_CONTENT );
+            }
+            else
+            {
+                getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "Anonymous user cannot reset password!" );
 
-            getLogger().log( Level.FINE, "Anonymous user password reset is blocked!" );
+                getLogger().log( Level.FINE, "Anonymous user password reset is blocked!" );
+            }
+        }
+        catch ( NoSuchUserException e )
+        {
+            getResponse().setStatus( Status.CLIENT_ERROR_BAD_REQUEST, "User ID not found!" );
+
+            getLogger().log( Level.FINE, "Invalid userid: " + getUserId(), e );
         }
     }
 }

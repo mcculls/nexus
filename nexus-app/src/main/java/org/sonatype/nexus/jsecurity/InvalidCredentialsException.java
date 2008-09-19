@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.configuration.security;
+package org.sonatype.nexus.jsecurity;
 
 /**
  * Thrown if the password isn't correct on reset password
