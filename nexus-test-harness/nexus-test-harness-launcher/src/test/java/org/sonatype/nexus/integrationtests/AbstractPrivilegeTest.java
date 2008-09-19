@@ -7,11 +7,10 @@ import java.util.Iterator;
 import org.junit.After;
 import org.junit.Before;
 import org.restlet.data.MediaType;
-import org.sonatype.nexus.configuration.security.model.CApplicationPrivilege;
+import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.UserResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.GroupMessageUtil;
 import org.sonatype.nexus.test.utils.PrivilegesMessageUtil;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
@@ -107,10 +106,10 @@ public abstract class AbstractPrivilegeTest
                 String privId = (String) roleIter.next();
                 // PrivilegeBaseStatusResource priv = this.privUtil.getPrivilegeResource( privId );
                 // privs.add( priv.getName() );
-                CApplicationPrivilege appPriv = SecurityConfigUtil.getCApplicationPrivilege( privId );
-                if ( appPriv != null )
+                CPrivilege priv = SecurityConfigUtil.getCPrivilege( privId );
+                if ( priv != null )
                 {
-                    privs.add( appPriv.getName() );
+                    privs.add( priv.getName() );
                 }
                 else
                 {

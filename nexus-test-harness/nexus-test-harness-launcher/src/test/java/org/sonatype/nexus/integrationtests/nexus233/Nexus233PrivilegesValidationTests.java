@@ -194,7 +194,7 @@ public class Nexus233PrivilegesValidationTests
 
         this.messageUtil.validateResponseErrorXml( responseText );
 
-        Assert.assertNull( SecurityConfigUtil.getCRepoTargetPrivilegeByName( "createWithInvalidAndValidMethodsTest - (read)" ) );
+        Assert.assertNull( SecurityConfigUtil.getCPrivilegeByName( "createWithInvalidAndValidMethodsTest - (read)" ) );
     }
 
     @SuppressWarnings( "unchecked" )

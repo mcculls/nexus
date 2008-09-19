@@ -141,6 +141,7 @@ public class PrivilegeListResourceHandler
                             
                             priv.setName( res.getName() != null ? res.getName() + " - (" + method + ")" : null );
                             priv.setDescription( res.getDescription() );
+                            priv.setType( "target" );
                             
                             CProperty prop = new CProperty();
                             prop.setKey( "method" );

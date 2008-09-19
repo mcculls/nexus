@@ -3,11 +3,13 @@ package org.sonatype.nexus.jsecurity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.sonatype.jsecurity.model.CPrivilege;
+import org.sonatype.jsecurity.model.CProperty;
 import org.sonatype.jsecurity.model.CRole;
 import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
@@ -39,6 +41,11 @@ public class DefaultNexusSecurity
      */
     private SecurityConfigurationSource configSource;
     
+    /**
+     * @plexus.requirement
+     */
+    private PrivilegeInheritanceManager privInheritance;
+    
     private List<ConfigurationChangeListener> listeners = new ArrayList<ConfigurationChangeListener>();
     
     public void startService()
@@ -47,6 +54,7 @@ public class DefaultNexusSecurity
         // Do this simply to upgrade the configuration if necessary
         try
         {
+            clearCache();
             configSource.loadConfiguration();
             getLogger().info( "Security Configuration loaded properly." );
         }
@@ -76,6 +84,7 @@ public class DefaultNexusSecurity
     public void createPrivilege( CPrivilege privilege ) 
         throws InvalidConfigurationException
     {
+        addInheritedPrivileges( privilege );
         manager.createPrivilege( privilege );
         save();
     }
@@ -231,5 +240,39 @@ public class DefaultNexusSecurity
         throws IOException
     {
         // Don't use this for security
+    }
+    
+    private void addInheritedPrivileges( CPrivilege privilege )
+    {
+        CProperty methodProperty = null;
+        
+        for ( CProperty property : ( List<CProperty> ) privilege.getProperties() )
+        {
+            if ( property.getKey().equals( "method" ) )
+            {
+                methodProperty = property;
+                break;
+            }
+        }
+        
+        if ( methodProperty != null )
+        {        
+            Set<String> inheritedMethods = privInheritance.getInheritedMethods( methodProperty.getValue() );
+    
+            StringBuffer buf = new StringBuffer();
+    
+            for ( String method : inheritedMethods )
+            {
+                buf.append( method );
+                buf.append( "," );
+            }
+    
+            if ( buf.length() > 0 )
+            {
+                buf.setLength( buf.length() - 1 );
+                
+                methodProperty.setValue( buf.toString() );
+            }
+        }
     }
 }
