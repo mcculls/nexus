@@ -3,11 +3,13 @@ package org.sonatype.nexus.jsecurity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.jsecurity.realm.Realm;
 import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.jsecurity.model.CProperty;
 import org.sonatype.jsecurity.model.CRole;
@@ -20,7 +22,6 @@ import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 import org.sonatype.nexus.configuration.ConfigurationChangeEvent;
 import org.sonatype.nexus.configuration.ConfigurationChangeListener;
 import org.sonatype.nexus.configuration.ConfigurationException;
-import org.sonatype.nexus.configuration.NotifiableConfiguration;
 import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
 import org.sonatype.nexus.email.NexusEmailer;
 
@@ -29,8 +30,7 @@ import org.sonatype.nexus.email.NexusEmailer;
  */
 public class DefaultNexusSecurity
     extends AbstractLogEnabled
-    implements NexusSecurity, 
-        NotifiableConfiguration
+    implements NexusSecurity
 {
     /**
      * @plexus.requirement
@@ -111,8 +111,8 @@ public class DefaultNexusSecurity
         throws InvalidConfigurationException
     {
         String password = generatePassword( user );
-        emailer.sendNewUserCreated( user.getEmail(), user.getId(), password );
         manager.createUser( user );
+        emailer.sendNewUserCreated( user.getEmail(), user.getId(), password );
         save();
     }
 
@@ -184,6 +184,7 @@ public class DefaultNexusSecurity
     public void save()
     {
         manager.save();
+        
         notifyConfigurationChangeListeners();
     }
 

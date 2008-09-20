@@ -3,9 +3,10 @@ package org.sonatype.nexus.jsecurity;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
 import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 import org.sonatype.nexus.NexusService;
+import org.sonatype.nexus.configuration.NotifiableConfiguration;
 
 public interface NexusSecurity
-    extends ConfigurationManager, NexusService
+    extends ConfigurationManager, NexusService, NotifiableConfiguration
 {
     String ROLE = NexusSecurity.class.getName();
     
