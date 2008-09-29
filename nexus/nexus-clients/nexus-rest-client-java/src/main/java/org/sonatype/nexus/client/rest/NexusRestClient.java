@@ -42,6 +42,7 @@ public class NexusRestClient
     public void disconnect()
         throws NexusConnectionException, NexusClientException
     {
+        this.clientHelper.disconnect();
         this.clientHelper = null;
     }
 
@@ -195,11 +196,24 @@ public class NexusRestClient
         return null;
 
     }
-
-    public boolean isNexusStarted( boolean blocking )
-        throws NexusClientException, NexusConnectionException
+    
+    public boolean isNexusRunning( boolean blocking ) throws NexusClientException, NexusConnectionException
     {
         return blocking ? this.waitforNexusToStart() : this.isNexusStarted();
+    }
+
+    public boolean isNexusStarted( boolean blocking )
+        throws NexusClientException
+    {
+        try
+        {
+            return blocking ? this.waitforNexusToStart() : this.isNexusStarted();
+        }
+        catch ( NexusConnectionException e )
+        {
+            // if we have a connection exception, then nexus is down, so return false.
+            return false;
+        }
     }
 
     public boolean waitforNexusToStart()
@@ -252,7 +266,7 @@ public class NexusRestClient
     public boolean isNexusStarted()
         throws NexusClientException, NexusConnectionException
     {
-        Object tempObj = this.getClientHelper().get( STATE_SERVICE, (String) null );
+        Object tempObj = this.getClientHelper().getUsingHttpClient( STATE_SERVICE, (String) null );
 
         // StatusResourceResponse.getData ->StatusResource
 

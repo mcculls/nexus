@@ -53,7 +53,7 @@ public class QueryCreatorTest
         assertEquals( "a:\"something is dotted\"", q.toString() );
 
         
-        // GROUP_ID : dots are left in place
+        // GROUP_ID : dots are not left in place
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "something is dotted" );
 
@@ -61,17 +61,17 @@ public class QueryCreatorTest
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "something.is.dotted" );
 
-        assertEquals( "g:something.is.dotted*", q.toString() );
+        assertEquals( "+g:something +g:is +g:dotted*", q.toString() );
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "\"something.is.dotted\"" );
 
-        assertEquals( "g:\"something.is.dotted\"*", q.toString() );
+        assertEquals( "g:\"something is dotted\"", q.toString() );
         
         // some special chars
         
         q = queryCreator.constructQuery( ArtifactInfo.ARTIFACT_ID, "_" );
 
-        assertEquals( "a:_*", q.toString() );
+        assertEquals( "a:*", q.toString() );
 
         q = queryCreator.constructQuery( ArtifactInfo.ARTIFACT_ID, "geronimo-javamail_1.4" );
 
@@ -87,11 +87,11 @@ public class QueryCreatorTest
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "_" );
 
-        assertEquals( "g:_*", q.toString() );
+        assertEquals( "g:*", q.toString() );
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "geronimo-javamail_1.4" );
 
-        assertEquals( "+g:geronimo +g:javamail +g:1.4*", q.toString() );
+        assertEquals( "+g:geronimo +g:javamail +g:1 +g:4*", q.toString() );
 
         q = queryCreator.constructQuery( ArtifactInfo.GROUP_ID, "commons-col" );
 

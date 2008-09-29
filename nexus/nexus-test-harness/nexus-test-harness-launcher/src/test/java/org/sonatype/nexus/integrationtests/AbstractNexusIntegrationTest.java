@@ -36,6 +36,8 @@ import org.restlet.data.Response;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.appbooter.ctl.AppBooterServiceException;
 import org.sonatype.nexus.artifact.Gav;
+import org.sonatype.nexus.client.NexusClient;
+import org.sonatype.nexus.client.rest.NexusRestClient;
 import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
@@ -282,7 +284,12 @@ public class AbstractNexusIntegrationTest
 
         try
         {
-            if ( NexusStateUtil.isNexusRunning() )
+            
+            NexusClient nexusClient = new NexusRestClient();
+            nexusClient.connect( this.getBaseNexusUrl(), TestContainer.getInstance().getTestContext().getAdminUsername(), TestContainer.getInstance().getTestContext().getAdminPassword() );
+            boolean running = nexusClient.isNexusRunning( false );
+            nexusClient.disconnect();
+            if ( running )
             {
                 // we have nothing to do if its running
                 return;
@@ -292,7 +299,7 @@ public class AbstractNexusIntegrationTest
                 NexusStateUtil.doSoftStart();
             }
         }
-        catch ( IOException e )
+        catch ( Exception e )
         {
             // nexus is not running....
             // that is ok, most likely someone ran a single test from eclipse
