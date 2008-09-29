@@ -52,14 +52,15 @@ public class DefaultQueryCreator
         {
             String[] terms = null;
 
-            if ( ArtifactInfo.GROUP_ID.equals( field ) )
-            {
-                terms = phrase.split( "[ _\\-/\\\\&&[^\\.]]" );
-            }
-            else
-            {
+//            if ( ArtifactInfo.GROUP_ID.equals( field ) )
+//            {
+//                terms = phrase.split( "[ _\\-/\\\\&&[^\\.]]" );
+//                terms = phrase.split( "[ ]" );
+//            }
+//            else
+//            {
                 terms = phrase.split( "[\\. _\\-/\\\\]" );
-            }
+//            }
 
             int len = terms.length;
 
@@ -171,7 +172,18 @@ public class DefaultQueryCreator
                 }
                 else
                 {
-                    queries.add( new PrefixQuery( new Term( field, phrase ) ) );
+                    
+//                    if( phrases.length == 1)
+//                    {
+//                        queries.add( new WildcardQuery( new Term( field, "*"+ phrase +"*" ) ) );
+//                    }
+//                    else
+//                    {
+                    if(terms.length  > 0)
+                        queries.add( new PrefixQuery( new Term( field, terms[0] ) ) );
+                    else
+                        queries.add( new PrefixQuery( new Term( field, "" ) ) );
+//                    }
                 }
             }
         }

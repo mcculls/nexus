@@ -32,6 +32,7 @@ public interface NexusClient
     public List<NexusArtifact> searchByGAV(NexusArtifact gav) throws NexusClientException, NexusConnectionException;
     
     public boolean isNexusStarted( boolean blocking) throws NexusClientException, NexusConnectionException;
+    public boolean isNexusRunning( boolean blocking) throws NexusClientException, NexusConnectionException;
     
     public void stopNexus() throws NexusClientException, NexusConnectionException;
     

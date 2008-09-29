@@ -41,8 +41,10 @@ public abstract class AbstractRepoNexusIndexerTest
         assertGroup( 1, "junit", context );
 
         assertGroup( 6, "commons-logging", context );
+        
+//        assertGroup( 0, "logging-commons", context );
 
-        assertGroup( 1, "regexp", context );
+        assertGroup( 2, "regexp", context );
 
         assertGroup( 1, "commons-cli", context );
 
@@ -51,6 +53,7 @@ public abstract class AbstractRepoNexusIndexerTest
         assertGroup( 6, "org.slf4j", context );
 
         assertGroup( 3, "org.testng", context );
+//        assertGroup( 0, "testng.org", context );
 
         assertGroup( 3, "org.apache", context );
 

@@ -138,7 +138,7 @@ public class TaskScheduleUtil
         Assert.assertTrue( "Unable to run task:" + scheduledTask.getTypeId(), status.isSuccess() );
 
         // I don't like to rely on this
-        Thread.sleep( 1000 );
+        Thread.sleep( 5000 );
 
         return scheduledTask;
     }

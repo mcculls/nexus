@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthPolicy;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.restlet.Client;
@@ -39,6 +46,8 @@ public class RestClientHelper
 
     private final Client restClient;
 
+    private final HttpClient httpClient = new HttpClient();
+
     private ChallengeResponse challenge;
 
     private String baseUrl;
@@ -57,6 +66,21 @@ public class RestClientHelper
         this.baseUrl = baseUrl;
         this.restContext = new Context();
         this.restClient = new Client( restContext, Protocol.HTTP );
+
+        this.initializeHttpClient( username, password );
+    }
+
+    private void initializeHttpClient( String username, String password )
+    {
+        this.httpClient.getHttpConnectionManager().getParams().setConnectionTimeout( 5000 );
+
+        this.httpClient
+            .getState().setCredentials( AuthScope.ANY, new UsernamePasswordCredentials( username, password ) );
+
+        List<String> authPrefs = new ArrayList<String>( 1 );
+        authPrefs.add( AuthPolicy.BASIC );
+        this.httpClient.getParams().setParameter( AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs );
+        this.httpClient.getParams().setAuthenticationPreemptive( true );
     }
 
     private String buildUrl( String service, String id )
@@ -114,6 +138,33 @@ public class RestClientHelper
     {
         String url = this.buildUrl( service, id );
         return this.sendMessage( Method.GET, url, (NexusResponse) null );
+    }
+
+    public Object getUsingHttpClient( String service, String id )
+        throws NexusClientException,
+            NexusConnectionException
+    {
+        String url = this.buildUrl( service, id );
+        GetMethod getMethod = new GetMethod( url );
+
+        try
+        {
+            this.httpClient.executeMethod( getMethod );
+            String responseText = getMethod.getResponseBodyAsString();
+            return this.parseResponseText( responseText );
+        }
+        catch ( HttpException e )
+        {
+            throw new NexusConnectionException( "Error getting response text: " + e.getMessage(), e );
+        }
+        catch ( IOException e )
+        {
+            throw new NexusConnectionException( "Error getting response text: " + e.getMessage(), e );
+        }
+        finally
+        {
+            getMethod.releaseConnection();
+        }
     }
 
     public Object get( String service, Map<String, String> args )
@@ -202,60 +253,75 @@ public class RestClientHelper
         // always expect a success
         if ( !response.getStatus().isSuccess() )
         {
-            String errorMessage = "Error in response from server: " + response.getStatus() + ".";
-            List<NexusError> errors = new ArrayList<NexusError>();
+            String responseText = null;
             try
             {
-                if ( response.getEntity() != null )
-                {
-
-                    String responseText = response.getEntity().getText();
-
-                    // this is kinda hackish, but this class is already tied to xstream
-                    if ( responseText.contains( "<error" ) ) // quick check before we parse the string
-                    {
-                        // try to parse the response
-                        NexusErrorResponse errorResponse = (NexusErrorResponse) this.xstream.fromXML(
-                            responseText,
-                            new NexusErrorResponse() );
-                        // if we made it this far we can stick the NexusErrors in the Exception
-                        errors = errorResponse.getErrors();
-                    }
-                    else
-                    {
-                        // the response text might be helpful in debugging, so we will add it
-                        errorMessage += "\nResponse: "
-                            + ( !StringUtils.isEmpty( responseText ) ? "\n" + responseText : "<empty>" );
-                    }
-                }
-                else
-                {
-                    errorMessage = response.getStatus().getName();
-                }
+                responseText = response.getEntity() != null ? response.getEntity().getText() : null;
             }
+
             catch ( Exception e ) // we really don't want our fancy exception to cause another problem.
             {
                 logger.warn( "Error getting the response text: " + e.getMessage(), e );
             }
-
-            // now finally throw it...
-            throw new NexusConnectionException( errorMessage, errors );
+            this.processErrorInResponse( responseText, response.getStatus().toString() );
         }
 
         Object result = null;
         try
         {
-            String responseText = response.getEntity().getText();
-            if ( StringUtils.isNotEmpty( responseText ) )
-            {
-                result = this.xstream.fromXML( responseText );
-            }
+            result =this.parseResponseText( response.getEntity().getText() );
         }
         catch ( IOException e )
         {
             throw new NexusConnectionException( "Error getting response text: " + e.getMessage(), e );
         }
+
         return result;
+    }
+
+    private Object parseResponseText( String responseText )
+    {
+        Object result = null;
+
+        if ( StringUtils.isNotEmpty( responseText ) )
+        {
+            result = this.xstream.fromXML( responseText );
+        }
+        return result;
+    }
+
+    private void processErrorInResponse( String responseText, String statusText )
+        throws NexusConnectionException
+    {
+        String errorMessage = "Error in response from server: " + statusText + ".";
+        List<NexusError> errors = new ArrayList<NexusError>();
+
+        if ( StringUtils.isNotEmpty( responseText ) )
+        {
+            // this is kinda hackish, but this class is already tied to xstream
+            if ( responseText.contains( "<error" ) ) // quick check before we parse the string
+            {
+                // try to parse the response
+                NexusErrorResponse errorResponse = (NexusErrorResponse) this.xstream.fromXML(
+                    responseText,
+                    new NexusErrorResponse() );
+                // if we made it this far we can stick the NexusErrors in the Exception
+                errors = errorResponse.getErrors();
+            }
+            else
+            {
+                // the response text might be helpful in debugging, so we will add it
+                errorMessage += "\nResponse: "
+                    + ( !StringUtils.isEmpty( responseText ) ? "\n" + responseText : "<empty>" );
+            }
+        }
+
+        // now finally throw it...
+        throw new NexusConnectionException( errorMessage, errors );
+    }
+
+    public void disconnect()
+    {
     }
 
 }

@@ -18,6 +18,7 @@ import java.util.Collection;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.PrefixQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.codehaus.plexus.PlexusTestCase;
@@ -69,14 +70,18 @@ public abstract class AbstractNexusIndexerTest
         // ArtifactInfo.UINFO - UN_TOKENIZED
         // ArtifactInfo.GROUP_ID - TOKENIZED
 
-        Term term = new Term( ArtifactInfo.GROUP_ID, group );
-        PrefixQuery pq = new PrefixQuery( term );
+//        Term term = new Term( ArtifactInfo.GROUP_ID, group );
+//        PrefixQuery pq = new PrefixQuery( term );
+        
+        
+        Query q = nexusIndexer.constructQuery( ArtifactInfo.GROUP_ID, group );
+        
         // new WildcardQuery( //
         // SpanTermQuery pq = new SpanTermQuery( term );
         // PhraseQuery pq = new PhraseQuery();
         // pq.add( new Term( ArtifactInfo.UINFO, group + "*" ) );
 
-        Collection<ArtifactInfo> artifacts = nexusIndexer.searchFlat( ArtifactInfo.VERSION_COMPARATOR, pq, context );
+        Collection<ArtifactInfo> artifacts = nexusIndexer.searchFlat( ArtifactInfo.VERSION_COMPARATOR, q, context );
         assertEquals( artifacts.toString(), expected, artifacts.size() );
     }
 

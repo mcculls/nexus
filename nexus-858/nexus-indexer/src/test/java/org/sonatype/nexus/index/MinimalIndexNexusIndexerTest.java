@@ -53,14 +53,20 @@ public class MinimalIndexNexusIndexerTest
 
 //        Query bq = new TermQuery(new Term(ArtifactInfo.GROUP_ID, "org.apache.maven.plugins"));
 //        Query bq = new TermQuery(new Term(ArtifactInfo.ARTIFACT_ID, term));
-        Query bq = new PrefixQuery( new Term( ArtifactInfo.GROUP_ID, term ) );
+//        Query bq = new PrefixQuery( new Term( ArtifactInfo.GROUP_ID, term ) );
 //        BooleanQuery bq = new BooleanQuery();
 //        bq.add(new PrefixQuery(new Term(ArtifactInfo.GROUP_ID, term + "*")), Occur.SHOULD);
 //        bq.add(new PrefixQuery(new Term(ArtifactInfo.ARTIFACT_ID, term + "*")), Occur.SHOULD);
-        TermQuery tq = new TermQuery( new Term( ArtifactInfo.PACKAGING, "maven-plugin" ) );
-        Query query = new FilteredQuery( tq, new QueryWrapperFilter( bq ) );
+//        TermQuery tq = new TermQuery( new Term( ArtifactInfo.PACKAGING, "maven-plugin" ) );
+//        Query query = new FilteredQuery( tq, new QueryWrapperFilter( bq ) );
+        
+        
+        Query q1 = nexusIndexer.constructQuery( ArtifactInfo.GROUP_ID, term );
 
-        FlatSearchResponse response = nexusIndexer.searchFlat( new FlatSearchRequest( query ) );
+        System.out.println( "new QueryWrapperFilter( bq ): "+ new QueryWrapperFilter( q1 ) );
+//        System.out.println( "query: "+ query );
+        
+        FlatSearchResponse response = nexusIndexer.searchFlat( new FlatSearchRequest( q1 ) );
         
         Collection<ArtifactInfo> r = response.getResults(); 
 
