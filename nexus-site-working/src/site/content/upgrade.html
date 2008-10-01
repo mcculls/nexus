@@ -3,7 +3,12 @@
     <title>Upgrade Notes</title>
   </head>
   <body>
- 
+
+  <h2>To Release 1.0.2 from 1.0.1</h2>
+    <p> There are no significant changes to system and upgrade is relatively easy. Simply unpack the bundle in the same folder that contains your nexus-webapp-1.0.1-bundle and sonatype-work folders. This will create a new folder called nexus-webapp-1.0.2-bundle. Shutdown the old Nexus, switch any symlinks you may have and start Nexus from the new folder. That's it.</p>
+
+<p>If you have managed to make nexus use your own security realm (using the realms list in the nexus.xml file), note that the nexus.xml file will be updated to use the newly implemented jsecurity realms that nexus will require by default.  If you use standard Nexus security, there is nothing to be concerned with</p>   
+  
     <h2>To Release 1.0.1 from 1.0.0</h2>
     <p> There are no significant changes to system and upgrade is relatively easy. Simply unpack the bundle in the same folder that contains your nexus-webapp-1.0.0-bundle and sonatype-work folders. This will create a new folder called nexus-webapp-1.0.1-bundle. Shutdown the old Nexus, switch any symlinks you may have and start Nexus from the new folder. That's it.</p>
 
