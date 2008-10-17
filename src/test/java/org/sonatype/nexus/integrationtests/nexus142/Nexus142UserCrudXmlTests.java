@@ -2,13 +2,9 @@ package org.sonatype.nexus.integrationtests.nexus142;
 
 import java.io.IOException;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
-import org.sonatype.plexus.rest.xstream.json.JsonOrgHierarchicalStreamDriver;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.Test;
 
 /**
  * CRUD tests for XML request/response.

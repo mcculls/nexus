@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
@@ -19,7 +19,6 @@ import org.sonatype.nexus.rest.model.RepositoryTargetListResource;
 import org.sonatype.nexus.rest.model.RepositoryTargetListResourceResponse;
 import org.sonatype.nexus.rest.model.RepositoryTargetResource;
 import org.sonatype.nexus.rest.model.RepositoryTargetResourceResponse;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.plexus.rest.representation.XStreamRepresentation;
 
 import com.thoughtworks.xstream.XStream;
@@ -187,8 +186,8 @@ public class TargetMessageUtil
 
         List<CRepositoryTarget> repoTargets = config.getRepositoryTargets();
         // check to see if the size matches
-        Assert.assertTrue( "Configuration had a different number: (" + repoTargets.size()
-            + ") of targets then expected: (" + targets.size() + ")", repoTargets.size() == targets.size() );
+        Assert.assertTrue( repoTargets.size() == targets.size(), "Configuration had a different number: (" + repoTargets.size()
+            + ") of targets then expected: (" + targets.size() + ")" );
 
         // look for the target by id
 

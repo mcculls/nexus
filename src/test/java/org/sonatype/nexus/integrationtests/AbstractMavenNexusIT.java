@@ -5,14 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.sonatype.nexus.test.utils.TestProperties;
-
-import com.thoughtworks.xstream.XStream;
 
 public class AbstractMavenNexusIT
     extends AbstractNexusIntegrationTest

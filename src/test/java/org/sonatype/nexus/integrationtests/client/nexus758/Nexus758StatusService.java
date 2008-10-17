@@ -1,8 +1,7 @@
 package org.sonatype.nexus.integrationtests.client.nexus758;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.appbooter.AbstractForkedAppBooter;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.nexus.client.NexusClient;
@@ -11,6 +10,7 @@ import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.integrationtests.TestContext;
 import org.sonatype.nexus.test.utils.TestProperties;
+import org.testng.annotations.Test;
 
 /**
  * Tests the Soft Start, Stop, Restart, and isNexusStarted methods in the rest-client.
@@ -39,11 +39,11 @@ public class Nexus758StatusService
 
         // stop Nexus
         client.stopNexus(); // blocking
-        Assert.assertFalse( "Expected Nexus to be Stopped", client.isNexusStarted( false ) );
+        Assert.assertFalse( client.isNexusStarted( false ), "Expected Nexus to be Stopped" );
 
         // start Nexus
         client.startNexus(); // blocking
-        Assert.assertTrue( "Expected Nexus to be Started", client.isNexusStarted( false ) );
+        Assert.assertTrue( client.isNexusStarted( false ), "Expected Nexus to be Started" );
 
         client.disconnect();
     }
@@ -56,7 +56,7 @@ public class Nexus758StatusService
 
         // restart Nexus
         client.restartNexus(); // this is blocking
-        Assert.assertTrue( "Expected Nexus to be Started", client.isNexusStarted( false ) );
+        Assert.assertTrue( client.isNexusStarted( false ), "Expected Nexus to be Started" );
 
         client.disconnect();
     }
@@ -77,13 +77,13 @@ public class Nexus758StatusService
             client = this.getConnectedNexusClient();
             // turn down the timeout to speed up the tests
             System.setProperty( NexusRestClient.WAIT_FOR_START_TIMEOUT_KEY, "2100" );
-            Assert.assertFalse("Wait for start, timed out.", client.isNexusStarted( true ));
+            Assert.assertFalse(client.isNexusStarted( true ), "Wait for start, timed out.");
             
             appBooter.setSleepAfterStart( 0 );
             appBooter.start();
             // set the timeout back to 16 sec
             System.setProperty( NexusRestClient.WAIT_FOR_START_TIMEOUT_KEY, "16000" );
-            Assert.assertTrue("Wait for start, timed out.", client.isNexusStarted( true ));
+            Assert.assertTrue(client.isNexusStarted( true ), "Wait for start, timed out.");
 
         }
         finally

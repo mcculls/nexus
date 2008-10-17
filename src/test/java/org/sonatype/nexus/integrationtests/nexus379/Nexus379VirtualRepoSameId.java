@@ -2,8 +2,8 @@ package org.sonatype.nexus.integrationtests.nexus379;
 
 import java.io.IOException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
@@ -61,7 +61,7 @@ public class Nexus379VirtualRepoSameId
         virtualRepo.setShadowOf( "testVirtualRepoWithSameId" );
         Response response = this.messageUtil.sendMessage( Method.POST, virtualRepo );
         
-        Assert.assertEquals( "Status:" + "\n"+ response.getEntity().getText(), 400, response.getStatus().getCode() );
+        Assert.assertEquals( 400, response.getStatus().getCode(),"Status:" + "\n"+ response.getEntity().getText() );
         
     }
     

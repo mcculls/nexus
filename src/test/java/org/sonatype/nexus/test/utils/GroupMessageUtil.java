@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.restlet.data.MediaType;
@@ -89,7 +88,7 @@ public class GroupMessageUtil
 
         
         
-        Assert.assertEquals( "Size of groups repository list, \nexpected: " + this.repoListToStringList( expected ) + "\nactual: "+ this.repoListToStringList( actual ) +"\n", expected.size(), actual.size() );
+        Assert.assertEquals( expected.size(), actual.size(), "Size of groups repository list, \nexpected: " + this.repoListToStringList( expected ) + "\nactual: "+ this.repoListToStringList( actual ) +"\n" );
 
         for ( int ii = 0; ii < expected.size(); ii++ )
         {
@@ -107,7 +106,7 @@ public class GroupMessageUtil
                 actualRepoId = tmpObj.toString();
             }
 
-            Assert.assertEquals( "Repo Id:", expectedRepo.getId(), actualRepoId );
+            Assert.assertEquals( expectedRepo.getId(), actualRepoId,  "Repo Id:" );
         }
     }
     
@@ -139,7 +138,7 @@ public class GroupMessageUtil
         String responseText = response.getEntity().getText();
         LOG.debug( "responseText: \n" + responseText );
         
-        Assert.assertTrue( "Failed to return Group: "+ groupId+"\nResponse:\n"+ responseText, response.getStatus().isSuccess());
+        Assert.assertTrue( response.getStatus().isSuccess(), "Failed to return Group: "+ groupId+"\nResponse:\n"+ responseText);
         
         // this should use call to: getResourceFromResponse
         XStreamRepresentation representation =

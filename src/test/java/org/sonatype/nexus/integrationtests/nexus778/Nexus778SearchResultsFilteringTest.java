@@ -3,9 +3,8 @@ package org.sonatype.nexus.integrationtests.nexus778;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.rest.model.NexusArtifact;
@@ -15,6 +14,7 @@ import org.sonatype.nexus.rest.model.RepositoryTargetResource;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.test.utils.SearchMessageUtil;
+import org.testng.annotations.Test;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 

@@ -5,12 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.proxy.AbstractNexusProxyIntegrationTest;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.annotations.Test;
 
 /**
  * Create three repositories, deploys a different artifact with the same name in each repo. Add each repo to a group

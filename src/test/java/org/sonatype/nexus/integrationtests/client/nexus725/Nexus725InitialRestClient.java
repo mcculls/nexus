@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.client.NexusClient;
-import org.sonatype.nexus.client.NexusClientException;
 import org.sonatype.nexus.client.NexusConnectionException;
-import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.integrationtests.TestContext;
@@ -19,6 +16,7 @@ import org.sonatype.nexus.rest.model.RepositoryBaseResource;
 import org.sonatype.nexus.rest.model.RepositoryListResource;
 import org.sonatype.nexus.rest.model.RepositoryResource;
 import org.sonatype.nexus.test.utils.TestProperties;
+import org.testng.annotations.Test;
 
 /**
  * Tests the Nexus java/REST client.
@@ -33,8 +31,8 @@ public class Nexus725InitialRestClient
 
         NexusClient client = (NexusClient) TestContainer.getInstance().lookup( NexusClient.ROLE );
         TestContext context = TestContainer.getInstance().getTestContext();
-        client.connect( TestProperties.getString( "nexus.base.url" ), context.getAdminUsername(),
-                        context.getAdminPassword() );
+        client.connect( TestProperties.getString( "nexus.base.url" ), context.getAdminUsername(), context
+            .getAdminPassword() );
 
         return client;
     }
@@ -46,7 +44,7 @@ public class Nexus725InitialRestClient
         NexusClient client = this.getConnectedNexusClient();
 
         List<RepositoryListResource> repos = client.getRespositories();
-        Assert.assertTrue( "Expected list of repos to be larger then 0", repos.size() > 0 );
+        Assert.assertTrue( repos.size() > 0, "Expected list of repos to be larger then 0" );
 
         List<String> knownRepos = new ArrayList<String>();
         knownRepos.add( "fake-central" );
@@ -60,8 +58,8 @@ public class Nexus725InitialRestClient
         for ( Iterator<RepositoryListResource> iter = repos.iterator(); iter.hasNext(); )
         {
             RepositoryListResource repositoryListResource = iter.next();
-            Assert.assertTrue( "Expected to find repo: " + repositoryListResource.getId() + " in list: " + knownRepos,
-                               knownRepos.contains( repositoryListResource.getId() ) );
+            Assert.assertTrue( knownRepos.contains( repositoryListResource.getId() ), "Expected to find repo: "
+                + repositoryListResource.getId() + " in list: " + knownRepos );
         }
         client.disconnect();
     }
@@ -73,11 +71,11 @@ public class Nexus725InitialRestClient
 
         NexusClient client = this.getConnectedNexusClient();
 
-        Assert.assertTrue( "Expected to find 'apache-snapshots' repo:",
-                           client.isValidRepository( "nexus-test-harness-repo" ) );
-        Assert.assertFalse( "Expected not to find 'foobar' repo:", client.isValidRepository( "foobar" ) );
+        Assert.assertTrue( client
+            .isValidRepository( "nexus-test-harness-repo" ), "Expected to find 'apache-snapshots' repo:" );
+        Assert.assertFalse( client.isValidRepository( "foobar" ), "Expected not to find 'foobar' repo:" );
 
-        Assert.assertFalse( "Expected not to find 'null' repo:", client.isValidRepository( null ) );
+        Assert.assertFalse( client.isValidRepository( null ), "Expected not to find 'null' repo:" );
 
         client.disconnect();
 
@@ -141,7 +139,7 @@ public class Nexus725InitialRestClient
         {
             // expected
         }
-        Assert.assertFalse( "Expected false, repo should have been deleted.", client.isValidRepository( "testCreate" ) );
+        Assert.assertFalse( client.isValidRepository( "testCreate" ), "Expected false, repo should have been deleted." );
 
         client.disconnect();
     }
@@ -184,12 +182,12 @@ public class Nexus725InitialRestClient
         searchParam.setClassifier( "not currently working" );
 
         List<NexusArtifact> results = client.searchByGAV( searchParam );
-        Assert.assertEquals( "Search result size", 1, results.size() );
+        Assert.assertEquals( 1, results.size(), "Search result size" );
 
-        Assert.assertEquals( "Search result artifact id", "nexus725-artifact-1", results.get( 0 ).getArtifactId() );
-        Assert.assertEquals( "Search result group id", "nexus725", results.get( 0 ).getGroupId() );
-        Assert.assertEquals( "Search result version", "1.0.1", results.get( 0 ).getVersion() );
-        Assert.assertEquals( "Search result packaging", "jar", results.get( 0 ).getPackaging() );
+        Assert.assertEquals( "nexus725-artifact-1", results.get( 0 ).getArtifactId(), "Search result artifact id" );
+        Assert.assertEquals( "nexus725", results.get( 0 ).getGroupId(),"Search result group id" );
+        Assert.assertEquals( "1.0.1", results.get( 0 ).getVersion(), "Search result version" );
+        Assert.assertEquals( "jar", results.get( 0 ).getPackaging(), "Search result packaging" );
 
         client.disconnect();
 
@@ -215,11 +213,12 @@ public class Nexus725InitialRestClient
         catch ( NexusConnectionException e )
         {
             // make sure we have an error
-            Assert.assertTrue( "NexusConnectionException should contain at least 1 NexusError",
-                               e.getErrors().size() > 0 );
+            Assert.assertTrue(
+                
+                e.getErrors().size() > 0, "NexusConnectionException should contain at least 1 NexusError" );
 
             // make sure the error is in the stacktrace
-            Assert.assertTrue( "Expected message in error", e.getMessage().contains( e.getErrors().get( 0 ).getMsg() ) );
+            Assert.assertTrue( e.getMessage().contains( e.getErrors().get( 0 ).getMsg() ), "Expected message in error" );
         }
     }
 
@@ -248,7 +247,7 @@ public class Nexus725InitialRestClient
         throws Exception
     {
         NexusClient client = (NexusClient) TestContainer.getInstance().lookup( NexusClient.ROLE );
-        
+
         try
         {
             client.connect( TestProperties.getString( "nexus.base.url" ), "admin", "wrong-password" );

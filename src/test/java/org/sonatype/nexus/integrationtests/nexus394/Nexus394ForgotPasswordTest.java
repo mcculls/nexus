@@ -2,8 +2,8 @@ package org.sonatype.nexus.integrationtests.nexus394;
 
 import javax.mail.internet.MimeMessage;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.sonatype.nexus.integrationtests.AbstractEmailServerNexusIT;
@@ -23,7 +23,7 @@ public class Nexus394ForgotPasswordTest
         throws Exception
     {
         Response response = ForgotPasswordUtils.recoverUserPassword( "test-user", "nexus-dev2@sonatype.org" );
-        Assert.assertEquals( "Status: "+response.getStatus() +"\n"+ response.getEntity().getText(), 202, response.getStatus().getCode() );
+        Assert.assertEquals( 202, response.getStatus().getCode(), "Status: "+response.getStatus() +"\n"+ response.getEntity().getText() );
         
         // Need 1 message
         server.waitForIncomingEmail( 1000, 1 );

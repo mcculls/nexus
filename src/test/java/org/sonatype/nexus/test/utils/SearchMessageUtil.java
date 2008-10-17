@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.restlet.data.MediaType;
 import org.restlet.data.Message;
 import org.restlet.data.Method;

@@ -5,19 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
-import org.restlet.Client;
 import org.restlet.data.Method;
-import org.restlet.data.Protocol;
-import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.RequestFacade;
-import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.integrationtests.proxy.AbstractNexusProxyIntegrationTest;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.annotations.Test;
 
 /**
  * Create an http server. Create a proxy repo to http server. Access a file from http server. Stop http server. access
@@ -42,7 +38,7 @@ public class Nexus179RemoteRepoDownTest
         this.stopProxy();
 
         // delete everything under this tests group id
-        Assert.assertTrue( "Expected item to be deleted.", this.deleteFromRepository( "nexus179/" ));
+        Assert.assertTrue( this.deleteFromRepository( "nexus179/" ), "Expected item to be deleted.");
 
         Gav gav =
             new Gav( this.getTestId(), "repo-down-test-artifact", "1.0.0", null, "xml", 0, new Date().getTime(),
@@ -51,7 +47,7 @@ public class Nexus179RemoteRepoDownTest
         File localFile = this.getLocalFile( TEST_RELEASE_REPO, gav );
 
         // make sure this exists first, or the test is invalid anyway.
-        Assert.assertTrue( "The File: " + localFile + " does not exist.", localFile.exists() );
+        Assert.assertTrue( localFile.exists(), "The File: " + localFile + " does not exist." );
 
         try
         {

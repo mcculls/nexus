@@ -4,20 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.RepositoryTargetResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.TargetMessageUtil;
-import org.sonatype.plexus.rest.xstream.json.JsonOrgHierarchicalStreamDriver;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.Test;
 
 /**
  * Extra CRUD validation tests.
@@ -30,8 +26,7 @@ public class Nexus133TargetValidationTests
 
     public Nexus133TargetValidationTests()
     {
-        this.messageUtil =
-            new TargetMessageUtil( this.getJsonXStream(), MediaType.APPLICATION_JSON );
+        this.messageUtil = new TargetMessageUtil( this.getJsonXStream(), MediaType.APPLICATION_JSON );
     }
 
     @Test
@@ -57,8 +52,9 @@ public class Nexus133TargetValidationTests
         {
             Assert.fail( "Target should not have been created: " + response.getStatus() + "\n" + responseText );
         }
-        Assert.assertTrue( "Response text did not contain an error message. \nResponse Text:\n " + responseText,
-                           responseText.startsWith( "{\"errors\":" ) );
+        Assert.assertTrue(
+            responseText.startsWith( "{\"errors\":" ),
+            "Response text did not contain an error message. \nResponse Text:\n " + responseText );
     }
 
     @Test
@@ -83,8 +79,9 @@ public class Nexus133TargetValidationTests
         {
             Assert.fail( "Target should not have been created: " + response.getStatus() + "\n" + responseText );
         }
-        Assert.assertTrue( "Response text did not contain an error message. \nResponse Text:\n " + responseText,
-                           responseText.startsWith( "{\"errors\":" ) );
+        Assert.assertTrue(
+            responseText.startsWith( "{\"errors\":" ),
+            "Response text did not contain an error message. \nResponse Text:\n " + responseText );
     }
 
     @Test
@@ -109,8 +106,9 @@ public class Nexus133TargetValidationTests
         {
             Assert.fail( "Target should not have been created: " + response.getStatus() + "\n" + responseText );
         }
-        Assert.assertTrue( "Response text did not contain an error message. \nResponse Text:\n " + responseText,
-                           responseText.startsWith( "{\"errors\":" ) );
+        Assert.assertTrue(
+            responseText.startsWith( "{\"errors\":" ),
+            "Response text did not contain an error message. \nResponse Text:\n " + responseText );
     }
 
     @Test
@@ -135,8 +133,9 @@ public class Nexus133TargetValidationTests
         {
             Assert.fail( "Target should not have been created: " + response.getStatus() + "\n" + responseText );
         }
-        Assert.assertTrue( "Response text did not contain an error message. \nResponse Text:\n " + responseText,
-                           responseText.startsWith( "{\"errors\":" ) );
+        Assert.assertTrue(
+            responseText.startsWith( "{\"errors\":" ),
+            "Response text did not contain an error message. \nResponse Text:\n " + responseText );
     }
 
     @Test
@@ -237,7 +236,9 @@ public class Nexus133TargetValidationTests
             Assert.fail( "Target should not have been created: " + response.getStatus() );
         }
         String responseText = response.getEntity().getText();
-        Assert.assertTrue("responseText does not contain an error message:\n"+ responseText, responseText.startsWith( "{\"errors\":" ) );
+        Assert.assertTrue(
+            responseText.startsWith( "{\"errors\":" ),
+            "responseText does not contain an error message:\n" + responseText );
 
         /*
          * Invalid RegEx
@@ -362,7 +363,7 @@ public class Nexus133TargetValidationTests
     }
 
     @SuppressWarnings( "unchecked" )
-    //@Test
+    // @Test
     // eclipseContentClass is disabled for beta5!
     public void eclipseContentClassTest()
         throws IOException
@@ -399,7 +400,7 @@ public class Nexus133TargetValidationTests
     }
 
     @SuppressWarnings( "unchecked" )
-    //@Test
+    // @Test
     // m2NamespaceContentclass is disabled for beta5!
     public void m2NamespaceContentClassTest()
         throws IOException

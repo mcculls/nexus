@@ -3,16 +3,17 @@ package org.sonatype.nexus.integrationtests.nexus983;
 import java.io.File;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.NexusArtifact;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
 import org.sonatype.nexus.test.utils.SearchMessageUtil;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * Copy (filesystem copy) a jar to a nexus repo and run reindex to see what happens
@@ -23,7 +24,7 @@ public class Nexus983IndexArtifactsWihoutPomTest
 
     protected SearchMessageUtil messageUtil;
 
-    @Before
+    @BeforeTest
     public void ini()
     {
         this.messageUtil = new SearchMessageUtil();
@@ -37,7 +38,7 @@ public class Nexus983IndexArtifactsWihoutPomTest
         DeployUtils.deployWithWagon( this.container, "http", baseNexusUrl + "content/repositories/"
             + REPO_TEST_HARNESS_REPO, artifactFile, "nexus983/nexus983-artifact1/1.0.0/nexus983-artifact1-1.0.0.jar" );
         List<NexusArtifact> artifacts = messageUtil.searchFor( "nexus983-artifact1" );
-        Assert.assertEquals( "Should find one artifact", 1, artifacts.size() );
+        Assert.assertEquals( 1, artifacts.size(), "Should find one artifact" );
     }
 
     @Test
@@ -50,7 +51,7 @@ public class Nexus983IndexArtifactsWihoutPomTest
         RepositoryMessageUtil.updateIndexes( REPO_TEST_HARNESS_REPO );
 
         List<NexusArtifact> artifacts = messageUtil.searchFor( "nexus983-artifact2" );
-        Assert.assertEquals( "Should find one artifact", 1, artifacts.size() );
+        Assert.assertEquals( 1, artifacts.size(), "Should find one artifact" );
     }
 
 }

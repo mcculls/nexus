@@ -1,12 +1,12 @@
 package org.sonatype.nexus.integrationtests.nexus586;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.Status;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.rest.model.GlobalConfigurationResource;
+import org.testng.annotations.Test;
 
 
 /**
@@ -31,7 +31,7 @@ public class Nexus586ValidateConfigurationTest
         globalConfig.setSecurityAnonymousUsername( "zigfrid" );
 
         Status status = SettingsMessageUtil.save( globalConfig );
-        Assert.assertEquals( "Can't set an invalid user as anonymous", 400, status.getCode() );
+        Assert.assertEquals( 400, status.getCode(), "Can't set an invalid user as anonymous" );
     }
 
 }

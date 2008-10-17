@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.test.utils.MavenDeployer;
+import org.testng.annotations.Test;
 
 /**
  * Test deploying artifacts using the wrong password. (expected to fail)

@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.Annotation;

@@ -1,19 +1,16 @@
 package org.sonatype.nexus.integrationtests;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.nexus.client.NexusClient;
 import org.sonatype.nexus.client.rest.NexusRestClient;
 import org.sonatype.nexus.test.utils.NexusStateUtil;
 import org.sonatype.nexus.test.utils.TestProperties;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 
-@RunWith( Suite.class )
-@SuiteClasses( { IntegrationTestSuiteClasses.class, IntegrationTestSuiteClassesSecurity.class } )
+//@RunWith( Suite.class )
+//@SuiteClasses( { IntegrationTestSuiteClasses.class, IntegrationTestSuiteClassesSecurity.class } )
 public class IntegrationTestSuite
 {
     //

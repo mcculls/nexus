@@ -2,15 +2,15 @@ package org.sonatype.nexus.integrationtests.nexus602;
 
 import java.net.URL;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
 import org.restlet.data.Response;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.RequestFacade;
+import org.testng.annotations.Test;
 
 /**
  * Test snapshot search results can be downloaded.
@@ -31,18 +31,18 @@ public class Nexus602SearchSnapshotArtifactTest
                 + SNAPSHOT_ARTIFACT.getGroupId() + "&a=" + SNAPSHOT_ARTIFACT.getArtifactId() + "&v="
                 + SNAPSHOT_ARTIFACT.getVersion();
         Response response = RequestFacade.doGetRequest( serviceURI );
-        Assert.assertEquals( "Snapshot download should redirect to a new file "
-            + response.getRequest().getResourceRef().toString(), 301, response.getStatus().getCode() );
+        Assert.assertEquals( 301, response.getStatus().getCode(),"Snapshot download should redirect to a new file "
+            + response.getRequest().getResourceRef().toString() );
 
         Reference redirectRef = response.getRedirectRef();
-        Assert.assertNotNull( "Snapshot download should redirect to a new file "
-            + response.getRequest().getResourceRef().toString(), redirectRef );
+        Assert.assertNotNull( redirectRef, "Snapshot download should redirect to a new file "
+            + response.getRequest().getResourceRef().toString() );
 
         serviceURI = redirectRef.toString();
 
         response = RequestFacade.sendMessage( new URL( serviceURI ), Method.GET, null );
 
-        Assert.assertTrue( "Unable to fetch snapshot artifact", response.getStatus().isSuccess() );
+        Assert.assertTrue( response.getStatus().isSuccess(), "Unable to fetch snapshot artifact" );
     }
 
     @Test
@@ -54,18 +54,18 @@ public class Nexus602SearchSnapshotArtifactTest
                 + "&a=" + "artifact" + "&v=" + "1.0";
         Response response = RequestFacade.doGetRequest( serviceURI );
 
-        Assert.assertEquals( "Should redirect to a new file " + response.getRequest().getResourceRef().toString(), 301,
-                             response.getStatus().getCode() );
+        Assert.assertEquals( 301,
+                             response.getStatus().getCode(), "Should redirect to a new file " + response.getRequest().getResourceRef().toString() );
 
         Reference redirectRef = response.getRedirectRef();
-        Assert.assertNotNull( "Should redirect to a new file " + response.getRequest().getResourceRef().toString(),
-                              redirectRef );
+        Assert.assertNotNull( 
+                              redirectRef, "Should redirect to a new file " + response.getRequest().getResourceRef().toString() );
 
         serviceURI = redirectRef.toString();
 
         response = RequestFacade.sendMessage( new URL( serviceURI ), Method.GET, null );
 
-        Assert.assertTrue( "fetch released artifact", response.getStatus().isSuccess() );
+        Assert.assertTrue( response.getStatus().isSuccess(), "fetch released artifact" );
     }
 
     @Test
@@ -77,7 +77,7 @@ public class Nexus602SearchSnapshotArtifactTest
                 + "&a=" + "invalidArtifact" + "&v=" + "32.64";
         Response response = RequestFacade.doGetRequest( serviceURI );
 
-        Assert.assertEquals( "Shouldn't find an invalid artifact", 404, response.getStatus().getCode() );
+        Assert.assertEquals( 404, response.getStatus().getCode(), "Shouldn't find an invalid artifact" );
     }
 
 }

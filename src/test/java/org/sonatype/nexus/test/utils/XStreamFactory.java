@@ -5,7 +5,6 @@ import org.sonatype.plexus.rest.xstream.json.JsonOrgHierarchicalStreamDriver;
 import org.sonatype.plexus.rest.xstream.json.PrimitiveKeyedMapConverter;
 import org.sonatype.plexus.rest.xstream.xml.LookAheadXppDriver;
 
-
 import com.thoughtworks.xstream.XStream;
 
 public class XStreamFactory

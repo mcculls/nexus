@@ -1,18 +1,15 @@
 package org.sonatype.nexus.integrationtests.nexus537;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
-import org.junit.Test;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.artifact.Gav;
@@ -24,6 +21,7 @@ import org.sonatype.nexus.rest.model.PrivilegeTargetResource;
 import org.sonatype.nexus.rest.model.RepositoryTargetResource;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.MavenDeployer;
+import org.testng.annotations.Test;
 
 /**
  * Creates a few repo targets and make sure the privileges work correctly.
@@ -263,11 +261,11 @@ public class Nexus537RepoTargetsTests
         try
         {
             result = this.downloadArtifactFromRepository( repoId, gav, "target/nexus537jars/" );
-            Assert.assertTrue( "Artifact download should have thrown exception", shouldDownload );
+            Assert.assertTrue( shouldDownload,"Artifact download should have thrown exception" );
         }
         catch ( IOException e )
         {
-            Assert.assertFalse( "Artifact should have downloaded: \n" + e.getMessage(), shouldDownload );
+            Assert.assertFalse( shouldDownload,"Artifact should have downloaded: \n" + e.getMessage() );
         }
 
         return result;
@@ -280,13 +278,13 @@ public class Nexus537RepoTargetsTests
         {
             MavenDeployer.deploy( gav, this.getRepositoryUrl( repoId ), fileToDeploy,
                                   this.getOverridableFile( "settings.xml" ) );
-            Assert.assertTrue( "Artifact upload should have thrown exception", shouldUpload );
+            Assert.assertTrue( shouldUpload, "Artifact upload should have thrown exception" );
             // if we made it this far we should also test download, because upload implies download
             this.download( repoId, gav, shouldUpload );
         }
         catch ( CommandLineException e )
         {
-            Assert.assertFalse( "Artifact should have uploaded: \n" + e.getMessage(), shouldUpload );
+            Assert.assertFalse( shouldUpload, "Artifact should have uploaded: \n" + e.getMessage() );
         }
     }
 
@@ -303,17 +301,17 @@ public class Nexus537RepoTargetsTests
 
         if ( !shouldDelete )
         {
-            Assert.assertEquals( "Response Status: " + responseText, 401, statusCode );
+            Assert.assertEquals( 401, statusCode, "Response Status: " + responseText );
         }
         else
         {
-            Assert.assertEquals( "Response Status: " + responseText, 200, statusCode );
-            Assert.assertEquals( "GET of artifact before DELETE:", 200, initialGet );
+            Assert.assertEquals( 200, statusCode, "Response Status: " + responseText );
+            Assert.assertEquals( 200, initialGet, "GET of artifact before DELETE:" );
             // we should have read also
             reponse = RequestFacade.sendMessage( url, Method.GET, null );
             responseText = reponse.getEntity().getText();
             statusCode = reponse.getStatus().getCode();
-            Assert.assertEquals( "File should have been deleted from: " + url + "\n" + responseText, 404, statusCode );
+            Assert.assertEquals( 404, statusCode, "File should have been deleted from: " + url + "\n" + responseText );
         }
 
     }
@@ -324,11 +322,11 @@ public class Nexus537RepoTargetsTests
         try
         {
             result = this.downloadArtifactFromGroup( "test-group", gav, "target/nexus537jars/" );
-            Assert.assertTrue( "Artifact download should have thrown exception", shouldDownload );
+            Assert.assertTrue( shouldDownload, "Artifact download should have thrown exception" );
         }
         catch ( IOException e )
         {
-            Assert.assertFalse( "Artifact should have downloaded: \n" + e.getMessage(), shouldDownload );
+            Assert.assertFalse( shouldDownload, "Artifact should have downloaded: \n" + e.getMessage() );
         }
 
         return result;

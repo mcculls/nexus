@@ -5,16 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.DeployUtils;
+import org.testng.annotations.Test;
 
 
 /**
@@ -69,7 +69,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse( fileWasUploaded, "The file was uploaded and it should not have been." );
 
     }
 
@@ -114,7 +114,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse( fileWasUploaded, "The file was uploaded and it should not have been." );
 
     }
     
@@ -159,7 +159,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse(fileWasUploaded,  "The file was uploaded and it should not have been." );
 
     }
     
@@ -203,7 +203,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse( fileWasUploaded, "The file was uploaded and it should not have been." );
 
     }
 
@@ -248,7 +248,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse( fileWasUploaded, "The file was uploaded and it should not have been." );
 
     }
     
@@ -293,7 +293,7 @@ public class Nexus176DeployToInvalidRepoTest
             fileWasUploaded = false;
         }
         
-        Assert.assertFalse( "The file was uploaded and it should not have been.", fileWasUploaded );
+        Assert.assertFalse( fileWasUploaded, "The file was uploaded and it should not have been." );
 
     }
     

@@ -2,20 +2,17 @@ package org.sonatype.nexus.integrationtests.nexus385;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.RepositoryRouteMemberRepository;
 import org.sonatype.nexus.rest.model.RepositoryRouteResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
 import org.sonatype.nexus.test.utils.RoutesMessageUtil;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.Test;
 
 /**
  * CRUD tests for XML request/response.
@@ -166,7 +163,7 @@ public class Nexus385RoutesCrudXmlTests
             Assert.fail( "Could not create privilege: " + response.getStatus() + "\nresponse:\n" + responseText );
         }
 
-        Assert.assertTrue( "Route was not deleted.", NexusConfigUtil.getRoute( resource.getId() ) == null );
+        Assert.assertTrue( NexusConfigUtil.getRoute( resource.getId() ) == null, "Route was not deleted." );
 
     }
 

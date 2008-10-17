@@ -3,11 +3,11 @@ package org.sonatype.nexus.integrationtests.proxy.nexus262;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.proxy.AbstractNexusProxyIntegrationTest;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.annotations.Test;
 
 
 /**

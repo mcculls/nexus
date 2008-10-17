@@ -3,7 +3,7 @@ package org.sonatype.nexus.test.utils;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.restlet.data.MediaType;

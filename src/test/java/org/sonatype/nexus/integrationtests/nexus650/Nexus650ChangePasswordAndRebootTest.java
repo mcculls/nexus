@@ -1,7 +1,7 @@
 package org.sonatype.nexus.integrationtests.nexus650;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.restlet.data.Status;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
@@ -29,7 +29,7 @@ public class Nexus650ChangePasswordAndRebootTest
         
         String newPassword = "123password";
         Status status = ChangePasswordUtils.changePassword( TEST_USER_NAME, TEST_USER_PASSWORD, newPassword );
-        Assert.assertTrue( "Status: ", status.isSuccess() );
+        Assert.assertTrue( status.isSuccess(), "Status: " );
          
         // now change the password
         context.setPassword( newPassword );
@@ -38,7 +38,7 @@ public class Nexus650ChangePasswordAndRebootTest
         NexusStateUtil.doSoftRestart();
 
         // now we can verify everything worked out
-        Assert.assertTrue( "Nexus is not running", NexusStateUtil.isNexusRunning() );
+        Assert.assertTrue( NexusStateUtil.isNexusRunning(), "Nexus is not running" );
         
     }
     
