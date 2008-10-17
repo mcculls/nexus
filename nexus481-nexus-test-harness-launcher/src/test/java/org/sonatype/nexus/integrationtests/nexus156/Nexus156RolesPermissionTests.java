@@ -2,21 +2,22 @@ package org.sonatype.nexus.integrationtests.nexus156;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.rest.model.RoleResource;
+import org.testng.annotations.Test;
 
 /**
  * Test the privileges for CRUD operations.
  */
-public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
+public class Nexus156RolesPermissionTests
+    extends AbstractPrivilegeTest
 {
-    
+
     @Test
     public void testCreatePermission()
         throws IOException
@@ -32,7 +33,7 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         Response response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
 
         // use admin
         TestContainer.getInstance().getTestContext().setUsername( "admin" );
@@ -40,28 +41,27 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
 
         // now give create
         this.giveUserPrivilege( "test-user", "34" );
-        
 
         // now.... it should work...
         TestContainer.getInstance().getTestContext().setUsername( "test-user" );
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 201, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 201, response.getStatus().getCode(), "Response status: " );
+
         role = this.roleUtil.getResourceFromResponse( response );
-        
+
         // read should succeed (inherited)
         response = this.roleUtil.sendMessage( Method.GET, role );
-        Assert.assertEquals( "Response status: ", 200, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Response status: " );
+
         // update should fail
         response = this.roleUtil.sendMessage( Method.PUT, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
         // delete should fail
         response = this.roleUtil.sendMessage( Method.DELETE, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
 
     }
 
@@ -80,7 +80,7 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         role.addPrivilege( "1" );
 
         Response response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 201, response.getStatus().getCode() );
+        Assert.assertEquals( 201, response.getStatus().getCode(), "Response status: " );
         role = this.roleUtil.getResourceFromResponse( response );
 
         TestContainer.getInstance().getTestContext().setUsername( "test-user" );
@@ -89,9 +89,9 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         // update user
         role.setName( "testUpdatePermission2" );
         response = this.roleUtil.sendMessage( Method.PUT, role );
-//        log.debug( "PROBLEM: "+ this.userUtil.getUser( "test-user" ) );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
+        // log.debug( "PROBLEM: "+ this.userUtil.getUser( "test-user" ) );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
         // use admin
         TestContainer.getInstance().getTestContext().setUsername( "admin" );
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
@@ -103,26 +103,25 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         // should work now...
-        
+
         // update user
         response = this.roleUtil.sendMessage( Method.PUT, role );
-        Assert.assertEquals( "Response status: ", 200, response.getStatus().getCode() );
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Response status: " );
 
         // read should succeed (inherited)
         response = this.roleUtil.sendMessage( Method.GET, role );
-        Assert.assertEquals( "Response status: ", 200, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Response status: " );
+
         // update should fail
         response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
         // delete should fail
         response = this.roleUtil.sendMessage( Method.DELETE, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
-        
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
     }
-    
+
     @Test
     public void testReadPermission()
         throws IOException
@@ -138,14 +137,14 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         role.addPrivilege( "1" );
 
         Response response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 201, response.getStatus().getCode() );
+        Assert.assertEquals( 201, response.getStatus().getCode(), "Response status: " );
         role = this.roleUtil.getResourceFromResponse( response );
 
         TestContainer.getInstance().getTestContext().setUsername( "test-user" );
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         response = this.roleUtil.sendMessage( Method.PUT, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
 
         // use admin
         TestContainer.getInstance().getTestContext().setUsername( "admin" );
@@ -158,26 +157,25 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         // should work now...
-        
+
         // update user
         response = this.roleUtil.sendMessage( Method.PUT, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
 
         // read should fail
         response = this.roleUtil.sendMessage( Method.GET, role );
-        Assert.assertEquals( "Response status: ", 200, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Response status: " );
+
         // update should fail
         response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
         // delete should fail
         response = this.roleUtil.sendMessage( Method.DELETE, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
-        
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Response status: " );
+
     }
-    
+
     @Test
     public void testDeletePermission()
         throws IOException
@@ -193,15 +191,14 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         role.addPrivilege( "1" );
 
         Response response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 201, response.getStatus().getCode() );
+        Assert.assertEquals( 201, response.getStatus().getCode() , "Response status: " );
         role = this.roleUtil.getResourceFromResponse( response );
 
         TestContainer.getInstance().getTestContext().setUsername( "test-user" );
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
-
         response = this.roleUtil.sendMessage( Method.DELETE, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode() , "Response status: " );
 
         // use admin
         TestContainer.getInstance().getTestContext().setUsername( "admin" );
@@ -214,25 +211,23 @@ public class Nexus156RolesPermissionTests extends AbstractPrivilegeTest
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         // should work now...
-        
+
         // update user
         response = this.roleUtil.sendMessage( Method.PUT, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
+        Assert.assertEquals(  401, response.getStatus().getCode(), "Response status: " );
 
         // read should succeed (inherited)
         response = this.roleUtil.sendMessage( Method.GET, role );
-        Assert.assertEquals( "Response status: ", 200, response.getStatus().getCode() );
-        
+        Assert.assertEquals(  200, response.getStatus().getCode() , "Response status: " );
+
         // update should fail
         response = this.roleUtil.sendMessage( Method.POST, role );
-        Assert.assertEquals( "Response status: ", 401, response.getStatus().getCode() );
-        
+        Assert.assertEquals(  401, response.getStatus().getCode() , "Response status: " );
+
         // delete should fail
         response = this.roleUtil.sendMessage( Method.DELETE, role );
-        Assert.assertEquals( "Response status: ", 204, response.getStatus().getCode() );
-        
-        
+        Assert.assertEquals(  204, response.getStatus().getCode(), "Response status: " );
+
     }
-    
-    
+
 }

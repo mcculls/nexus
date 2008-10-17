@@ -2,9 +2,8 @@ package org.sonatype.nexus.integrationtests.nexus923;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
@@ -13,6 +12,7 @@ import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
 import org.sonatype.nexus.rest.model.PrivilegeTargetResource;
 import org.sonatype.nexus.rest.model.RepositoryTargetResource;
 import org.sonatype.nexus.test.utils.ContentListMessageUtil;
+import org.testng.annotations.Test;
 
 public class Nexus923BrowseRootWithTarget
     extends AbstractPrivilegeTest
@@ -59,13 +59,13 @@ public class Nexus923BrowseRootWithTarget
             MediaType.APPLICATION_XML );
 
         List<ContentListResource> items = contentUtil.getContentListResource( this.getTestRepositoryId(), "/", false );
-        Assert.assertEquals( "Expected to have only one entry: " + items, 1, items.size() );
+        Assert.assertEquals( 1, items.size(), "Expected to have only one entry: " + items );
         
         items = contentUtil.getContentListResource( this.getTestRepositoryId(), "/nexus923", false );
-        Assert.assertEquals( "Expected to have only one entry: " + items, 1, items.size() );
+        Assert.assertEquals( 1, items.size(), "Expected to have only one entry: " + items );
         
         items = contentUtil.getContentListResource( this.getTestRepositoryId(), "/nexus923/group/", false );
-        Assert.assertEquals( "Expected to have only one entry: " + items, 2, items.size() );
+        Assert.assertEquals( 2, items.size(), "Expected to have only one entry: " + items );
     }
 
 }

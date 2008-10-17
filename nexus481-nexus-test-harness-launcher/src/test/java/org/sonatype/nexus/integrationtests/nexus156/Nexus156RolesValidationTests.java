@@ -2,20 +2,16 @@ package org.sonatype.nexus.integrationtests.nexus156;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.RoleResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.RoleMessageUtil;
 import org.sonatype.nexus.test.utils.SecurityConfigUtil;
-import org.sonatype.plexus.rest.xstream.json.JsonOrgHierarchicalStreamDriver;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.Test;
 
 /**
  * Extra CRUD validation tests.

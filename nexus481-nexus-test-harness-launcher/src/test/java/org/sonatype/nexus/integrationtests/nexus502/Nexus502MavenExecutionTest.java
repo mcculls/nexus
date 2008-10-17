@@ -5,16 +5,14 @@ import java.io.IOException;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractMavenNexusIT;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.rest.model.UserResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * Put a bunch of artifacts in a repo, and then run a maven project to download them 
@@ -30,7 +28,7 @@ public class Nexus502MavenExecutionTest
 
     private Verifier verifier;
 
-    @Before
+    @BeforeTest
     public void createVerifier()
         throws Exception
     {

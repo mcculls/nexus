@@ -3,18 +3,16 @@ package org.sonatype.nexus.integrationtests.nexus538;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
-import org.sonatype.nexus.proxy.repository.ProxyMode;
 import org.sonatype.nexus.rest.model.RepositoryBaseResource;
-import org.sonatype.nexus.rest.model.RepositoryProxyResource;
 import org.sonatype.nexus.rest.model.RepositoryStatusResource;
 import org.sonatype.nexus.test.utils.FeedUtil;
 import org.sonatype.nexus.test.utils.NexusStateUtil;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
+import org.testng.annotations.Test;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -72,8 +70,8 @@ public class Nexus538SystemFeeds
         // the first item should be the boot event
         SyndEntry entry = entries.get( 0 );
         Assert.assertEquals( "Feed entry: " + entry.getPublishedDate(), "Configuration change", entry.getTitle() );
-        Assert.assertTrue( "Could not find new repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue(), entry.getDescription().getValue().contains( newName ) );
-        Assert.assertTrue( "Could not find old repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue(), entry.getDescription().getValue().contains( oldName ) );
+        Assert.assertTrue( entry.getDescription().getValue().contains( newName ), "Could not find new repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue() );
+        Assert.assertTrue( entry.getDescription().getValue().contains( oldName ),  "Could not find old repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue() );
     }
     
     
@@ -103,7 +101,7 @@ public class Nexus538SystemFeeds
         // the first item should be the boot event
         SyndEntry entry = entries.get( 0 );
         Assert.assertEquals( "Feed entry: " + entry.getPublishedDate(), "Repository proxy mode change", entry.getTitle() );
-        Assert.assertTrue( "Could not find repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue(), entry.getDescription().getValue().contains( "release-proxy-repo-1" ) );
+        Assert.assertTrue( entry.getDescription().getValue().contains( "release-proxy-repo-1" ), "Could not find repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue() );
         
         feed = FeedUtil.getFeed( "systemRepositoryStatusChanges" );
         entries = feed.getEntries();
@@ -111,7 +109,7 @@ public class Nexus538SystemFeeds
         // the first item should be the boot event
         entry = entries.get( 0 );
         Assert.assertEquals( "Feed entry: " + entry.getPublishedDate(), "Repository proxy mode change", entry.getTitle() );
-        Assert.assertTrue( "Could not find repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue(), entry.getDescription().getValue().contains( "release-proxy-repo-1" ) );
+        Assert.assertTrue( entry.getDescription().getValue().contains( "release-proxy-repo-1" ), "Could not find repo id in feed entry, Entry body:\n"+ entry.getDescription().getValue() );
     }
 
 }

@@ -20,18 +20,16 @@
  */
 package org.sonatype.nexus.integrationtests.nexus261;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.annotations.Test;
 
 /**
  * Tests to make sure an artifact deployed in multiple repositories will respect the group order. 
@@ -50,7 +48,7 @@ public class Nexus261NexusGroupDownloadTest
 
         File artifact = downloadArtifactFromGroup( "nexus-test", gav, "./target/downloaded-jars" );
 
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         File originalFile =
             this.getTestResourceAsFile( "projects/" + gav.getArtifactId() + "/" + gav.getArtifactId() + "."

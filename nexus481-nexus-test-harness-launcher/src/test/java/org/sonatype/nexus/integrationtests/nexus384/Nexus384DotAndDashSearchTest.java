@@ -2,13 +2,13 @@ package org.sonatype.nexus.integrationtests.nexus384;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.NexusArtifact;
 import org.sonatype.nexus.test.utils.SearchMessageUtil;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * Searches for artifact that has a '.' and a '-' in the artifact name.

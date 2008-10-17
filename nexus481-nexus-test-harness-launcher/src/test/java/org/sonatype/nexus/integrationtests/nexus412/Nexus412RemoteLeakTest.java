@@ -2,12 +2,11 @@ package org.sonatype.nexus.integrationtests.nexus412;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.junit.Test;
-import org.junit.Before;
+import org.aspectj.lang.annotation.Before;
 import org.sonatype.nexus.configuration.RepositoryStatusConverter;
 import org.sonatype.nexus.configuration.model.CRepository;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
@@ -18,13 +17,15 @@ import org.sonatype.nexus.proxy.storage.remote.DefaultRemoteStorageContext;
 import org.sonatype.nexus.proxy.storage.remote.RemoteStorageContext;
 import org.sonatype.nexus.proxy.storage.remote.commonshttpclient.CommonsHttpClientRemoteStorage;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 public class Nexus412RemoteLeakTest
     extends AbstractNexusIntegrationTest
 {
     private RepositoryStatusConverter repositoryStatusConverter;
 
-    @Before
+    @BeforeTest
     protected void prepare()
         throws Exception
     {

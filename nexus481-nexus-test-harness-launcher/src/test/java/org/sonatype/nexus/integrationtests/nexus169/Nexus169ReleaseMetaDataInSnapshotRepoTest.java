@@ -8,17 +8,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
+import org.testng.annotations.Test;
 
 /**
- * Adds metadata in a snapshot repo, then checks to see if it was not changed ( future version of nexus may clean metadata on the fly.) 
+ * Adds metadata in a snapshot repo, then checks to see if it was not changed ( future version of nexus may clean
+ * metadata on the fly.)
  */
 public class Nexus169ReleaseMetaDataInSnapshotRepoTest
     extends AbstractNexusIntegrationTest
@@ -38,9 +39,20 @@ public class Nexus169ReleaseMetaDataInSnapshotRepoTest
         throws IOException
     {
 
-        Gav gav =
-            new Gav( this.getTestId(), "simple-artifact", "1.0.4", null, "jar", 0, new Date().getTime(),
-                     "Simple Test Artifact", false, false, null, false, null );
+        Gav gav = new Gav(
+            this.getTestId(),
+            "simple-artifact",
+            "1.0.4",
+            null,
+            "jar",
+            0,
+            new Date().getTime(),
+            "Simple Test Artifact",
+            false,
+            false,
+            null,
+            false,
+            null );
 
         // try to download it
         boolean fileWasDownloaded = true;
@@ -54,7 +66,7 @@ public class Nexus169ReleaseMetaDataInSnapshotRepoTest
             fileWasDownloaded = false;
         }
 
-        Assert.assertFalse( "The file was downloaded and it should not have been.", fileWasDownloaded );
+        Assert.assertFalse( fileWasDownloaded, "The file was downloaded and it should not have been." );
 
         fileWasDownloaded = true;
         try
@@ -67,22 +79,21 @@ public class Nexus169ReleaseMetaDataInSnapshotRepoTest
             fileWasDownloaded = false;
         }
 
-        Assert.assertFalse( "The file was downloaded and it should not have been.", fileWasDownloaded );
+        Assert.assertFalse( fileWasDownloaded, "The file was downloaded and it should not have been." );
     }
 
     @Test
     public void metadataCleaningTest()
-        throws IOException, XmlPullParserException
+        throws IOException,
+            XmlPullParserException
     {
         // now we are going to grab the maven-metadata.xml, and take a look at that, the release version should have
         // been stripped out.
 
-        URL snapshotRepoMetaDataURL =
-            new URL( this.getNexusTestRepoUrl() + this.getTestId().replace( '.', '/' )
-                + "/simple-artifact/maven-metadata.xml" );
-        URL groupMetaDataURL =
-            new URL( this.getBaseNexusUrl() + GROUP_REPOSITORY_RELATIVE_URL + TEST_GROUP + "/"
-                + this.getTestId().replace( '.', '/' ) + "/simple-artifact/maven-metadata.xml" );
+        URL snapshotRepoMetaDataURL = new URL( this.getNexusTestRepoUrl() + this.getTestId().replace( '.', '/' )
+            + "/simple-artifact/maven-metadata.xml" );
+        URL groupMetaDataURL = new URL( this.getBaseNexusUrl() + GROUP_REPOSITORY_RELATIVE_URL + TEST_GROUP + "/"
+            + this.getTestId().replace( '.', '/' ) + "/simple-artifact/maven-metadata.xml" );
 
         log.debug( "snapshotRepoMetaDataURL: " + snapshotRepoMetaDataURL );
         log.debug( "groupMetaDataURL: " + groupMetaDataURL );
@@ -98,23 +109,28 @@ public class Nexus169ReleaseMetaDataInSnapshotRepoTest
         // check the versions of the file
         MetadataXpp3Reader r = new MetadataXpp3Reader();
 
-        File snapShotMetaDataFile = this.downloadFile( snapshotRepoMetaDataURL, "./target/downloads/snapshotMetaData.xml" );
-        
-        InputStream is = new FileInputStream(snapShotMetaDataFile);
+        File snapShotMetaDataFile = this.downloadFile(
+            snapshotRepoMetaDataURL,
+            "./target/downloads/snapshotMetaData.xml" );
+
+        InputStream is = new FileInputStream( snapShotMetaDataFile );
         Metadata snapshotRepoMetaData = r.read( is );
         is.close();
 
         File groupMetaDataFile = this.downloadFile( snapshotRepoMetaDataURL, "./target/downloads/groupMetaData.xml" );
-        is = new FileInputStream(groupMetaDataFile);
+        is = new FileInputStream( groupMetaDataFile );
         Metadata groupMetaData = r.read( is );
         is.close();
 
-        Assert.assertTrue(
-                           "Metadata from snapshot repo does not have 2 versions, maybe you just fixed up the metadata merge code, in that case, change this test.",
-                           snapshotRepoMetaData.getVersioning().getVersions().size() == 2 );
-        Assert.assertTrue(
-                           "Metadata from group does not have 2 versions, maybe you just fixed up the metadata merge code, in that case, change this test.",
-                           groupMetaData.getVersioning().getVersions().size() == 2 );
+        Assert
+            .assertTrue(
+
+                snapshotRepoMetaData.getVersioning().getVersions().size() == 2,
+                "Metadata from snapshot repo does not have 2 versions, maybe you just fixed up the metadata merge code, in that case, change this test." );
+        Assert
+            .assertTrue(
+                groupMetaData.getVersioning().getVersions().size() == 2,
+                "Metadata from group does not have 2 versions, maybe you just fixed up the metadata merge code, in that case, change this test." );
 
     }
 

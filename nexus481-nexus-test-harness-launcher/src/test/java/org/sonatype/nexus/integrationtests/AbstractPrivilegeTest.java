@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.junit.After;
-import org.junit.Before;
 import org.restlet.data.MediaType;
 import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
@@ -19,6 +17,8 @@ import org.sonatype.nexus.test.utils.RoutesMessageUtil;
 import org.sonatype.nexus.test.utils.SecurityConfigUtil;
 import org.sonatype.nexus.test.utils.TargetMessageUtil;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -78,7 +78,7 @@ public abstract class AbstractPrivilegeTest
 
 
 
-    @Before
+    @BeforeTest
     public void resetTestUserPrivs()
         throws IOException
     {
@@ -184,7 +184,7 @@ public abstract class AbstractPrivilegeTest
         this.userUtil.updateUser( testUser );
     }
 
-    @After
+    @AfterTest
     public void afterTest()
         throws Exception
     {

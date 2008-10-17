@@ -3,9 +3,8 @@ package org.sonatype.nexus.integrationtests.nexus642;
 import java.io.File;
 import java.net.URL;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.RepositoryShadowResource;
@@ -15,6 +14,7 @@ import org.sonatype.nexus.tasks.descriptors.SynchronizeShadowTaskDescriptor;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
+import org.testng.annotations.Test;
 
 public class Nexus642SynchShadowTaskTest
     extends AbstractNexusIntegrationTest

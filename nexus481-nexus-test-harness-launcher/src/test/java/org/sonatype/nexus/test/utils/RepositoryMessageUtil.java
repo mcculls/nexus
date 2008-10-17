@@ -3,7 +3,7 @@ package org.sonatype.nexus.test.utils;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.restlet.data.MediaType;
@@ -95,16 +95,16 @@ public class RepositoryMessageUtil
             // TODO: sometimes the storage dir ends with a '/' SEE: NEXUS-542
             if ( actual.getDefaultLocalStorageUrl().endsWith( "/" ) )
             {
-                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
-                    + repo.getId() + "/  <actual>" + actual.getDefaultLocalStorageUrl(), actual
-                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() + "/" ) );
+                Assert.assertTrue( actual
+                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() + "/" ), "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
+                    + repo.getId() + "/  <actual>" + actual.getDefaultLocalStorageUrl() );
             }
             // NOTE one of these blocks should be removed
             else
             {
-                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
-                    + repo.getId() + "  <actual>" + actual.getDefaultLocalStorageUrl(), actual
-                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() ) );
+                Assert.assertTrue( actual
+                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() ), "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
+                    + repo.getId() + "  <actual>" + actual.getDefaultLocalStorageUrl() );
             }
 
             Assert.assertEquals( expected.getNotFoundCacheTTL(), actual.getNotFoundCacheTTL() );
@@ -285,7 +285,7 @@ public class RepositoryMessageUtil
             String serviceURI = "service/local/data_index/repositories/" + repo + "/content";
             Response response = RequestFacade.sendMessage( serviceURI, Method.DELETE );
             Status status = response.getStatus();
-            Assert.assertTrue( "Fail to update " + repo + " repository index " + status, status.isSuccess() );
+            Assert.assertTrue( status.isSuccess(), "Fail to update " + repo + " repository index " + status );
         }
 
         // let s w8 a few time for indexes
@@ -300,7 +300,7 @@ public class RepositoryMessageUtil
         Response response = RequestFacade.sendMessage( RequestFacade.SERVICE_LOCAL + "repositories/" + repoId
             + "/status", Method.GET );
         Status status = response.getStatus();
-        Assert.assertTrue( "Fail to getStatus for '" + repoId + "' repository" + status, status.isSuccess() );
+        Assert.assertTrue( status.isSuccess(), "Fail to getStatus for '" + repoId + "' repository" + status );
 
         XStreamRepresentation representation = new XStreamRepresentation(
             this.xstream,
@@ -325,8 +325,8 @@ public class RepositoryMessageUtil
 
         Response response = RequestFacade.sendMessage( uriPart, Method.PUT, representation );
         Status status = response.getStatus();
-        Assert.assertTrue( "Fail to update '" + repoStatus.getId() + "' repository status " + status +"\nResponse:\n"+ response.getEntity().getText() +"\nrepresentation:\n"+ representation.getText(), status
-            .isSuccess() );
+        Assert.assertTrue( status
+            .isSuccess(), "Fail to update '" + repoStatus.getId() + "' repository status " + status +"\nResponse:\n"+ response.getEntity().getText() +"\nrepresentation:\n"+ representation.getText() );
 
     }
 

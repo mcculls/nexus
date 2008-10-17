@@ -2,17 +2,16 @@ package org.sonatype.nexus.integrationtests.nexus639;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.ScheduledServiceListResource;
 import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
 import org.sonatype.nexus.tasks.descriptors.PurgeTimelineTaskDescriptor;
 import org.sonatype.nexus.test.utils.FeedUtil;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
+import org.testng.annotations.Test;
 
-import com.sun.syndication.feed.atom.Entry;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
@@ -31,7 +30,7 @@ public class Nexus639PurgeTaskTest
         SyndFeed feed = FeedUtil.getFeed( "recentlyDeployed" );
         List<SyndEntry> entries = feed.getEntries();
         
-        Assert.assertTrue("Expected artifacts in the recentlyDeployed feed.", entries.size() > 0 );
+        Assert.assertTrue(entries.size() > 0, "Expected artifacts in the recentlyDeployed feed." );
         
         // run the purge task for everything
         ScheduledServicePropertyResource repo = new ScheduledServicePropertyResource();
@@ -52,7 +51,7 @@ public class Nexus639PurgeTaskTest
 //            System.out.println( "entry: "+ syndEntry.getTitle() );
 //        }
 //        
-        Assert.assertTrue("Expected ZERO artifacts in the recentlyDeployed feed.", entries.size() == 0 );
+        Assert.assertTrue(entries.size() == 0, "Expected ZERO artifacts in the recentlyDeployed feed." );
     }
 
 }

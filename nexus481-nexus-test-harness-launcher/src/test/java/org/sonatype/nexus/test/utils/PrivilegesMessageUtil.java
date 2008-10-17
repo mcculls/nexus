@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.codehaus.plexus.util.StringUtils;
@@ -128,12 +128,12 @@ public class PrivilegesMessageUtil
 
         NexusErrorResponse errorResponse = (NexusErrorResponse) xstream.fromXML( xml, new NexusErrorResponse() );
 
-        Assert.assertTrue( "Error response is empty.", errorResponse.getErrors().size() > 0 );
+        Assert.assertTrue( errorResponse.getErrors().size() > 0, "Error response is empty." );
 
         for ( Iterator<NexusError> iter = errorResponse.getErrors().iterator(); iter.hasNext(); )
         {
             NexusError error = (NexusError) iter.next();
-            Assert.assertFalse( "Response Error message is empty.", StringUtils.isEmpty( error.getMsg() ) );
+            Assert.assertFalse( StringUtils.isEmpty( error.getMsg() ), "Response Error message is empty." );
 
         }
 

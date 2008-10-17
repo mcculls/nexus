@@ -2,16 +2,13 @@ package org.sonatype.nexus.integrationtests.nexus448;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.PrivilegesMessageUtil;
-
-import com.thoughtworks.xstream.XStream;
+import org.testng.annotations.Test;
 
 /**
  * GETS for application privileges where returning an error, so this is a really simple test to make sure the GET will work.
@@ -33,10 +30,10 @@ public class Nexus448PrivilegeURLTest extends AbstractNexusIntegrationTest
     {
         
         PrivilegeBaseStatusResource resource = this.messageUtil.getPrivilegeResource( "T2" );
-        Assert.assertEquals( "Type", "repositoryTarget", resource.getType() );
+        Assert.assertEquals( "repositoryTarget", resource.getType(), "Type" );
         
         resource = this.messageUtil.getPrivilegeResource( "1" );
-        Assert.assertEquals( "Type", "application", resource.getType() );
+        Assert.assertEquals( "application", resource.getType(), "Type" );
         
     }
     

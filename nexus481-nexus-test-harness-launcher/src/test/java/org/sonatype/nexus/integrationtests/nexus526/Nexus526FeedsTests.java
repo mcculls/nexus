@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.FeedUtil;
+import org.testng.annotations.Test;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -49,12 +49,12 @@ public class Nexus526FeedsTests
             // check if the title contains the groupid, artifactid, and version
             String title = entry.getTitle();
 
-            Assert.assertTrue( "Feed title does not contain the groupId. Title was: " + title,
-                               title.contains( gav.getGroupId() ) );
-            Assert.assertTrue( "Feed title does not contain the artifactId. Title was: " + title,
-                               title.contains( gav.getArtifactId() ) );
-            Assert.assertTrue( "Feed title does not contain the version. Title was: " + title,
-                               title.contains( gav.getVersion() ) );
+            Assert.assertTrue( 
+                               title.contains( gav.getGroupId() ), "Feed title does not contain the groupId. Title was: " + title );
+            Assert.assertTrue( 
+                               title.contains( gav.getArtifactId() ), "Feed title does not contain the artifactId. Title was: " + title );
+            Assert.assertTrue( 
+                               title.contains( gav.getVersion() ), "Feed title does not contain the version. Title was: " + title );
 
             // check link
             String link = entry.getLink();
@@ -73,7 +73,7 @@ public class Nexus526FeedsTests
                 this.getBaseNexusUrl() + "content/repositories/" + this.getTestRepositoryId() + "/"
                     + this.getRelitiveArtifactPath( gav );
             expectedUrl = expectedUrl.replaceAll( gav.getExtension() + "$", extention );
-            Assert.assertTrue( "The feed link was wrong", links.contains( expectedUrl ) );
+            Assert.assertTrue( links.contains( expectedUrl ), "The feed link was wrong" );
         }
 
     }
@@ -85,7 +85,7 @@ public class Nexus526FeedsTests
     {
         SyndFeed feed = FeedUtil.getFeed( "recentlyDeployed" );
         List<SyndEntry> entries = feed.getEntries();
-        Assert.assertTrue( "Feed should have at least 2 entries", entries.size() >= 2 );
+        Assert.assertTrue( entries.size() >= 2, "Feed should have at least 2 entries" );
 
         // we just want the first 2 because this test only deployed 2 artifacts... although we should beef up this tests....
         List<SyndEntry> testEntries = new ArrayList<SyndEntry>();
@@ -102,7 +102,7 @@ public class Nexus526FeedsTests
     {
         SyndFeed feed = FeedUtil.getFeed( "recentChanges" );
         List<SyndEntry> entries = feed.getEntries();
-        Assert.assertTrue( "Feed should have at least 2 entries", entries.size() >= 2 );
+        Assert.assertTrue( entries.size() >= 2, "Feed should have at least 2 entries" );
 
      // we just want the first 2 because this test only deployed 2 artifacts... although we should beef up this tests....
         List<SyndEntry> testEntries = new ArrayList<SyndEntry>();
@@ -119,7 +119,7 @@ public class Nexus526FeedsTests
     {
         SyndFeed feed = FeedUtil.getFeed( "recentCacheOrDeployments" );
         List<SyndEntry> entries = feed.getEntries();
-        Assert.assertTrue( "Feed should have at least 2 entries", entries.size() >= 2 );
+        Assert.assertTrue( entries.size() >= 2, "Feed should have at least 2 entries" );
 
      // we just want the first 2 because this test only deployed 2 artifacts... although we should beef up this tests....
         List<SyndEntry> testEntries = new ArrayList<SyndEntry>();

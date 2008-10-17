@@ -2,8 +2,6 @@ package org.sonatype.nexus.test.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import org.apache.commons.httpclient.HttpException;
@@ -17,11 +15,8 @@ import org.apache.log4j.Logger;
 import org.apache.maven.wagon.ConnectionException;
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.TransferFailedException;
-import org.apache.maven.wagon.Wagon;
 import org.apache.maven.wagon.authentication.AuthenticationException;
-import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.apache.maven.wagon.authorization.AuthorizationException;
-import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.cli.CommandLineException;

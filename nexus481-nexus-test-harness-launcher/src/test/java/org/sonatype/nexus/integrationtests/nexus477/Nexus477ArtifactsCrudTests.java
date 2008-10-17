@@ -3,27 +3,18 @@ package org.sonatype.nexus.integrationtests.nexus477;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.maven.wagon.ConnectionException;
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.TransferFailedException;
 import org.apache.maven.wagon.authentication.AuthenticationException;
 import org.apache.maven.wagon.authorization.AuthorizationException;
+import org.aspectj.lang.annotation.Before;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.junit.Before;
-import org.junit.Test;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.nexus.artifact.Gav;
@@ -31,6 +22,8 @@ import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.RequestFacade;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.test.utils.DeployUtils;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * Test the privilege for CRUD operations.
@@ -39,7 +32,7 @@ public class Nexus477ArtifactsCrudTests
     extends AbstractPrivilegeTest
 {
 
-    @Before
+    @BeforeTest
     public void deployArtifact()
         throws IOException, ConnectionException, AuthenticationException, TransferFailedException,
         ResourceDoesNotExistException, AuthorizationException, ComponentLookupException
@@ -60,7 +53,7 @@ public class Nexus477ArtifactsCrudTests
         this.resetTestUserPrivs();
 
         int status = DeployUtils.deployUsingGavWithRest( this.getTestRepositoryId(), gav, fileToDeploy );
-        Assert.assertEquals( "Status", 201, status );
+        Assert.assertEquals( 201, status, "Status" );
     }
 
     // @Test
@@ -91,7 +84,7 @@ public class Nexus477ArtifactsCrudTests
             "content/repositories/" + this.getTestRepositoryId() + "/" + this.getTestId();
 
          Response response = RequestFacade.sendMessage( serviceURI, Method.DELETE );
-         Assert.assertEquals( "Artifact should not have been deleted", 401, response.getStatus().getCode() );
+         Assert.assertEquals( 401, response.getStatus().getCode(), "Artifact should not have been deleted" );
 
         TestContainer.getInstance().getTestContext().useAdminForRequests();
         this.giveUserPrivilege( "test-user", "T7" );
@@ -99,10 +92,10 @@ public class Nexus477ArtifactsCrudTests
         // delete implies read
         // we need to check read first...
         response = RequestFacade.sendMessage( "content/repositories/" + this.getTestRepositoryId() + "/" + this.getRelitiveArtifactPath( gav ), Method.GET );
-        Assert.assertEquals( "Could not get artifact", 200, response.getStatus().getCode() );
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Could not get artifact" );
 
          response = RequestFacade.sendMessage( serviceURI, Method.DELETE );
-         Assert.assertEquals( "Artifact should have been deleted", 204, response.getStatus().getCode() );
+         Assert.assertEquals( 204, response.getStatus().getCode(), "Artifact should have been deleted" );
 
     }
 
@@ -123,7 +116,7 @@ public class Nexus477ArtifactsCrudTests
             "content/repositories/" + this.getTestRepositoryId() + "/" + this.getRelitiveArtifactPath( gav );
 
         Response response = RequestFacade.sendMessage( serviceURI, Method.GET );
-        Assert.assertEquals( "Artifact should not have been read", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Artifact should not have been read" );
 
         TestContainer.getInstance().getTestContext().useAdminForRequests();
         this.giveUserPrivilege( "test-user", "T1" );
@@ -132,10 +125,10 @@ public class Nexus477ArtifactsCrudTests
         TestContainer.getInstance().getTestContext().setPassword( "admin123" );
 
         response = RequestFacade.sendMessage( serviceURI, Method.GET );
-        Assert.assertEquals( "Artifact should have been read\nresponse:\n"+ response.getEntity().getText(), 200, response.getStatus().getCode());
+        Assert.assertEquals( 200, response.getStatus().getCode(), "Artifact should have been read\nresponse:\n"+ response.getEntity().getText());
 
         response = RequestFacade.sendMessage( serviceURI, Method.DELETE );
-        Assert.assertEquals( "Artifact should have been deleted", 401, response.getStatus().getCode() );
+        Assert.assertEquals( 401, response.getStatus().getCode(), "Artifact should have been deleted" );
         
     }
 

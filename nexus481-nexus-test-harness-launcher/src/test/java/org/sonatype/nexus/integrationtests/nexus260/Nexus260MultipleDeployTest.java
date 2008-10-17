@@ -1,15 +1,13 @@
 package org.sonatype.nexus.integrationtests.nexus260;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
-import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Deploys an artifact multiple times. (this is allowed)  
@@ -39,10 +37,10 @@ public class Nexus260MultipleDeployTest
         File artifact = downloadArtifact( "org.sonatype.nexus-integration-tests.multiple-deploy-test", "singleDeployTest", "1", "xml", null, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
     }
 
     @Test
@@ -69,10 +67,10 @@ public class Nexus260MultipleDeployTest
         File artifact = downloadArtifact( "org.sonatype.nexus-integration-tests.multiple-deploy-test", "deploySameFileMultipleTimesTest", "1", "xml", null, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
 
     }
 
@@ -102,13 +100,13 @@ public class Nexus260MultipleDeployTest
         File artifact = downloadArtifact( "org.sonatype.nexus-integration-tests.multiple-deploy-test", "deployChangedFileMultipleTimesTest", "1", "xml", null, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy3, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy3, artifact ) );
 
         // this should pass if the above passed
-        assertFalse( FileTestingUtils.compareFileSHA1s( fileToDeploy2, artifact ) );
+        Assert.assertFalse( FileTestingUtils.compareFileSHA1s( fileToDeploy2, artifact ) );
 
     }
 
@@ -138,10 +136,10 @@ public class Nexus260MultipleDeployTest
         File artifact = downloadArtifact( "org.sonatype.nexus-integration-tests.multiple-deploy-test", "deploySameFileMultipleTimesUsingContentUriTest", "1", "xml", null, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
 
     }
     

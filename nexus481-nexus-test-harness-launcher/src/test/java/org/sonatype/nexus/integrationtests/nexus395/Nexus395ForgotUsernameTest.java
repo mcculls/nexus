@@ -2,8 +2,8 @@ package org.sonatype.nexus.integrationtests.nexus395;
 
 import javax.mail.internet.MimeMessage;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.restlet.data.Status;
 import org.sonatype.nexus.integrationtests.AbstractEmailServerNexusIT;
 

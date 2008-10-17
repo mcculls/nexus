@@ -1,20 +1,18 @@
 package org.sonatype.nexus.integrationtests.nexus258;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
+import org.testng.annotations.Test;
 
 
 /**
@@ -62,10 +60,10 @@ public class Nexus258ReleaseDeployTest
         File artifact = downloadArtifact( gav, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
     }
     
     
@@ -101,10 +99,10 @@ public class Nexus258ReleaseDeployTest
         File artifact = downloadArtifact( gav, "./target/downloaded-jars" );
 
         // make sure its here
-        assertTrue( artifact.exists() );
+        Assert.assertTrue( artifact.exists() );
 
         // make sure it is what we expect.
-        assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
+        Assert.assertTrue( FileTestingUtils.compareFileSHA1s( fileToDeploy, artifact ) );
 
     }
     

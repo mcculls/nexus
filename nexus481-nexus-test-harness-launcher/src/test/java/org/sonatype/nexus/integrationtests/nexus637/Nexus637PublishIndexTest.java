@@ -2,13 +2,13 @@ package org.sonatype.nexus.integrationtests.nexus637;
 
 import java.io.File;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
 import org.sonatype.nexus.tasks.descriptors.PublishIndexesTaskDescriptor;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
+import org.testng.annotations.Test;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class Nexus637PublishIndexTest
         File repositoryPath = new File( nexusBaseDir, "runtime/work/storage/nexus-test-harness-repo" );
         File index = new File( repositoryPath, ".index" );
         
-        Assert.assertFalse( ".index shouldn't exists before publish index task is run.", index.exists() );
+        Assert.assertFalse( index.exists(), ".index shouldn't exists before publish index task is run." );
 
         ScheduledServicePropertyResource prop = new ScheduledServicePropertyResource();
         prop.setId( "repositoryOrGroupId" );
@@ -40,6 +40,6 @@ public class Nexus637PublishIndexTest
 
         TaskScheduleUtil.runTask( PublishIndexesTaskDescriptor.ID, prop );
 
-        Assert.assertTrue( ".index should exists after publish index task was run.", index.exists() );
+        Assert.assertTrue( index.exists(), ".index should exists after publish index task was run." );
     }
 }

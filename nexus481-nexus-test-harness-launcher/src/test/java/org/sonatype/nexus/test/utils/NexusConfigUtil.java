@@ -10,7 +10,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.nexus.configuration.application.validator.ApplicationConfigurationValidator;

@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
@@ -17,6 +16,7 @@ import org.sonatype.nexus.rest.model.RepositoryGroupMemberRepository;
 import org.sonatype.nexus.rest.model.RepositoryGroupResource;
 import org.sonatype.nexus.test.utils.GroupMessageUtil;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
+import org.testng.annotations.Test;
 
 /**
  * CRUD tests for XML request/response.
@@ -163,7 +163,7 @@ public class Nexus532GroupsCrudXmlTests extends AbstractNexusIntegrationTest
             RepositoryGroupListResource group = iter.next();
             CRepositoryGroup cGroup = NexusConfigUtil.getGroup( group.getId() );
             
-            Assert.assertNotNull( "CRepositoryGroup", cGroup );
+            Assert.assertNotNull( cGroup,"CRepositoryGroup" );
             
             this.messageUtil.validateRepoLists( group.getRepositories(), cGroup.getRepositories() );
         }

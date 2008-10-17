@@ -3,12 +3,12 @@ package org.sonatype.nexus.integrationtests.nexus292;
 import java.io.IOException;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.NexusStateUtil;
+import org.testng.annotations.Test;
 
 /**
  * This test-harness uses the start/stop internally. This test will just poke at the state after the methods are called.

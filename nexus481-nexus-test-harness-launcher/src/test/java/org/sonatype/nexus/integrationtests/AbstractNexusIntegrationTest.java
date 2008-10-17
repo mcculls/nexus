@@ -1,7 +1,5 @@
 package org.sonatype.nexus.integrationtests;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -14,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.log4j.Logger;
 import org.apache.maven.model.Model;
@@ -26,10 +24,6 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
 import org.restlet.data.Response;
@@ -37,12 +31,20 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.appbooter.ctl.AppBooterServiceException;
 import org.sonatype.nexus.artifact.Gav;
+import org.sonatype.nexus.client.NexusClient;
+import org.sonatype.nexus.client.rest.NexusRestClient;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
 import org.sonatype.nexus.test.utils.NexusStateUtil;
 import org.sonatype.nexus.test.utils.TestProperties;
 import org.sonatype.nexus.test.utils.XStreamFactory;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -124,62 +126,7 @@ public class AbstractNexusIntegrationTest
 
     }
 
-    /**
-     * To me this seems like a bad hack around this problem. I don't have any other thoughts though. <BR/>If you see
-     * this and think: "Wow, why did he to that instead of XYZ, please let me know." <BR/> The issue is that we want to
-     * init the tests once (to start/stop the app) and the <code>@BeforeClass</code> is static, so we don't have access
-     * to the package name of the running tests. We are going to use the package name to find resources for additional
-     * setup. NOTE: With this setup running multiple Test at the same time is not possible.
-     *
-     * @throws Exception
-     */
-    @Before
-    public void oncePerClassSetUp()
-        throws Exception
-    {
-        synchronized ( AbstractNexusIntegrationTest.class )
-        {
-            if ( NEEDS_INIT )
-            {
-                // tell the console what we are doing, now that there is no output its
-                System.out.println( "Running Test: "+ this.getClass().getSimpleName() );
-
-                HashMap<String, String> variables = new HashMap<String, String>();
-                variables.put( "test-harness-id", this.getTestId() );
-
-                // clean common work dir
-                // this.cleanWorkDir();
-
-                this.copyConfigFile( "nexus.xml", RELATIVE_WORK_CONF_DIR );
-
-                // copy security config
-                this.copyConfigFile( "security.xml", RELATIVE_WORK_CONF_DIR );
-
-                // this.copyConfigFile( "log4j.properties", variables );
-
-                if ( TestContainer.getInstance().getTestContext().isSecureTest()
-                    || Boolean.valueOf( System.getProperty( "secure.test" ) ) )
-                {
-                    NexusConfigUtil.enableSecurity( true );
-                }
-
-                // we need to make sure the config is valid, so we don't need to hunt through log files
-                if( this.verifyNexusConfigBeforeStart )
-                {
-                    NexusConfigUtil.validateConfig();
-                }
-
-                // start nexus
-                this.startNexus();
-
-                // deploy artifacts
-                this.deployArtifacts();
-
-                // TODO: we can remove this now that we have the soft restart
-                NEEDS_INIT = false;
-            }
-        }
-    }
+   
 
     private boolean isSecurityTest()
     {
@@ -268,7 +215,7 @@ public class AbstractNexusIntegrationTest
         }
     }
 
-    @After
+    @AfterTest
     public void afterTest()
         throws Exception
     {
@@ -452,24 +399,6 @@ public class AbstractNexusIntegrationTest
         }
     }
 
-    /**
-     * See oncePerClassSetUp.
-     */
-    @BeforeClass
-    public static void staticOncePerClassSetUp()
-    {
-        // hacky state machine
-        NEEDS_INIT = true;
-    }
-
-    @AfterClass
-    public static void oncePerClassTearDown()
-        throws Exception
-    {
-        // stop nexus
-        new AbstractNexusIntegrationTest().stopNexus();
-    }
-
     private void setupContainer()
     {
         // ----------------------------------------------------------------------------
@@ -512,7 +441,7 @@ public class AbstractNexusIntegrationTest
         catch ( PlexusContainerException e )
         {
             e.printStackTrace();
-            fail( "Failed to create plexus container." );
+            org.testng.Assert.fail( "Failed to create plexus container." );
         }
     }
 
@@ -566,10 +495,10 @@ public class AbstractNexusIntegrationTest
             "service/local/artifact/maven/redirect?r=" + repository + "&g=" + gav.getGroupId() + "&a="
                 + gav.getArtifactId() + "&v=" + gav.getVersion();
         Response response = RequestFacade.doGetRequest( serviceURI );
-        Assert.assertEquals( "Snapshot download should redirect to a new file " + response.getRequest().getResourceRef().toString(), 301, response.getStatus().getCode());
+        Assert.assertEquals( 301, response.getStatus().getCode(), "Snapshot download should redirect to a new file " + response.getRequest().getResourceRef().toString());
 
         Reference redirectRef = response.getRedirectRef();
-        Assert.assertNotNull( "Snapshot download should redirect to a new file " + response.getRequest().getResourceRef().toString(), redirectRef );
+        Assert.assertNotNull( redirectRef, "Snapshot download should redirect to a new file " + response.getRequest().getResourceRef().toString() );
 
         serviceURI = redirectRef.toString();
 
@@ -752,4 +681,139 @@ public class AbstractNexusIntegrationTest
         return XStreamFactory.getJsonXStream();
     }
 
+    @BeforeSuite
+    public void beforeSuite()
+        throws Exception
+    {
+        System.out.println( "beforeSuite" );
+        TestContainer testContainer = TestContainer.getInstance();
+        ForkedAppBooter appBooter =
+            (ForkedAppBooter) testContainer.lookup( ForkedAppBooter.ROLE, "TestForkedAppBooter" );
+        
+        // check if nexus is running, if so kill it, so we can start clean
+        
+        try
+        {
+            if ( NexusStateUtil.isNexusRunning() )
+            {
+                System.out.println( "******************\n*\n*  NEXUS WAS RUNNING BEFORE SUITE STARTED   *\n*  WARNING:  KILLING IT! *\n*\n******************" );
+                appBooter.stop();
+            }
+        }
+        catch ( IOException e )
+        {
+        // ignore, this is expected
+        }
+        
+        
+        
+        
+        
+        appBooter.start();
+        
+        // use the java client to wait for nexus to start 
+        // the ForkedAppBooter waits 6 seconds, and that is configurable
+        // The client will wait 10 seconds by default, but will poll every half second.
+        NexusClient client = new NexusRestClient();
+        // at this point security should not be turned on, but you never know...
+        client.connect( TestProperties.getString( "nexus.base.url" ), testContainer.getTestContext().getAdminUsername(), testContainer.getTestContext().getAdminPassword() );
+        client.isNexusStarted( true );
+        client.disconnect();
+        
+        // now to make everything work correctly we actually have to "soft-stop" nexus
+        NexusStateUtil.doSoftStop();
+
+    }
+
+    
+//    /**
+//     * See oncePerClassSetUp.
+//     */
+//    @BeforeClass
+//    public static void staticOncePerClassSetUp()
+//    {
+//        System.out.println( "staticOncePerClassSetUp" );
+//        // hacky state machine
+//        NEEDS_INIT = true;
+//    }
+    
+    /**
+     * To me this seems like a bad hack around this problem. I don't have any other thoughts though. <BR/>If you see
+     * this and think: "Wow, why did he to that instead of XYZ, please let me know." <BR/> The issue is that we want to
+     * init the tests once (to start/stop the app) and the <code>@BeforeClass</code> is static, so we don't have access
+     * to the package name of the running tests. We are going to use the package name to find resources for additional
+     * setup. NOTE: With this setup running multiple Test at the same time is not possible.
+     *
+     * @throws Exception
+     */
+    @BeforeClass(alwaysRun=true)
+    public void oncePerClassSetUp()
+        throws Exception
+    {
+        System.out.println( "oncePerClassSetUp" );
+        synchronized ( AbstractNexusIntegrationTest.class )
+        {
+//            if ( NEEDS_INIT )
+//            {
+                // tell the console what we are doing, now that there is no output its
+                System.out.println( "Running Test: "+ this.getClass().getSimpleName() );
+
+                HashMap<String, String> variables = new HashMap<String, String>();
+                variables.put( "test-harness-id", this.getTestId() );
+
+                // clean common work dir
+                // this.cleanWorkDir();
+
+                this.copyConfigFile( "nexus.xml", RELATIVE_WORK_CONF_DIR );
+
+                // copy security config
+                this.copyConfigFile( "security.xml", RELATIVE_WORK_CONF_DIR );
+
+                // this.copyConfigFile( "log4j.properties", variables );
+
+                if ( TestContainer.getInstance().getTestContext().isSecureTest()
+                    || Boolean.valueOf( System.getProperty( "secure.test" ) ) )
+                {
+                    NexusConfigUtil.enableSecurity( true );
+                }
+
+                // we need to make sure the config is valid, so we don't need to hunt through log files
+                if( this.verifyNexusConfigBeforeStart )
+                {
+                    NexusConfigUtil.validateConfig();
+                }
+
+                // start nexus
+                this.startNexus();
+
+                // deploy artifacts
+                this.deployArtifacts();
+
+//                // TODO: we can remove this now that we have the soft restart
+//                NEEDS_INIT = false;
+//            }
+        }
+    }
+    
+    
+    @AfterClass(alwaysRun=true)
+    public static void oncePerClassTearDown()
+        throws Exception
+    {
+        System.out.println( "oncePerClassTearDown" );
+        // stop nexus
+        new AbstractNexusIntegrationTest().stopNexus();
+    }
+    
+    @AfterSuite(alwaysRun=true)
+    public static void afterSuite()
+        throws Exception
+    {
+System.out.println( "afterSuite" );
+        
+        ForkedAppBooter appBooter =
+            (ForkedAppBooter) TestContainer.getInstance().lookup( ForkedAppBooter.ROLE, "TestForkedAppBooter" );
+        appBooter.shutdown();
+    }
+    
 }

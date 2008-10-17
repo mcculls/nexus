@@ -3,9 +3,9 @@ package org.sonatype.nexus.integrationtests.nexus634;
 import java.io.File;
 import java.util.Collection;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 /**
  * Test SnapshotRemoverTask to remove all artifacts
@@ -23,7 +23,7 @@ public class Nexus634RemoveAllTest
         runSnapshotRemover( "nexus-test-harness-snapshot-repo", 0, 0, true );
 
         Collection<File> jars = listFiles( artifactFolder, new String[] { "jar" }, false );
-        Assert.assertTrue( "All artifacts should be deleted by SnapshotRemoverTask", jars.isEmpty() );
+        Assert.assertTrue( jars.isEmpty(), "All artifacts should be deleted by SnapshotRemoverTask" );
     }
 
 }

@@ -2,9 +2,8 @@ package org.sonatype.nexus.integrationtests.nexus874;
 
 import java.net.ConnectException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
@@ -15,6 +14,7 @@ import org.sonatype.nexus.test.utils.RoleMessageUtil;
 import org.sonatype.nexus.test.utils.TargetMessageUtil;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
+import org.testng.annotations.Test;
 
 /**
  * Validate the MemoryRealm that replaces default nexus security

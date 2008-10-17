@@ -3,7 +3,7 @@ package org.sonatype.nexus.test.utils;
 import java.io.IOException;
 import java.net.ConnectException;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -11,7 +11,6 @@ import org.restlet.data.Response;
 import org.restlet.resource.StringRepresentation;
 import org.sonatype.nexus.integrationtests.RequestFacade;
 import org.sonatype.nexus.rest.model.StatusResourceResponse;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 
 import com.thoughtworks.xstream.XStream;
 

@@ -1,0 +1,7 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Generated Suite">
+  <test name="Generated Test">
+    <classes>
+    </classes>
+  </test>
+</suite>

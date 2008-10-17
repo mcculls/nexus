@@ -2,24 +2,21 @@ package org.sonatype.nexus.integrationtests.nexus450;
 
 import javax.mail.internet.MimeMessage;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.sonatype.nexus.integrationtests.AbstractEmailServerNexusIT;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.integrationtests.TestContext;
 import org.sonatype.nexus.rest.model.UserResource;
-import org.sonatype.nexus.rest.xstream.XStreamInitializer;
 import org.sonatype.nexus.test.utils.ChangePasswordUtils;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
-import org.sonatype.plexus.rest.xstream.json.JsonOrgHierarchicalStreamDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 import com.icegreen.greenmail.util.GreenMailUtil;
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Using admin account create a new user. Then check for new user creation confirmation e-mail and password. Login and
@@ -39,7 +36,7 @@ public class Nexus450UserCreationTest
         TestContainer.getInstance().getTestContext().setSecureTest( true );
     }
 
-    @Before
+    @BeforeTest
     public void init()
     {
         userUtil =
@@ -107,7 +104,7 @@ public class Nexus450UserCreationTest
         Assert.assertTrue( status.isSuccess() );
     }
 
-    @After
+    @AfterTest
     public void removeUser()
         throws Exception
     {

@@ -7,12 +7,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
-import org.restlet.resource.StringRepresentation;
 import org.sonatype.nexus.integrationtests.RequestFacade;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -41,7 +39,7 @@ public class FeedUtil
         SyndFeedInput input = new SyndFeedInput();
         
         Response response = RequestFacade.sendMessage( FEED_URL_PART + feedId, Method.GET );
-        Assert.assertTrue( "Expected content", response.getEntity().isAvailable());
+        Assert.assertTrue( response.getEntity().isAvailable(), "Expected content");
         
         SyndFeed feed = input.build( new XmlReader( response.getEntity().getStream() ) );
         // sort it by date

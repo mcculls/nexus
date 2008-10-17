@@ -4,21 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.After;
-import org.junit.Before;
-import org.restlet.Client;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
-import org.restlet.data.Protocol;
-import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.StringRepresentation;
 import org.sonatype.jettytestsuite.ServletServer;
 import org.sonatype.nexus.artifact.Gav;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.RequestFacade;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 
 public abstract class AbstractNexusProxyIntegrationTest
     extends AbstractNexusIntegrationTest
@@ -44,7 +43,7 @@ public abstract class AbstractNexusProxyIntegrationTest
 
     }
 
-    @Before
+    @BeforeTest
     public void startProxy()
         throws Exception
     {
@@ -52,7 +51,7 @@ public abstract class AbstractNexusProxyIntegrationTest
         server.start();
     }
 
-    @After
+    @AfterTest
     public void stopProxy()
         throws Exception
     {

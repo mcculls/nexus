@@ -6,15 +6,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.rest.model.RepositoryProxyResource;
 import org.sonatype.nexus.rest.model.RepositoryResource;
 import org.sonatype.nexus.rest.model.RepositoryResourceRemoteStorage;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
+import org.testng.annotations.Test;
 
 public class Nexus688ReindexOnRepoAdd
     extends AbstractNexusIntegrationTest
@@ -53,8 +53,8 @@ public class Nexus688ReindexOnRepoAdd
         File indexFile = this.downloadIndexFromRepository( resource.getId() );
         
         // if the above line didn't throw a FileNotFound, we are good to go, but check anyway.
-        Assert.assertNotNull( "Downloaded index file was null.", indexFile );
-        Assert.assertTrue( "Downloaded index does not exists", indexFile.exists() );
+        Assert.assertNotNull( indexFile, "Downloaded index file was null." );
+        Assert.assertTrue( indexFile.exists(), "Downloaded index does not exists" );
     }
     
     @Test
@@ -125,8 +125,8 @@ public class Nexus688ReindexOnRepoAdd
         File indexFile = this.downloadIndexFromRepository( resource.getId() );
         
         // if the above line didn't throw a FileNotFound, we are good to go, but check anyway.
-        Assert.assertNotNull( "Downloaded index file was null.", indexFile );
-        Assert.assertTrue( "Downloaded index does not exists", indexFile.exists() );
+        Assert.assertNotNull( indexFile, "Downloaded index file was null." );
+        Assert.assertTrue( indexFile.exists(), "Downloaded index does not exists" );
     }
     
     @Test
@@ -161,8 +161,8 @@ public class Nexus688ReindexOnRepoAdd
         File indexFile = this.downloadIndexFromRepository( resource.getId() );
         
         // if the above line didn't throw a FileNotFound, we are good to go, but check anyway.
-        Assert.assertNotNull( "Downloaded index file was null.", indexFile );
-        Assert.assertTrue( "Downloaded index does not exists", indexFile.exists() );
+        Assert.assertNotNull( indexFile, "Downloaded index file was null." );
+        Assert.assertTrue( indexFile.exists(), "Downloaded index does not exists" );
     }
     
     @Test
