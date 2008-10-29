@@ -7,6 +7,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.sonatype.nexus.rest.model.ScheduledServiceBaseResource;
 import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
 import org.sonatype.nexus.tasks.descriptors.ReindexTaskDescriptor;
+import org.testng.annotations.Test;
 
 public class Nexus533TaskManualTest
     extends AbstractNexusTasksIntegrationTest<ScheduledServiceBaseResource>
@@ -14,6 +15,12 @@ public class Nexus533TaskManualTest
 
     private static ScheduledServiceBaseResource scheduledTask;
 
+    @Test
+    public void foo()
+    {
+        System.out.println( "foo" );
+    }
+    
     @Override
     public ScheduledServiceBaseResource getTaskScheduled()
     {

@@ -85,7 +85,7 @@ public class TaskScheduleUtil
 
     /**
      * Blocks while waiting for a task to finish.
-     * 
+     *
      * @param name
      * @return
      * @throws Exception
@@ -97,16 +97,15 @@ public class TaskScheduleUtil
 
         for ( int attempt = 0; attempt < maxAttempts; attempt++ )
         {
+            Thread.sleep( sleep );
+
             ScheduledServiceListResource task = getTask( name );
-            String status = task.getStatus();
-            
-            if ( !status.equals( "RUNNING" ) )
+
+            if ( task.getLastRunResult() != "n/a"
+                && ( task.getStatus().equals( "SUBMITTED" )
+                    || task.getStatus().equals( "WAITING" ) ) )
             {
                 return task;
-            }
-            else
-            {
-                Thread.sleep( sleep );
             }
         }
         return null;
@@ -176,7 +175,7 @@ public class TaskScheduleUtil
 
         return waitForTask( taskName, maxAttempts );
     }
-    
+
     public static ScheduledServiceListResource runTask( String taskName, String typeId,
         ScheduledServicePropertyResource... properties )
         throws Exception

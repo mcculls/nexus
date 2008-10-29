@@ -6,10 +6,13 @@ import java.util.List;
 
 import org.testng.Assert;
 
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Response;
+import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
+import org.sonatype.nexus.jsecurity.PasswordGenerator;
 import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.test.utils.SecurityConfigUtil;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
@@ -44,6 +47,31 @@ public class Nexus142UserCrudJsonTests
 
         // this also validates
         this.messageUtil.createUser( resource );
+    }
+    
+    @Test
+    public void createTestWithPassword()
+        throws IOException, ComponentLookupException
+    {
+
+        UserResource resource = new UserResource();
+        String password = "defaultPassword";
+        resource.setName( "Create User" );
+        resource.setUserId( "createTestWithPassword" );
+        resource.setStatus( "active" );
+        resource.setEmail( "nexus@user.com" );
+        resource.addRole( "role1" );
+        resource.setPassword( password );
+
+        // this also validates
+        this.messageUtil.createUser( resource );
+        
+        // validate password is correct
+        PasswordGenerator pwGenerator = (PasswordGenerator) this.getContainer().lookup( PasswordGenerator.class );
+        String hashedPassword = pwGenerator.hashPassword( password );
+        CUser cUser = SecurityConfigUtil.getCUser( "createTestWithPassword" );
+        Assert.assertEquals( hashedPassword, cUser.getPassword(), "Expected hashed passwords to be the same." );
+        
     }
     
     @Test

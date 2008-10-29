@@ -7,7 +7,7 @@
 		<artifactId>nexus-test-harness</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>nexus-test-harness-launcher</artifactId>
+	<artifactId>nexus-test-harness-launcher-2</artifactId>
 	<name>Nexus Test Harness Launcher</name>
 	<properties>
 

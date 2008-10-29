@@ -147,7 +147,9 @@ import org.sonatype.nexus.integrationtests.upgrades.nexus652.Nexus652Beta5To10Up
 //    Nexus947GroupBrowsing.class,
 //    Nexus570IndexArchetypeTest.class,
 //    Nexus970DeleteRepositoryTest.class,
-//    Nexus969CacheEvictInteractionTest.class } )
+//    Nexus969CacheEvictInteractionTest.class
+//    Nexus980ReindexVirtualReposTest.class,
+//    Nexus950CorruptPomTest.class } )
 public class IntegrationTestSuiteClasses
 {
 

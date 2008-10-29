@@ -2,8 +2,6 @@ package org.sonatype.nexus.integrationtests.nexus969;
 
 import java.io.IOException;
 
-import org.testng.Assert;
-
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.sonatype.appbooter.ForkedAppBooter;
@@ -16,6 +14,7 @@ import org.sonatype.nexus.rest.model.ScheduledServiceListResource;
 import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
 import org.sonatype.nexus.tasks.descriptors.EvictUnusedItemsTaskDescriptor;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class Nexus969CacheEvictInteractionTest
@@ -85,7 +84,7 @@ public class Nexus969CacheEvictInteractionTest
         scheduledTask.addProperty( repo );
 
         Status status = TaskScheduleUtil.create( scheduledTask );
-        Assert.assertTrue(status.isSuccess(),  "Unable to create task:" + scheduledTask.getTypeId() );
+        Assert.assertTrue( status.isSuccess(), "Unable to create task: " + status.getDescription() );
 
         return TaskScheduleUtil.getTask( taskName );
     }

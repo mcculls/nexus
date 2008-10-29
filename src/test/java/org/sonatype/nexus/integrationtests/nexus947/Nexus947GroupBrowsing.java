@@ -1,6 +1,7 @@
 package org.sonatype.nexus.integrationtests.nexus947;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.testng.Assert;
@@ -19,34 +20,38 @@ public class Nexus947GroupBrowsing
 {
 
     @Test
-    public void doTest() throws IOException
+    public void groupTest() throws IOException
     {
         ContentListMessageUtil contentUtil = new ContentListMessageUtil(this.getXMLXStream(), MediaType.APPLICATION_XML);
-        
+
         List<ContentListResource> items = contentUtil.getContentListResource( "public", "/", true );
-        
+
         // make sure we have a few items
         Assert.assertTrue( items.size() > 1, "Expected more then 1 item. " );
-        
+
         // now for a bit more control
         items = contentUtil.getContentListResource( "public", "/nexus947/nexus947/3.2.1/", true );
-        
+
         // exactly 2 items
         Assert.assertEquals( 2, items.size() );
-        
+
+        ArrayList<String> itemsText = new ArrayList<String>();
+        itemsText.add( items.get( 0 ).getText() );
+        itemsText.add( items.get( 1 ).getText() );
+
         // they are sorted in alpha order, so expect the jar, then the pom
-        Assert.assertEquals( "nexus947-3.2.1.jar", items.get( 0 ).getText() );
-        Assert.assertEquals( "nexus947-3.2.1.pom", items.get( 1 ).getText() );
+        Assert.assertTrue( itemsText.contains("nexus947-3.2.1.jar") );
+        Assert.assertTrue( itemsText.contains("nexus947-3.2.1.pom") );
     }
-    
+
     @Test
     public void redirectTest() throws IOException
     {
         String uriPart = RequestFacade.SERVICE_LOCAL + "repo_groups/" + "public" + "/content";
         Response response = RequestFacade.sendMessage( uriPart, Method.GET );
         Assert.assertEquals( 301, response.getStatus().getCode() );
-        
+
         Assert.assertTrue(response.getLocationRef().toString().endsWith( uriPart + "/" ));
-        
+
     }
 }

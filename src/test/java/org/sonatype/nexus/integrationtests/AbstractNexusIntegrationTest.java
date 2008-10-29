@@ -196,7 +196,7 @@ public class AbstractNexusIntegrationTest
                 String artifactFileName = model.getArtifactId() + "." + model.getPackaging();
                 File artifactFile = new File( project, artifactFileName );
 
-                log.debug( "wow, this is working: " + artifactFile );
+                log.debug( "wow, this is working: " + artifactFile.getName() );
 
                 Gav gav =
                     new Gav( model.getGroupId(), model.getArtifactId(), model.getVersion(), null, model.getPackaging(),
@@ -706,7 +706,10 @@ public class AbstractNexusIntegrationTest
         }
         
         
-        
+        this.copyConfigFile( "nexus.xml", RELATIVE_WORK_CONF_DIR );
+
+        // copy security config
+        this.copyConfigFile( "security.xml", RELATIVE_WORK_CONF_DIR );
         
         
         appBooter.start();

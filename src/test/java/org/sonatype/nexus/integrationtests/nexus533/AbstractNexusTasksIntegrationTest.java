@@ -51,7 +51,7 @@ public abstract class AbstractNexusTasksIntegrationTest<E extends ScheduledServi
         Assert.assertEquals( scheduledTask.getTypeId(), task.getType() );
     }
 
-    @Test
+    @Test( dependsOnMethods="scheduleTasks")
     public void updateTasks()
         throws Exception
     {
@@ -68,7 +68,7 @@ public abstract class AbstractNexusTasksIntegrationTest<E extends ScheduledServi
 
     public abstract void updateTask( E scheduledTask );
 
-    @Test
+    @Test( dependsOnMethods="scheduleTasks")
     public void changeScheduling()
         throws Exception
     {
@@ -112,7 +112,7 @@ public abstract class AbstractNexusTasksIntegrationTest<E extends ScheduledServi
         assertTasks();
     }
 
-    @Test
+    @Test( dependsOnMethods={"scheduleTasks", "updateTasks", "changeScheduling"})
     public void deleteTasks()
         throws Exception
     {

@@ -35,9 +35,10 @@ public class AbstractSnapshotRemoverTest
     }
 
     @BeforeTest
-    public void deploySnapshotArtifacts()
+    public void oncePerClassSetUp()
         throws Exception
     {
+        super.oncePerClassSetUp();
         initFolders();
 
         File oldSnapshot = getTestFile( "repo" );

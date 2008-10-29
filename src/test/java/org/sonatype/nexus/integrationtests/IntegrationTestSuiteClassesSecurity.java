@@ -145,7 +145,8 @@ import org.testng.annotations.BeforeClass;
 //    Nexus930AutoDiscoverComponent.class,
 //    Nexus947GroupBrowsing.class,
 //    Nexus570IndexArchetypeTest.class,
-//    Nexus504ChangeRoleTest.class} )
+//    Nexus504ChangeRoleTest.class, 
+//    Nexus999SetUsersPassword.class } )
 public class IntegrationTestSuiteClassesSecurity
 {
     @BeforeClass
