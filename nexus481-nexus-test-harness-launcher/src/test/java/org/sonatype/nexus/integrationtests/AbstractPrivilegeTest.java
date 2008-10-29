@@ -80,7 +80,7 @@ public abstract class AbstractPrivilegeTest
 
     @BeforeTest
     public void resetTestUserPrivs()
-        throws IOException
+        throws Exception
     {
         TestContainer.getInstance().getTestContext().useAdminForRequests();
 

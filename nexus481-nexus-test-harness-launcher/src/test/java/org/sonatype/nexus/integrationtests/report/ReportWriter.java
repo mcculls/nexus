@@ -108,17 +108,17 @@ public class ReportWriter
         JavaMethod[] methods = javaClass.getMethods();
         for ( JavaMethod javaMethod : methods )
         {
-            List<Annotation> annotations = Arrays.asList( javaMethod.getAnnotations() );
-
-            for ( Iterator<Annotation> iter = annotations.iterator(); iter.hasNext(); )
-            {
-                Annotation annotation = iter.next();
-
-                if ( annotation.getType().getValue().equals( Test.class.getName() ) )
-                {
-                    return true;
-                }
-            }
+//            List<Annotation> annotations = Arrays.asList( javaMethod.getAnnotations() );
+//
+//            for ( Iterator<Annotation> iter = annotations.iterator(); iter.hasNext(); )
+//            {
+//                Annotation annotation = iter.next();
+//
+//                if ( annotation.getType().getValue().equals( Test.class.getName() ) )
+//                {
+//                    return true;
+//                }
+//            }
         }
 
         return false;

@@ -34,8 +34,7 @@ public class Nexus477ArtifactsCrudTests
 
     @BeforeTest
     public void deployArtifact()
-        throws IOException, ConnectionException, AuthenticationException, TransferFailedException,
-        ResourceDoesNotExistException, AuthorizationException, ComponentLookupException
+        throws Exception
     {
         Gav gav =
             new Gav( this.getTestId(), "artifact", "1.0.0", null, "xml", 0, new Date().getTime(), "", false, false,
