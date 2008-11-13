@@ -39,9 +39,9 @@ public abstract class AbstractPrivilegeTest
     protected TargetMessageUtil targetUtil;
 
     protected RoutesMessageUtil routeUtil;
-    
+
     protected RepositoryMessageUtil repoUtil;
-    
+
     protected GroupMessageUtil groupUtil;
 
     public AbstractPrivilegeTest( String testRepositoryId)
@@ -59,7 +59,7 @@ public abstract class AbstractPrivilegeTest
     {
         // turn on security for the test
         TestContainer.getInstance().getTestContext().setSecureTest( true );
-        
+
         XStream xstream = this.getXMLXStream();
 
         this.userUtil = new UserMessageUtil( xstream, MediaType.APPLICATION_XML );
@@ -90,6 +90,7 @@ public abstract class AbstractPrivilegeTest
         this.userUtil.updateUser( testUser );
     }
 
+    @SuppressWarnings("unchecked")
     protected void printUserPrivs( String userId )
         throws IOException
     {
@@ -164,7 +165,7 @@ public abstract class AbstractPrivilegeTest
     {
         // use admin
         TestContainer.getInstance().getTestContext().useAdminForRequests();
-        
+
         // now give create
         RoleResource role = new RoleResource();
         role.setDescription( newRoleName );
@@ -184,6 +185,7 @@ public abstract class AbstractPrivilegeTest
         this.userUtil.updateUser( testUser );
     }
 
+    @Override
     @After
     public void afterTest()
         throws Exception

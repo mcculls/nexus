@@ -15,6 +15,10 @@ import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 public class Nexus166SampleTest extends AbstractNexusIntegrationTest
 {
 
+//    static {
+//        ServerRemoteControl.setInstance( new JettyServerControl() );
+//    }
+
     @Test
     public void sampleTest() throws IOException
     {
