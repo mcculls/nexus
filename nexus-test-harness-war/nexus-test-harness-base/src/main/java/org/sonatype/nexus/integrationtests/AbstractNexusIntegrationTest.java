@@ -339,7 +339,7 @@ public class AbstractNexusIntegrationTest
         }
     }
 
-    private void stopNexus()
+    private static void stopNexus()
         throws Exception
     {
         log.info( "stopping Nexus" );
@@ -443,7 +443,7 @@ public class AbstractNexusIntegrationTest
         throws Exception
     {
         // stop nexus
-        new AbstractNexusIntegrationTest().stopNexus();
+        AbstractNexusIntegrationTest.stopNexus();
     }
 
     private void setupContainer()
@@ -526,6 +526,7 @@ public class AbstractNexusIntegrationTest
             + classifierPart + "." + extension;
     }
 
+    @SuppressWarnings("deprecation")
     protected File downloadSnapshotArtifact( String repository, Gav gav, File parentDir )
         throws IOException
     {
