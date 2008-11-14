@@ -148,6 +148,9 @@ public class AbstractNexusIntegrationTest
                 // tell the console what we are doing, now that there is no output its
                 log.info( "Running Test: " + this.getClass().getSimpleName() );
 
+                //setupServer
+                ServerRemoteControl.setupServer();
+
                 HashMap<String, String> variables = new HashMap<String, String>();
                 variables.put( "test-harness-id", this.getTestId() );
 

@@ -55,7 +55,6 @@
     <fake-maven>${project.build.directory}/apache-maven-${maven-version}</fake-maven>
 
     <config-resource>${project.build.directory}/config-resources</config-resource>
-    <bundle-conf-resource>${project.build.directory}/bundle-conf-resource</bundle-conf-resource>
   </properties>
 
   <dependencies>
@@ -82,12 +81,6 @@
       <testResource>
         <directory>${config-resource}</directory>
         <filtering>true</filtering>
-      </testResource>
-
-      <testResource>
-        <directory>${bundle-conf-resource}</directory>
-        <filtering>true</filtering>
-        <targetPath>${nexus-abs-basedir}</targetPath>
       </testResource>
 
       <testResource>
@@ -246,14 +239,6 @@
                   <type>zip</type>
                   <outputDirectory>${config-resource}</outputDirectory>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>org.sonatype.nexus</groupId>
-                  <artifactId>nexus-test-harness-base</artifactId>
-                  <version>${project.version}</version>
-                  <classifier>bundle-conf</classifier>
-                  <type>zip</type>
-                  <outputDirectory>${bundle-conf-resource}</outputDirectory>
-                </artifactItem>
               </artifactItems>
 
             </configuration>
@@ -320,6 +305,18 @@
         </executions>
       </plugin>
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <argLine>-Xmx512m -Xms128m</argLine>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
   <reporting>
