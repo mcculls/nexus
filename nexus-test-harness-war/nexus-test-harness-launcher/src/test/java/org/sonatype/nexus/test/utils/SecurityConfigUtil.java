@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
@@ -36,7 +35,6 @@ public class SecurityConfigUtil
         verifyRoles( roles );
     }
 
-    @SuppressWarnings( "unchecked" )
     public static void verifyRoles( List<RoleResource> roles )
         throws IOException
     {
@@ -103,8 +101,8 @@ public class SecurityConfigUtil
                 Assert.assertEquals( targetPriv.getId(), secPriv.getId() );
                 Assert.assertEquals( targetPriv.getName(), secPriv.getName() );
                 Assert.assertEquals( targetPriv.getType(), "repositoryTarget" );
-                
-                for ( CProperty prop : ( List<CProperty> ) secPriv.getProperties() )
+
+                for ( CProperty prop : (List<CProperty>) secPriv.getProperties() )
                 {
                     if ( prop.getKey().equals( "repositoryGroupId" ) )
                     {
@@ -134,8 +132,8 @@ public class SecurityConfigUtil
                 Assert.assertEquals( targetPriv.getId(), secPriv.getId() );
                 Assert.assertEquals( targetPriv.getName(), secPriv.getName() );
                 Assert.assertEquals( targetPriv.getType(), "application" );
-                
-                for ( CProperty prop : ( List<CProperty> ) secPriv.getProperties() )
+
+                for ( CProperty prop : (List<CProperty>) secPriv.getProperties() )
                 {
                     if ( prop.getKey().equals( "permission" ) )
                     {
@@ -187,7 +185,7 @@ public class SecurityConfigUtil
         }
         return null;
     }
-    
+
     @SuppressWarnings( "unchecked" )
     public static CPrivilege getCPrivilegeByName( String privilegeName )
         throws IOException
@@ -226,16 +224,12 @@ public class SecurityConfigUtil
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static Configuration getSecurityConfig()
         throws IOException
     {
 
-        ResourceBundle rb = ResourceBundle.getBundle( "baseTest" );
-
-        File secConfigFile = new File( rb.getString( "nexus.base.dir" ) 
-                                       + "/"
-                                       + AbstractNexusIntegrationTest.RELATIVE_WORK_CONF_DIR
-                                       , "security.xml" );
+        File secConfigFile = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf/security.xml" );
 
         Reader fr = null;
         Configuration configuration = null;
@@ -248,22 +242,24 @@ public class SecurityConfigUtil
 
             // read again with interpolation
             configuration = reader.read( fr );
-            
+
             Configuration staticConfiguration = null;
-            
-            fr = new InputStreamReader( SecurityConfigUtil.class.getResourceAsStream( "/META-INF/nexus/static-security.xml" ) );
-            
+
+            fr =
+                new InputStreamReader(
+                                       SecurityConfigUtil.class.getResourceAsStream( "/META-INF/nexus/static-security.xml" ) );
+
             staticConfiguration = reader.read( fr );
-            
-            for ( CUser user : ( List<CUser> ) staticConfiguration.getUsers() )
+
+            for ( CUser user : (List<CUser>) staticConfiguration.getUsers() )
             {
                 configuration.addUser( user );
             }
-            for ( CRole role : ( List<CRole> ) staticConfiguration.getRoles() )
+            for ( CRole role : (List<CRole>) staticConfiguration.getRoles() )
             {
                 configuration.addRole( role );
             }
-            for ( CPrivilege priv : ( List<CPrivilege> ) staticConfiguration.getPrivileges() )
+            for ( CPrivilege priv : (List<CPrivilege>) staticConfiguration.getPrivileges() )
             {
                 configuration.addPrivilege( priv );
             }

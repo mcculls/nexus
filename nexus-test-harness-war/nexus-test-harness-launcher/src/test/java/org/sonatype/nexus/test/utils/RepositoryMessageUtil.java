@@ -28,6 +28,8 @@ import com.thoughtworks.xstream.XStream;
 public class RepositoryMessageUtil
 {
 
+    private static final String NEXUS_STORAGE_END_PATH = "storage/";
+
     private XStream xstream;
 
     private MediaType mediaType;
@@ -95,16 +97,16 @@ public class RepositoryMessageUtil
             // TODO: sometimes the storage dir ends with a '/' SEE: NEXUS-542
             if ( actual.getDefaultLocalStorageUrl().endsWith( "/" ) )
             {
-                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
+                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + NEXUS_STORAGE_END_PATH
                     + repo.getId() + "/  <actual>" + actual.getDefaultLocalStorageUrl(), actual
-                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() + "/" ) );
+                    .getDefaultLocalStorageUrl().endsWith( NEXUS_STORAGE_END_PATH + repo.getId() + "/" ) );
             }
             // NOTE one of these blocks should be removed
             else
             {
-                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + "runtime/work/storage/"
+                Assert.assertTrue( "Unexpected defaultLocalStorage: <expected to end with> " + NEXUS_STORAGE_END_PATH
                     + repo.getId() + "  <actual>" + actual.getDefaultLocalStorageUrl(), actual
-                    .getDefaultLocalStorageUrl().endsWith( "runtime/work/storage/" + repo.getId() ) );
+                    .getDefaultLocalStorageUrl().endsWith( NEXUS_STORAGE_END_PATH + repo.getId() ) );
             }
 
             Assert.assertEquals( expected.getNotFoundCacheTTL(), actual.getNotFoundCacheTTL() );
@@ -144,7 +146,7 @@ public class RepositoryMessageUtil
         RepositoryResourceResponse resourceResponse = (RepositoryResourceResponse) representation
             .getPayload( new RepositoryResourceResponse() );
 
-        return (RepositoryBaseResource) resourceResponse.getData();
+        return resourceResponse.getData();
     }
 
     public RepositoryBaseResource updateRepo( RepositoryBaseResource repo )
@@ -198,7 +200,7 @@ public class RepositoryMessageUtil
 
     /**
      * This should be replaced with a REST Call, but the REST client does not set the Accept correctly on GET's/
-     * 
+     *
      * @return
      * @throws IOException
      */

@@ -29,9 +29,7 @@ public class JettyServerControl
     {
         // copy default nexus.xml
         File testConfigFile = AbstractNexusIntegrationTest.getResource( "default-config/nexus.xml" );
-        File outputFile =
-            new File( AbstractNexusIntegrationTest.nexusBaseDir + "/"
-                + AbstractNexusIntegrationTest.RELATIVE_WORK_CONF_DIR, "nexus.xml" );
+        File outputFile = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf/nexus.xml" );
         FileTestingUtils.fileCopy( testConfigFile, outputFile );
     }
 

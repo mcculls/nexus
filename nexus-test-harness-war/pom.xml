@@ -14,7 +14,6 @@
 	<name>Nexus Test Harness</name>
 	
 	<modules>
-		<module>nexus-simple-memory-realm</module>
         <module>nexus-test-harness-base</module>
         <module>nexus-test-harness-parent</module>
         <module>nexus-test-harness-launcher</module>

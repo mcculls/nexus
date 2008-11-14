@@ -8,9 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.sonatype.nexus.client.NexusClient;
-import org.sonatype.nexus.client.NexusClientException;
 import org.sonatype.nexus.client.NexusConnectionException;
-import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.integrationtests.AbstractPrivilegeTest;
 import org.sonatype.nexus.integrationtests.TestContainer;
 import org.sonatype.nexus.integrationtests.TestContext;
@@ -181,7 +179,7 @@ public class Nexus725InitialRestClient
         searchParam.setGroupId( "nexus725" );
         searchParam.setVersion( "1.0.1" );
         searchParam.setPackaging( "jar" );
-        searchParam.setClassifier( "not currently working" );
+//        searchParam.setClassifier( "not currently working" );
 
         List<NexusArtifact> results = client.searchByGAV( searchParam );
         Assert.assertEquals( "Search result size", 1, results.size() );
@@ -248,7 +246,7 @@ public class Nexus725InitialRestClient
         throws Exception
     {
         NexusClient client = (NexusClient) TestContainer.getInstance().lookup( NexusClient.ROLE );
-        
+
         try
         {
             client.connect( TestProperties.getString( "nexus.base.url" ), "admin", "wrong-password" );

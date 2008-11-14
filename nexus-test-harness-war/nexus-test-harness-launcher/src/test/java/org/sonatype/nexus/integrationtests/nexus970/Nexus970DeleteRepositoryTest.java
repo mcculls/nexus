@@ -26,7 +26,7 @@ public class Nexus970DeleteRepositoryTest
     public void deleteOnDefaultStorage()
         throws Exception
     {
-        File storageDir = new File( nexusBaseDir, "runtime/work/storage/nexus970-default" );
+        File storageDir = new File( nexusWorkDir, "storage/nexus970-default" );
         File artifactFile = new File( storageDir, "nexus970/artifact/1.0.0/artifact-1.0.0.jar" );
 
         // sanity check
@@ -42,7 +42,7 @@ public class Nexus970DeleteRepositoryTest
         Assert.assertFalse( "Artifacts shouldn't exists on deleted repo", artifactFile.exists() );
         Assert.assertFalse( "Storage dir should be deleted", storageDir.exists() );
 
-        File trashStorageDir = new File( nexusBaseDir, "runtime/work/trash/nexus970-default" );
+        File trashStorageDir = new File( nexusWorkDir, "trash/nexus970-default" );
         File trashArtifactFile = new File( trashStorageDir, "nexus970/artifact/1.0.0/artifact-1.0.0.jar" );
 
         Assert.assertTrue( "Storage should be moved to trash", trashStorageDir.isDirectory() );

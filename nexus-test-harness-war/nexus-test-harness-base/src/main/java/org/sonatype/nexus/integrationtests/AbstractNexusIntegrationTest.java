@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -35,6 +36,7 @@ import org.restlet.data.Status;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.nexus.artifact.Gav;
+import org.sonatype.nexus.test.servercontrol.ServerRemoteControl;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
@@ -85,7 +87,7 @@ public class AbstractNexusIntegrationTest
 
     protected static String baseNexusUrl;
 
-    protected static String nexusWorkDir;
+    public static String nexusWorkDir;
 
     protected static String nexusLogDir;
 
@@ -105,10 +107,6 @@ public class AbstractNexusIntegrationTest
         nexusWorkDir = TestProperties.getString( "nexus.work.dir" );
         nexusLogDir = TestProperties.getString( "nexus.log.dir" );
     }
-
-    public static final String RELATIVE_CONF_DIR = "runtime/apps/nexus/conf";
-
-    public static final String RELATIVE_WORK_CONF_DIR = "runtime/work/conf";
 
     protected AbstractNexusIntegrationTest()
     {
@@ -153,15 +151,24 @@ public class AbstractNexusIntegrationTest
                 HashMap<String, String> variables = new HashMap<String, String>();
                 variables.put( "test-harness-id", this.getTestId() );
 
-                // clean common work dir
-                // this.cleanWorkDir();
+                // copy configuration files or any other required
+                List<String> files = ServerRemoteControl.getResetableFilesNames();
+                for ( String file : files )
+                {
+                    File configDir = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf" );
+                    if ( !configDir.exists() )
+                    {
+                        configDir.mkdirs();
+                    }
 
-                this.copyConfigFile( "nexus.xml", RELATIVE_WORK_CONF_DIR );
+                    File testConfigFile = this.getOverridableFile( file );
 
-                // copy security config
-                this.copyConfigFile( "security.xml", RELATIVE_WORK_CONF_DIR );
+                    File destination = new File( configDir, file );
+                    log.debug( "copying " + file + " to:  " + destination );
 
-                // this.copyConfigFile( "log4j.properties", variables );
+                    FileTestingUtils.interpolationFileCopy( testConfigFile, destination, variables );
+
+                }
 
                 if ( TestContainer.getInstance().getTestContext().isSecureTest()
                     || Boolean.valueOf( System.getProperty( "secure.test" ) ) )
@@ -193,11 +200,6 @@ public class AbstractNexusIntegrationTest
         throws Exception
     {
         // must override
-    }
-
-    private boolean isSecurityTest()
-    {
-        return TestContainer.getInstance().getTestContext().isSecureTest();
     }
 
     protected static void cleanWorkDir()
@@ -353,7 +355,7 @@ public class AbstractNexusIntegrationTest
             // must reset
             NEEDS_HARD_STOP = false;
 
-            NexusStateUtil.doHardStop( );
+            NexusStateUtil.doHardStop();
         }
 
     }
@@ -367,57 +369,13 @@ public class AbstractNexusIntegrationTest
         // we need to replace every time to make sure no one changes it.
         if ( testConfigFile == null || !testConfigFile.exists() )
         {
-            testConfigFile = this.getResource( "default-config/" + file );
+            testConfigFile = AbstractNexusIntegrationTest.getResource( "default-config/" + file );
         }
         else
         {
             log.debug( "This test is using its own " + file + " " + testConfigFile );
         }
         return testConfigFile;
-    }
-
-    private void copyConfigFile( String configFile, String destShortName, Map<String, String> variables, String path )
-        throws IOException
-    {
-        // the test can override the test config.
-        File testConfigFile = this.getOverridableFile( configFile );
-
-        log.debug( "copying "
-            + configFile
-            + " to:  "
-            + new File( AbstractNexusIntegrationTest.nexusBaseDir + "/" + ( path == null ? RELATIVE_CONF_DIR : path ),
-                        configFile ) );
-
-        FileTestingUtils.interpolationFileCopy( testConfigFile, new File( AbstractNexusIntegrationTest.nexusBaseDir
-            + "/" + ( path == null ? RELATIVE_CONF_DIR : path ), destShortName ), variables );
-
-    }
-
-    // Overloaded helpers
-    private void copyConfigFile( String configFile )
-        throws IOException
-    {
-        this.copyConfigFile( configFile, (String) null );
-    }
-
-    private void copyConfigFile( String configFile, String path )
-        throws IOException
-    {
-        this.copyConfigFile( configFile, new HashMap<String, String>(), path );
-    }
-
-    private void copyConfigFile( String configFile, Map<String, String> variables )
-        throws IOException
-    {
-        this.copyConfigFile( configFile, configFile, variables, null );
-
-    }
-
-    private void copyConfigFile( String configFile, Map<String, String> variables, String path )
-        throws IOException
-    {
-        this.copyConfigFile( configFile, configFile, variables, path );
-
     }
 
     /**
@@ -430,7 +388,7 @@ public class AbstractNexusIntegrationTest
     protected File getTestResourceAsFile( String relativePath )
     {
         String resource = this.getTestId() + "/" + relativePath;
-        return this.getResource( resource );
+        return AbstractNexusIntegrationTest.getResource( resource );
     }
 
     protected String getTestId()

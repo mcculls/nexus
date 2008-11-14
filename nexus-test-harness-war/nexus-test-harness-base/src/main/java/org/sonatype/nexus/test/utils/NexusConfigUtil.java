@@ -88,8 +88,7 @@ public class NexusConfigUtil
 
     public static File getNexusFile()
     {
-        return new File( TestProperties.getString( "nexus.base.dir" ) + "/"
-            + AbstractNexusIntegrationTest.RELATIVE_WORK_CONF_DIR, "nexus.xml" );
+        return new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf/nexus.xml" );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -125,7 +124,8 @@ public class NexusConfigUtil
         }
 
     }
-    
+
+    @SuppressWarnings("unchecked")
     public static CRepositoryShadow getRepoShadow( String repoId )
         throws IOException
     {
@@ -141,9 +141,10 @@ public class NexusConfigUtil
                 return cRepo;
             }
         }
-        return null;        
+        return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static CRepository getRepo( String repoId )
         throws IOException
     {
@@ -162,11 +163,13 @@ public class NexusConfigUtil
         return null;
     }
 
-    public static void validateConfig() throws Exception
+    public static void validateConfig()
+        throws Exception
     {
-        ApplicationConfigurationValidator validator = (ApplicationConfigurationValidator) TestContainer.getInstance().lookup( ApplicationConfigurationValidator.class );
-        ValidationResponse vResponse =
-            validator.validateModel( new ValidationRequest( getNexusConfig() ) );
+        ApplicationConfigurationValidator validator =
+            (ApplicationConfigurationValidator) TestContainer.getInstance().lookup(
+                                                                                    ApplicationConfigurationValidator.class );
+        ValidationResponse vResponse = validator.validateModel( new ValidationRequest( getNexusConfig() ) );
 
         if ( !vResponse.isValid() )
         {
@@ -175,7 +178,9 @@ public class NexusConfigUtil
 
     }
 
-    public static CRepositoryGroup getGroup( String groupId ) throws IOException
+    @SuppressWarnings("unchecked")
+    public static CRepositoryGroup getGroup( String groupId )
+        throws IOException
     {
         List<CRepositoryGroup> repos = getNexusConfig().getRepositoryGrouping().getRepositoryGroups();
 

@@ -26,9 +26,12 @@ public class BundleServerControl
     {
         // copy default nexus.xml
         File testConfigFile = AbstractNexusIntegrationTest.getResource( "default-config/nexus.xml" );
-        File outputFile =
-            new File( AbstractNexusIntegrationTest.nexusBaseDir + "/"
-                + AbstractNexusIntegrationTest.RELATIVE_WORK_CONF_DIR, "nexus.xml" );
+        File configDir = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf" );
+        if ( !configDir.exists() )
+        {
+            configDir.mkdirs();
+        }
+        File outputFile = new File( configDir, "nexus.xml" );
         FileTestingUtils.fileCopy( testConfigFile, outputFile );
     }
 

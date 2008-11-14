@@ -14,17 +14,18 @@
   <name>Nexus Test Harness Parent</name>
 
   <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>junit</groupId>
-  			<artifactId>junit</artifactId>
-  			<version>4.4</version>
-  		</dependency>
-  	</dependencies>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.4</version>
+      </dependency>
+    </dependencies>
   </dependencyManagement>
 
   <properties>
     <bundle-expanded-dir>target/bundle</bundle-expanded-dir>
+    <war-expanded-dir>target/war</war-expanded-dir>
     <config-expanded-dir>target/test-nexus-config</config-expanded-dir>
 
     <emma-sources-base>target/emma/sources</emma-sources-base>
@@ -47,7 +48,7 @@
 
     <lib-target-dir>${nexus-abs-basedir}/runtime/apps/nexus/lib</lib-target-dir>
     <config-target-dir>${nexus-abs-basedir}/runtime/apps/nexus/conf</config-target-dir>
-    <work-target-dir>${nexus-abs-basedir}/runtime/work</work-target-dir>
+    <work-target-dir>${project.build.directory}/nexus-workspace</work-target-dir>
 
     <maven-version>2.0.9</maven-version>
     <fake-central-repo>${project.build.testOutputDirectory}/fake-central</fake-central-repo>
@@ -124,6 +125,24 @@
               <includeArtifactIds>nexus-webapp</includeArtifactIds>
               <outputDirectory>${bundle-expanded-dir}</outputDirectory>
               <excludes>**/conf/plexus.properties</excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack-war</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.sonatype.nexus</groupId>
+                  <version>${project.version}</version>
+                  <artifactId>nexus-webapp</artifactId>
+                  <type>war</type>
+                  <outputDirectory>${war-expanded-dir}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
             </configuration>
           </execution>
           <execution>

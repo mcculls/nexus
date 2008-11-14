@@ -26,7 +26,7 @@ public class Nexus643EmptyTrashTaskTest
 
         delete( "nexus643" );
 
-        File trashContent = new File( nexusBaseDir, "runtime/work/trash/nexus-test-harness-repo/nexus643" );
+        File trashContent = new File( nexusWorkDir, "trash/nexus-test-harness-repo/nexus643" );
         Assert.assertTrue( "Something should be at trash!", trashContent.exists() );
 
         // This is THE important part
