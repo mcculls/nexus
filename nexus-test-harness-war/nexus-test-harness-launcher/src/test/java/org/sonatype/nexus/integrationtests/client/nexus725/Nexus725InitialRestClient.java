@@ -172,12 +172,6 @@ public class Nexus725InitialRestClient
         throws Exception
     {
 
-        if ( true )
-        {
-            printKnownErrorButDoNotFail( getClass(), "searchByGAVTest" );
-            return;
-        }
-
         NexusClient client = this.getConnectedNexusClient();
 
         NexusArtifact searchParam = new NexusArtifact();
