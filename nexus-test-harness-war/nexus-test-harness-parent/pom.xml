@@ -24,11 +24,11 @@
   </dependencyManagement>
 
   <properties>
-    <bundle-expanded-dir>target/bundle</bundle-expanded-dir>
-    <war-expanded-dir>target/war</war-expanded-dir>
-    <config-expanded-dir>target/test-nexus-config</config-expanded-dir>
+    <bundle-expanded-dir>${project.build.directory}/bundle</bundle-expanded-dir>
+    <war-expanded-dir>${project.build.directory}/war</war-expanded-dir>
+    <config-expanded-dir>${project.build.directory}/test-nexus-config</config-expanded-dir>
 
-    <emma-sources-base>target/emma/sources</emma-sources-base>
+    <emma-sources-base>${project.build.directory}/emma/sources</emma-sources-base>
 
     <proxy-repo-target-dir-name>proxyRepo</proxy-repo-target-dir-name>
     <proxy-repo-target-dir>${project.build.directory}/test-classes/${proxy-repo-target-dir-name}</proxy-repo-target-dir>
@@ -76,7 +76,6 @@
   </dependencies>
 
   <build>
-
     <testResources>
       <testResource>
         <directory>${config-resource}</directory>

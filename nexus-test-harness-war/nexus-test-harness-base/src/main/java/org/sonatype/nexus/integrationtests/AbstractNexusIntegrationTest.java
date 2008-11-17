@@ -36,6 +36,7 @@ import org.restlet.data.Status;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.nexus.artifact.Gav;
+import org.sonatype.nexus.test.servercontrol.JettyServerControl;
 import org.sonatype.nexus.test.servercontrol.ServerRemoteControl;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
@@ -54,6 +55,12 @@ import com.thoughtworks.xstream.XStream;
 
 public class AbstractNexusIntegrationTest
 {
+
+    static
+    {
+        ServerRemoteControl.setInstance( new JettyServerControl() );
+    }
+
 
     public static final String REPO_TEST_HARNESS_REPO = "nexus-test-harness-repo";
 
@@ -83,15 +90,17 @@ public class AbstractNexusIntegrationTest
 
     public String testRepositoryId;
 
-    public static String nexusBaseDir;
+    public static final String nexusBaseDir;
 
     protected static String baseNexusUrl;
 
-    public static String nexusWorkDir;
+    public static final String nexusWorkDir;
 
     protected static String nexusLogDir;
 
     protected static Logger log = Logger.getLogger( AbstractNexusIntegrationTest.class );
+
+    public static final String nexusWarDir;
 
     /**
      * Flag that says if we should verify the config before startup, we do not want to do this for upgrade tests.
@@ -106,6 +115,7 @@ public class AbstractNexusIntegrationTest
         baseNexusUrl = TestProperties.getString( "nexus.base.url" );
         nexusWorkDir = TestProperties.getString( "nexus.work.dir" );
         nexusLogDir = TestProperties.getString( "nexus.log.dir" );
+        nexusWarDir = TestProperties.getString( "nexus.war.dir" );
     }
 
     protected AbstractNexusIntegrationTest()
@@ -148,7 +158,7 @@ public class AbstractNexusIntegrationTest
                 // tell the console what we are doing, now that there is no output its
                 log.info( "Running Test: " + this.getClass().getSimpleName() );
 
-                //setupServer
+                // setupServer
                 ServerRemoteControl.setupServer();
 
                 HashMap<String, String> variables = new HashMap<String, String>();
@@ -529,7 +539,7 @@ public class AbstractNexusIntegrationTest
             + classifierPart + "." + extension;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings( "deprecation" )
     protected File downloadSnapshotArtifact( String repository, Gav gav, File parentDir )
         throws IOException
     {

@@ -41,33 +41,33 @@ public class SearchMessageUtil
 
         return RequestFacade.doGetRequest( serviceURI );
     }
-    
+
     public Response doSearchFor( Map<String, String> queryArgs )
-    throws Exception
-{
-    StringBuffer serviceURI = new StringBuffer("service/local/data_index?");
-    
-    for ( Entry<String, String> entry : queryArgs.entrySet() )
+        throws Exception
     {
-        serviceURI.append( entry.getKey() ).append( "=" ).append( entry.getValue() ).append( "&" );
+        StringBuffer serviceURI = new StringBuffer( "service/local/data_index?" );
+
+        for ( Entry<String, String> entry : queryArgs.entrySet() )
+        {
+            serviceURI.append( entry.getKey() ).append( "=" ).append( entry.getValue() ).append( "&" );
+        }
+
+        return RequestFacade.doGetRequest( serviceURI.toString() );
     }
-    
-    return RequestFacade.doGetRequest( serviceURI.toString() );
-}
-    
+
     @SuppressWarnings( "unchecked" )
     public List<NexusArtifact> searchFor( String query )
         throws Exception
-    {   
+    {
         HashMap<String, String> queryArgs = new HashMap<String, String>();
         queryArgs.put( "q", query );
         return searchFor( queryArgs );
     }
-    
+
     @SuppressWarnings( "unchecked" )
     public List<NexusArtifact> searchFor( Map<String, String> queryArgs )
         throws Exception
-    {   
+    {
         String responseText = doSearchFor( queryArgs ).getEntity().getText();
 
         XStreamRepresentation representation =
@@ -83,7 +83,10 @@ public class SearchMessageUtil
     {
         String serviceURI = "service/local/identify/sha1/" + sha1;
 
-        String responseText = RequestFacade.doGetRequest( serviceURI ).getEntity().getText();
+        Response response = RequestFacade.doGetRequest( serviceURI );
+        String responseText = response.getEntity().getText();
+
+        Assert.assertTrue( "Fail to search for sha1 " + responseText, response.getStatus().isSuccess() );
 
         log.debug( "responseText: \n" + responseText );
 

@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.sonatype.nexus.test.servercontrol.BundleServerControl;
+import org.sonatype.nexus.test.servercontrol.JettyServerControl;
 import org.sonatype.nexus.test.servercontrol.ServerRemoteControl;
 import org.sonatype.nexus.test.utils.NexusStateUtil;
 
@@ -17,7 +17,8 @@ public class IntegrationTestSuite
     public static void beforeSuite()
         throws Exception
     {
-        ServerRemoteControl.setInstance( new BundleServerControl() );
+        ServerRemoteControl.setInstance( new JettyServerControl() );
+        // ServerRemoteControl.setInstance( new BundleServerControl() );
 
         ServerRemoteControl.setupServer();
 

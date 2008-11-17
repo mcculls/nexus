@@ -2,6 +2,8 @@ package org.sonatype.nexus.test.servercontrol;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,26 +16,35 @@ import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.TestProperties;
 
 public class JettyServerControl
+    extends AbstractServerControl
     implements ServerControl
 {
 
     private static Server server;
+
+    private ClassLoader previousLoader;
 
     public List<String> getResetableFilesNames()
     {
         return Arrays.asList( "nexus.xml", "security.xml" );
     }
 
+    @Override
     public void setupServer()
         throws Exception
     {
-        // copy default nexus.xml
-        File testConfigFile = AbstractNexusIntegrationTest.getResource( "default-config/nexus.xml" );
-        File outputFile = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf/nexus.xml" );
-        FileTestingUtils.fileCopy( testConfigFile, outputFile );
+        if ( isSetup )
+        {
+            return;
+        }
+
+        super.setupServer();
+
+        copyToBaseDirConf( "plexus.war.properties", "plexus.properties" );
+
     }
 
-    public void startServer()
+    public synchronized void startServer()
         throws Exception
     {
         Server server = getServer();
@@ -45,6 +56,9 @@ public class JettyServerControl
     {
         if ( server == null )
         {
+            previousLoader = Thread.currentThread().getContextClassLoader();
+            URLClassLoader cl = new URLClassLoader( new URL[0], previousLoader );
+            Thread.currentThread().setContextClassLoader( cl );
             int port = TestProperties.getInteger( "nexus.application.port" );
             String war = TestProperties.getString( "nexus.war.dir" );
             war = new File( war ).getCanonicalPath();
@@ -64,11 +78,45 @@ public class JettyServerControl
         return server;
     }
 
-    public void stopServer()
+    public synchronized void stopServer()
         throws Exception
     {
-        Server server = getServer();
-        server.stop();
+        if ( server == null )
+        {
+            return;
+        }
+        try
+        {
+            Server server = getServer();
+            server.stop();
+            Thread.currentThread().setContextClassLoader( previousLoader );
+        }
+        finally
+        {
+            JettyServerControl.server = null;
+            previousLoader = null;
+        }
+    }
+
+    @Override
+    protected File getBaseDirConf()
+    {
+        File configDir = new File( AbstractNexusIntegrationTest.nexusWarDir, "WEB-INF" );
+        return configDir;
+    }
+
+    @Override
+    protected File getRuntimeDirConf()
+    {
+        File configDir = getBaseDirConf();
+        return configDir;
+    }
+
+    @Override
+    protected File getWorkDirConf()
+    {
+        File configDir = new File( AbstractNexusIntegrationTest.nexusWorkDir, "conf" );
+        return configDir;
     }
 
 }
