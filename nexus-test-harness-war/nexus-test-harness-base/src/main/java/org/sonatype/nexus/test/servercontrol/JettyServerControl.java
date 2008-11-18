@@ -12,7 +12,6 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
-import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.TestProperties;
 
 public class JettyServerControl
@@ -22,7 +21,7 @@ public class JettyServerControl
 
     private static Server server;
 
-    private ClassLoader previousLoader;
+    private static ClassLoader previousLoader;
 
     public List<String> getResetableFilesNames()
     {
@@ -56,12 +55,14 @@ public class JettyServerControl
     {
         if ( server == null )
         {
-            previousLoader = Thread.currentThread().getContextClassLoader();
-            URLClassLoader cl = new URLClassLoader( new URL[0], previousLoader );
-            Thread.currentThread().setContextClassLoader( cl );
             int port = TestProperties.getInteger( "nexus.application.port" );
             String war = TestProperties.getString( "nexus.war.dir" );
             war = new File( war ).getCanonicalPath();
+
+            previousLoader = Thread.currentThread().getContextClassLoader();
+            URLClassLoader cl = new URLClassLoader( new URL[0], previousLoader );
+            Thread.currentThread().setContextClassLoader( cl );
+
 
             server = new Server();
             Connector connector = new SelectChannelConnector();
