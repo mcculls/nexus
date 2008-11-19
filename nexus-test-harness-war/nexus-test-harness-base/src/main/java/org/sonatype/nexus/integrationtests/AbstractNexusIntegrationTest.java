@@ -36,8 +36,8 @@ import org.restlet.data.Status;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.sonatype.appbooter.ForkedAppBooter;
 import org.sonatype.nexus.artifact.Gav;
-import org.sonatype.nexus.test.servercontrol.JettyServerControl;
 import org.sonatype.nexus.test.servercontrol.ServerRemoteControl;
+import org.sonatype.nexus.test.servercontrol.TomcatServerControl;
 import org.sonatype.nexus.test.utils.DeployUtils;
 import org.sonatype.nexus.test.utils.FileTestingUtils;
 import org.sonatype.nexus.test.utils.NexusConfigUtil;
@@ -58,7 +58,8 @@ public class AbstractNexusIntegrationTest
 
     static
     {
-        ServerRemoteControl.setInstance( new JettyServerControl() );
+        ServerRemoteControl.setInstance( new TomcatServerControl() );
+//        ServerRemoteControl.setInstance( new JettyServerControl() );
     }
 
 
