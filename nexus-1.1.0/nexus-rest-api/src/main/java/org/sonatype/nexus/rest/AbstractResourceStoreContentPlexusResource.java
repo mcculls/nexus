@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.fileupload.FileItem;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
@@ -63,7 +65,10 @@ import org.sonatype.nexus.proxy.item.StorageLinkItem;
 import org.sonatype.nexus.proxy.storage.UnsupportedStorageOperationException;
 import org.sonatype.nexus.rest.model.ContentListResource;
 import org.sonatype.nexus.rest.model.ContentListResourceResponse;
+import org.sonatype.nexus.security.filter.NexusJSecurityFilter;
 import org.sonatype.plexus.rest.representation.VelocityRepresentation;
+
+import com.noelios.restlet.ext.servlet.ServletCall;
 
 /**
  * This is an abstract resource handler that uses ResourceStore implementor and publishes those over REST.
@@ -135,7 +140,7 @@ public abstract class AbstractResourceStoreContentPlexusResource
         }
         catch ( Exception e )
         {
-            handleException( e );
+            handleException( request, e );
 
             return null;
         }
@@ -159,7 +164,7 @@ public abstract class AbstractResourceStoreContentPlexusResource
         }
         catch ( Exception t )
         {
-            handleException( t );
+            handleException( request, t );
         }
         return null;
     }
@@ -185,7 +190,7 @@ public abstract class AbstractResourceStoreContentPlexusResource
         }
         catch ( Exception e )
         {
-            handleException( e );
+            handleException( request, e );
         }
     }
 
@@ -339,7 +344,7 @@ public abstract class AbstractResourceStoreContentPlexusResource
             }
             catch ( Exception e )
             {
-                handleException( e );
+                handleException( req, e );
 
                 return null;
             }
@@ -480,7 +485,7 @@ public abstract class AbstractResourceStoreContentPlexusResource
      * 
      * @param t
      */
-    protected void handleException( Exception t )
+    protected void handleException( Request req, Exception t )
         throws ResourceException
     {
         if ( t instanceof IllegalArgumentException )
@@ -527,6 +532,12 @@ public abstract class AbstractResourceStoreContentPlexusResource
         }
         else if ( t instanceof AccessDeniedException )
         {
+            // WARN1: WE ARE TYING RESTLET CODE TO BE RUN WITHIN SERLVET CONTAINER!
+            // WARN2: THIS IS SOMETHING NASTY!
+            HttpServletRequest request = ServletCall.getRequest( req );
+
+            request.setAttribute( NexusJSecurityFilter.REQUEST_IS_AUTHZ_REJECTED, Boolean.TRUE );
+
             throw new ResourceException( Status.CLIENT_ERROR_UNAUTHORIZED, "Authenticate to access this resource!" );
         }
         else
