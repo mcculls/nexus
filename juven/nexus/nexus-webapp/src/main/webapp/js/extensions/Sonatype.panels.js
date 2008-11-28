@@ -295,7 +295,7 @@ Ext.extend( Sonatype.panels.GridViewer, Ext.Panel, {
 Sonatype.panels.TreePanel = function( config ) {
   var config = config || {};
   var defaultConfig = { 
-    titleColumn: 'name',
+    titleColumn: 'name'
   };
   Ext.apply( this, config, defaultConfig );
 
@@ -356,6 +356,9 @@ Sonatype.panels.TreePanel = function( config ) {
         // Sonatype: node name is supplied as 'nodeName' instead of 'text'
         if ( ! attr.text && attr.nodeName ) {
           attr.text = attr.nodeName;
+        }
+        if ( ! attr.id ) {
+          attr.id = ( this.url + attr.path ).replace( /\//g, '_' );
         }
 
         if ( attr.nodeType ) {
