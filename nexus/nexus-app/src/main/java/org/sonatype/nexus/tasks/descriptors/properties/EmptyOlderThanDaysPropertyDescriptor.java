@@ -18,23 +18,27 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.tasks.descriptors;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.sonatype.nexus.tasks.descriptors.properties;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.sonatype.nexus.tasks.descriptors.properties.ScheduledTaskPropertyDescriptor;
 
-@Component( role = ScheduledTaskDescriptor.class, hint = "EmptyTrash", description = "Empty Trash" )
-public class EmptyTrashTaskDescriptor
-    extends AbstractScheduledTaskDescriptor
+/**
+ * 
+ * @author Juven Xu
+ *
+ */
+@Component( role = ScheduledTaskPropertyDescriptor.class, hint = "EmptyOlderThanDays", instantiationStrategy = "per-lookup" )
+public class EmptyOlderThanDaysPropertyDescriptor
+    extends AbstractNumberPropertyDescriptor
 {
-    public static final String ID = "EmptyTrashTask";
 
-    @Requirement( role = ScheduledTaskPropertyDescriptor.class, hint = "EmptyOlderThanDays" )
-    private ScheduledTaskPropertyDescriptor emptyOlderThanDays;
+    public static final String ID = "EmptyTrashItemsOlderThan";
+
+    public EmptyOlderThanDaysPropertyDescriptor()
+    {
+        setHelpText( "Set the number of days, to purge all items that were trashed before the given number of days." );
+        setRequired( false );
+    }
 
     public String getId()
     {
@@ -43,15 +47,7 @@ public class EmptyTrashTaskDescriptor
 
     public String getName()
     {
-        return "Empty Trash";
+        return "Purge items older than (days)";
     }
 
-    public List<ScheduledTaskPropertyDescriptor> getPropertyDescriptors()
-    {
-        List<ScheduledTaskPropertyDescriptor> properties = new ArrayList<ScheduledTaskPropertyDescriptor>();
-
-        properties.add( emptyOlderThanDays );
-
-        return properties;
-    }
 }
