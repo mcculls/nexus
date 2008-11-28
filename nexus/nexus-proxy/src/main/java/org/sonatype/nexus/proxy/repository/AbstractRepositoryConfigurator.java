@@ -132,9 +132,9 @@ public abstract class AbstractRepositoryConfigurator
             else
             {
                 repository.setRemoteUrl( null );
-
+                
                 repository.setRemoteStorage( null );
-
+                
                 repository.setRemoteStorageContext( null );
             }
         }
