@@ -18,24 +18,29 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.nexus.feeds.NexusArtifactEvent;
+import org.sonatype.nexus.feeds.SystemEvent;
 
 /**
- * The overall changes feed.
+ * The system changes feed.
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "recentChanges" )
-public class RecentOverallChangesFeedSource
-    extends AbstractNexusFeedSource
+@Component( role = FeedSource.class, hint = "systemChanges" )
+public class SystemFeedSource
+    extends AbstractSystemFeedSource
 {
-    public static final String CHANNEL_KEY = "recentChanges";
+    public static final String CHANNEL_KEY = "systemChanges";
+
+    public List<SystemEvent> getEventList( Integer from, Integer count, Map<String, String> params ) 
+    {
+        return getNexus().getSystemEvents( from, count );
+    }
 
     public String getFeedKey()
     {
@@ -50,19 +55,13 @@ public class RecentOverallChangesFeedSource
     @Override
     public String getDescription()
     {
-        return "Recent storage changes in all Nexus repositories (caches, deployments, deletions).";
-    }
-
-    @Override
-    public List<NexusArtifactEvent> getEventList( Integer from, Integer count, Map<String, String> params )
-    {
-        return getNexus().getRecentlyStorageChanges( from, count, getRepoIdsFromParams( params ) );
+        return "System changes in Nexus.";
     }
 
     @Override
     public String getTitle()
     {
-        return "Recent storage changes";
+        return "System changes";
     }
 
 }

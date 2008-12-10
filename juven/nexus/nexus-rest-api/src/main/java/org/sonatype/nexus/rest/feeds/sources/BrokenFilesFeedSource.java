@@ -18,29 +18,28 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.nexus.feeds.SystemEvent;
+import org.codehaus.plexus.component.annotations.Requirement;
+import org.sonatype.nexus.feeds.NexusArtifactEvent;
 
 /**
- * The system changes feed.
+ * The brokenArtifacts feed.
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "systemRepositoryStatusChanges" )
-public class SystemRepositoryStatusChangesFeedSource
-    extends AbstractSystemFeedSource
+@Component( role = FeedSource.class, hint = "brokenFiles" )
+public class BrokenFilesFeedSource
+    extends AbstractNexusItemEventFeedSource
 {
-    public static final String CHANNEL_KEY = "systemRepositoryStatusChanges";
-
-    public List<SystemEvent> getEventList( Integer from, Integer count, Map<String, String> params )
-    {
-        return getNexus().getRepositoryStatusChanges( from, count );
-    }
+    @Requirement( hint = "file" )
+    private SyndEntryBuilder<NexusArtifactEvent> entryBuilder;
+    
+    public static final String CHANNEL_KEY = "brokenFiles";
 
     public String getFeedKey()
     {
@@ -55,13 +54,24 @@ public class SystemRepositoryStatusChangesFeedSource
     @Override
     public String getDescription()
     {
-        return "Repository Status Changes in Nexus (user interventions and automatic).";
+        return "Broken files in all Nexus repositories (checksum errors, ...).";
+    }
+
+    @Override
+    public List<NexusArtifactEvent> getEventList( Integer from, Integer count, Map<String, String> params )
+    {
+        return getNexus().getBrokenArtifacts( from, count, getRepoIdsFromParams( params ) );
     }
 
     @Override
     public String getTitle()
     {
-        return "Repository Status Changes";
+        return "Broken files";
     }
 
+    @Override
+    public SyndEntryBuilder<NexusArtifactEvent> getSyndEntryBuilder( NexusArtifactEvent event )
+    {
+        return entryBuilder;
+    }
 }

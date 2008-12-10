@@ -18,29 +18,28 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.nexus.feeds.SystemEvent;
+import org.codehaus.plexus.component.annotations.Requirement;
+import org.sonatype.nexus.feeds.NexusArtifactEvent;
 
 /**
- * The system changes feed.
+ * The overall deployments feed.
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "systemChanges" )
-public class SystemFeedSource
-    extends AbstractSystemFeedSource
+@Component( role = FeedSource.class, hint = "recentlyDeployedFiles" )
+public class RecentDeployedFileFeedSource
+    extends AbstractNexusItemEventFeedSource
 {
-    public static final String CHANNEL_KEY = "systemChanges";
-
-    public List<SystemEvent> getEventList( Integer from, Integer count, Map<String, String> params ) 
-    {
-        return getNexus().getSystemEvents( from, count );
-    }
+    @Requirement( hint = "file" )
+    private SyndEntryBuilder<NexusArtifactEvent> entryBuilder;
+    
+    public static final String CHANNEL_KEY = "recentlyDeployedFiles";
 
     public String getFeedKey()
     {
@@ -55,13 +54,24 @@ public class SystemFeedSource
     @Override
     public String getDescription()
     {
-        return "System changes in Nexus.";
+        return "New deployed files in all Nexus repositories (deployed).";
+    }
+
+    @Override
+    public List<NexusArtifactEvent> getEventList( Integer from, Integer count, Map<String, String> params )
+    {
+        return getNexus().getRecentlyDeployedArtifacts( from, count, getRepoIdsFromParams( params ) );
     }
 
     @Override
     public String getTitle()
     {
-        return "System changes";
+        return "New deployed files";
     }
 
+    @Override
+    public SyndEntryBuilder<NexusArtifactEvent> getSyndEntryBuilder( NexusArtifactEvent event )
+    {
+        return entryBuilder;
+    }
 }

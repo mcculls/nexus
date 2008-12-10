@@ -35,6 +35,7 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.sonatype.nexus.rest.AbstractNexusPlexusResource;
+import org.sonatype.nexus.rest.feeds.sources.FeedSource;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 

@@ -18,24 +18,28 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.nexus.feeds.NexusArtifactEvent;
 
 /**
- * The brokenArtifacts feed.
+ * The overall changes feed.
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "brokenArtifacts" )
-public class BrokenArtifactsFeedSource
-    extends AbstractNexusFeedSource
+@Component( role = FeedSource.class, hint = "recentlyChangedFiles" )
+public class RecentChangedFileFeedSource
+    extends AbstractNexusItemEventFeedSource
 {
-    public static final String CHANNEL_KEY = "brokenArtifacts";
+    @Requirement( hint = "file" )
+    private SyndEntryBuilder<NexusArtifactEvent> entryBuilder;
+    
+    public static final String CHANNEL_KEY = "recentlyChangedFiles";
 
     public String getFeedKey()
     {
@@ -50,19 +54,25 @@ public class BrokenArtifactsFeedSource
     @Override
     public String getDescription()
     {
-        return "Broken artifacts in all Nexus repositories (checksum errors, wrong POMs, ...).";
+        return "Recent file storage changes in all Nexus repositories (caches, deployments, deletions).";
     }
 
     @Override
     public List<NexusArtifactEvent> getEventList( Integer from, Integer count, Map<String, String> params )
     {
-        return getNexus().getBrokenArtifacts( from, count, getRepoIdsFromParams( params ) );
+        return getNexus().getRecentlyStorageChanges( from, count, getRepoIdsFromParams( params ) );
     }
 
     @Override
     public String getTitle()
     {
-        return "Broken artifacts";
+        return "Recent file storage changes";
+    }
+
+    @Override
+    public SyndEntryBuilder<NexusArtifactEvent> getSyndEntryBuilder( NexusArtifactEvent event )
+    {
+        return entryBuilder;
     }
 
 }
