@@ -12,7 +12,7 @@ public abstract class AbstractRssTest
     extends AbstractPrivilegeTest
 {
 
-    private static final String RECENTLY_DEPLOYED = "recentlyDeployed";
+    private static final String RECENTLY_DEPLOYED = "recentlyDeployedArtifacts";
 
     private List<SyndEntry> entries;
 
