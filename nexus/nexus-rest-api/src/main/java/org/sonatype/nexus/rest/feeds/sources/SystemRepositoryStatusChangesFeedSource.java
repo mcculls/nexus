@@ -18,24 +18,29 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.nexus.feeds.NexusArtifactEvent;
+import org.sonatype.nexus.feeds.SystemEvent;
 
 /**
- * The overall deployments feed.
+ * The system changes feed.
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "recentlyDeployed" )
-public class RecentOverallDeploymentsFeedSource
-    extends AbstractNexusFeedSource
+@Component( role = FeedSource.class, hint = "systemRepositoryStatusChanges" )
+public class SystemRepositoryStatusChangesFeedSource
+    extends AbstractSystemFeedSource
 {
-    public static final String CHANNEL_KEY = "recentlyDeployed";
+    public static final String CHANNEL_KEY = "systemRepositoryStatusChanges";
+
+    public List<SystemEvent> getEventList( Integer from, Integer count, Map<String, String> params )
+    {
+        return getNexus().getRepositoryStatusChanges( from, count );
+    }
 
     public String getFeedKey()
     {
@@ -50,19 +55,13 @@ public class RecentOverallDeploymentsFeedSource
     @Override
     public String getDescription()
     {
-        return "New deployed artifacts in all Nexus repositories (deployed).";
-    }
-
-    @Override
-    public List<NexusArtifactEvent> getEventList( Integer from, Integer count, Map<String, String> params )
-    {
-        return getNexus().getRecentlyDeployedArtifacts( from, count, getRepoIdsFromParams( params ) );
+        return "Repository Status Changes in Nexus (user interventions and automatic).";
     }
 
     @Override
     public String getTitle()
     {
-        return "New deployed artifacts";
+        return "Repository Status Changes";
     }
 
 }

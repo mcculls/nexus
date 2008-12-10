@@ -18,12 +18,13 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.nexus.feeds.NexusArtifactEvent;
 
 /**
@@ -31,11 +32,14 @@ import org.sonatype.nexus.feeds.NexusArtifactEvent;
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "recentlyCached" )
-public class RecentOverallCachingFeedSource
-    extends AbstractNexusFeedSource
+@Component( role = FeedSource.class, hint = "recentlyCachedFiles" )
+public class RecentCachedFileFeedSource
+    extends AbstractNexusItemEventFeedSource
 {
-    public static final String CHANNEL_KEY = "recentlyCached";
+    @Requirement( hint = "file" )
+    private SyndEntryBuilder<NexusArtifactEvent> entryBuilder;
+    
+    public static final String CHANNEL_KEY = "recentlyCachedFiles";
 
     public String getFeedKey()
     {
@@ -50,7 +54,7 @@ public class RecentOverallCachingFeedSource
     @Override
     public String getDescription()
     {
-        return "New cached artifacts in all Nexus repositories (cached).";
+        return "New cached files in all Nexus repositories (cached).";
     }
 
     @Override
@@ -62,7 +66,12 @@ public class RecentOverallCachingFeedSource
     @Override
     public String getTitle()
     {
-        return "New cached artifacts";
+        return "New cached files";
     }
 
+    @Override
+    public SyndEntryBuilder<NexusArtifactEvent> getSyndEntryBuilder( NexusArtifactEvent event )
+    {
+        return entryBuilder;
+    }
 }

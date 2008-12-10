@@ -18,12 +18,13 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-package org.sonatype.nexus.rest.feeds;
+package org.sonatype.nexus.rest.feeds.sources;
 
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.nexus.feeds.NexusArtifactEvent;
 
 /**
@@ -31,11 +32,14 @@ import org.sonatype.nexus.feeds.NexusArtifactEvent;
  * 
  * @author cstamas
  */
-@Component( role = FeedSource.class, hint = "recentCacheOrDeployments" )
-public class RecentOverallCachedOrDeployedFeedSource
-    extends AbstractNexusFeedSource
+@Component( role = FeedSource.class, hint = "recentlyCachedOrDeployedFiles" )
+public class RecentCachedOrDeployedFileFeedSource
+    extends AbstractNexusItemEventFeedSource
 {
-    public static final String CHANNEL_KEY = "recentCacheOrDeployments";
+    @Requirement( hint = "file" )
+    private SyndEntryBuilder<NexusArtifactEvent> entryBuilder;
+    
+    public static final String CHANNEL_KEY = "recentlyCachedOrDeployedFiles";
 
     public String getFeedKey()
     {
@@ -50,7 +54,7 @@ public class RecentOverallCachedOrDeployedFeedSource
     @Override
     public String getDescription()
     {
-        return "New artifacts in all Nexus repositories (cached or deployed).";
+        return "New files in all Nexus repositories (cached or deployed).";
     }
 
     @Override
@@ -62,7 +66,13 @@ public class RecentOverallCachedOrDeployedFeedSource
     @Override
     public String getTitle()
     {
-        return "New artifacts";
+        return "New files";
+    }
+
+    @Override
+    public SyndEntryBuilder<NexusArtifactEvent> getSyndEntryBuilder( NexusArtifactEvent event )
+    {
+        return entryBuilder;
     }
 
 }
