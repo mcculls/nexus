@@ -169,6 +169,7 @@ Sonatype.repoServer.RepoMaintPanel = function(config){
     {name:'id'},
     {name:'repoType', convert: function(s, parent){return 'group';}},
     {name:'resourceURI'},
+    {name:'format'},
     {name:'name', sortType:Ext.data.SortTypes.asUCString},
     {name:'sStatus'},
     {name:'contentUri', mapping:'resourceURI', convert: this.restToContentUrl }
@@ -196,6 +197,7 @@ Sonatype.repoServer.RepoMaintPanel = function(config){
   this.repoRecordConstructor = Ext.data.Record.create([
     {name:'id'},
     {name:'repoType'},
+    {name:'format'},
     {name:'resourceURI'},
     {name:'status'},
     {name:'localStatus'/*, mapping: 'status'*/, convert: function(s, parent){return parent.status?parent.status.localStatus:null;}},
@@ -300,7 +302,8 @@ Sonatype.repoServer.RepoMaintPanel = function(config){
           return record.get('repoType') == 'group' ? ( '<b>' + value + '</b>' ) : value;
         }},
       {header: 'Type', dataIndex: 'repoType', width:50},
-      {header: 'Status', dataIndex: 'sStatus', width:300},
+      {header: 'Format', dataIndex: 'format', width:90},
+      {header: 'Status', dataIndex: 'sStatus', width:250},
       {header: 'Repository Path', dataIndex: 'contentUri', id: 'repo-maint-url-col', width:250,renderer: function(s){return '<a href="' + s + ((s != null && (s.charAt(s.length)) == '/') ? '' : '/') +'" target="_blank">' + s + '</a>';},menuDisabled:true}      
     ],
     autoExpandColumn: 'repo-maint-url-col',
