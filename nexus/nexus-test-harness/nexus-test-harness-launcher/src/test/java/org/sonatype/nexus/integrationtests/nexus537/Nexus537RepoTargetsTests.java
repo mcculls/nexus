@@ -462,7 +462,7 @@ public class Nexus537RepoTargetsTests
         fooPriv.addMethod( "update" );
         fooPriv.addMethod( "delete" );
         fooPriv.setName( "FooPriv" );
-        fooPriv.setType( "repositoryTarget" );
+        fooPriv.setType( "target" );
         fooPriv.setRepositoryTargetId( fooTarget.getId() );
         fooPriv.setRepositoryId( "repo1" );
         // get the Resource object
@@ -492,7 +492,7 @@ public class Nexus537RepoTargetsTests
         barPriv.addMethod( "update" );
         barPriv.addMethod( "delete" );
         barPriv.setName( "BarPriv" );
-        barPriv.setType( "repositoryTarget" );
+        barPriv.setType( "target" );
         barPriv.setRepositoryTargetId( barTarget.getId() );
         barPriv.setRepositoryId( "repo1" );
 
@@ -523,7 +523,7 @@ public class Nexus537RepoTargetsTests
         groupPriv.addMethod( "update" );
         groupPriv.addMethod( "delete" );
         groupPriv.setName( "GroupPriv" );
-        groupPriv.setType( "repositoryTarget" );
+        groupPriv.setType( "target" );
         groupPriv.setRepositoryTargetId( fooTarget.getId() );
         groupPriv.setRepositoryGroupId( "test-group" );
         // groupPriv.setRepositoryId( repositoryId )
