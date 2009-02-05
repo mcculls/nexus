@@ -218,6 +218,26 @@ public class DefaultFeedRecorder
     {
         return getSesFromMaps( getEvents( SYSTEM_EVENT_TYPE_SET, subtypes, from, count, filter ) );
     }
+    
+    private void putContext( Map<String, String> map, Map<String, Object> context )
+    {
+        for ( String key : context.keySet() )
+        {
+            Object value = context.get( key );
+
+            if ( value == null )
+            {
+                if ( getLogger().isDebugEnabled() )
+                {
+                    getLogger().debug( "The attribute with key '" + key + "' in event context is NULL!" );
+                }
+
+                value = "";
+            }
+
+            map.put( CTX_PREFIX + key, value.toString() );
+        }
+    }
 
     public void addSystemEvent( String action, String message )
     {
@@ -239,10 +259,7 @@ public class DefaultFeedRecorder
             map.put( REMOTE_URL, nae.getNexusItemInfo().getRemoteUrl() );
         }
 
-        for ( String key : nae.getEventContext().keySet() )
-        {
-            map.put( CTX_PREFIX + key, nae.getEventContext().get( key ).toString() );
-        }
+        putContext( map, nae.getEventContext() );
 
         if ( nae.getMessage() != null )
         {
@@ -289,10 +306,7 @@ public class DefaultFeedRecorder
     {
         Map<String, String> map = new HashMap<String, String>();
 
-        for ( String key : se.getEventContext().keySet() )
-        {
-            map.put( CTX_PREFIX + key, se.getEventContext().get( key ).toString() );
-        }
+        putContext( map, se.getEventContext() );
 
         map.put( DATE, eventDateFormat.format( se.getEventDate() ) );
 
