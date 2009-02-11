@@ -3,12 +3,14 @@ package org.sonatype.nexus.integrationtests;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.restlet.data.MediaType;
 import org.sonatype.jsecurity.model.CPrivilege;
 import org.sonatype.nexus.rest.model.PrivilegeBaseStatusResource;
+import org.sonatype.nexus.rest.model.PrivilegeTargetResource;
 import org.sonatype.nexus.rest.model.RoleResource;
 import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.test.utils.GroupMessageUtil;
@@ -284,4 +286,24 @@ public abstract class AbstractPrivilegeTest
         this.userUtil.updateUser( testUser );
     }
 
+    protected void addPriv( String userName, String privId, String type, String repoTargetId, String repositoryId,
+                          String repositoryGroupId, String... methods  ) throws IOException
+    {
+        TestContainer.getInstance().getTestContext().useAdminForRequests();
+
+        PrivilegeTargetResource priv = new PrivilegeTargetResource();
+        priv.setName( privId );
+        priv.setDescription( privId );
+        priv.setType( type );
+        priv.setRepositoryTargetId( repoTargetId );
+        priv.setRepositoryId( repositoryId );
+        priv.setRepositoryGroupId( repositoryGroupId );
+        for ( String method : methods )
+        {
+            priv.addMethod( method );
+        }
+
+        List<PrivilegeBaseStatusResource> stat= privUtil.createPrivileges( priv );
+        addPrivilege( userName, stat.get( 0 ).getId() );
+    }
 }
