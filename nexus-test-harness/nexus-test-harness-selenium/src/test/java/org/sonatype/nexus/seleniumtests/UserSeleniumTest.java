@@ -13,127 +13,64 @@
  */
 package org.sonatype.nexus.seleniumtests;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
-
 import org.apache.log4j.Logger;
-import org.codehaus.plexus.util.FileUtils;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.server.SeleniumServer;
+import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
+import org.sonatype.nexus.test.utils.TestProperties;
 
-import com.thoughtworks.selenium.SeleneseTestCase;
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
 
 public class UserSeleniumTest
-    extends SeleneseTestCase
+    extends AbstractNexusIntegrationTest
 {
-    private Logger log = Logger.getLogger( getClass() );
-    
+    private static Logger log = Logger.getLogger( UserSeleniumTest.class );
+
+    private Selenium selenium;
+
+    @BeforeClass
+    public static void init()
+        throws Exception
+    {
+         SeleniumServer.main( new String[] { "-port", TestProperties.getString( "selenium-server-port" ) } );
+//        final SeleniumServer seleniumProxy = new SeleniumServer( TestProperties.getInteger( "selenium-server-port" ) );
+//        seleniumProxy.start();
+    }
+
+    @Before
     public void setUp()
         throws Exception
     {
-        setUp( TestProperties.getString( "nexus.base.url" ), "*chrome" );
+        selenium =
+            new DefaultSelenium( "localhost", TestProperties.getInteger( "selenium-server-port" ), "firefox",
+                                 nexusBaseUrl );
+        selenium.start();
+        selenium.setContext( this.getClass().getName() );
     }
 
-    public void testNew()
+    @Test
+    public void findNexus()
         throws Throwable
     {
-        Nexus.start();
-
-        try
-        {
-
-            selenium.setBrowserLogLevel( "INFO" );
-            selenium.getEval( "LOG.info('TEST LOG');" );
-
-            selenium.setSpeed( "400" );
-            selenium.open( "/nexus/" );
-
-            // login
-            this.login( "admin", "admin123" );
-
-            // get the javascript from a file (so its readable)
-            String js = this.getJavaScript( "scripts/test.js");
-            selenium.getEval( js );
-
-            // open security tab
-            selenium.mouseDown( "open-security-users" );
-            selenium.mouseUp( "open-security-users" );
-
-            // click the Add user button
-            selenium.click( "//table[@id='user-add-btn']/tbody/tr/td[2]/em/button" );
-
-            // populate user info
-            selenium.type( "userId", "TestUser" );
-            selenium.type( "name", "TestName" );
-            selenium.type( "email", "Foo@bar.com" );
-            // change the combo box
-            selenium.mouseDown( "//input[@name='status']" );
-            selenium.click( "//div/div[text()='Active']" );
-            // select the admin role
-            selenium.click( "//a/span" );
-            selenium.click( "document.forms[0].elements[4]" );
-
-            // hack the send
-            // TODO:
-
-            // click the save button
-            selenium.click( "//div[2]/div/div/div/div/div/table/tbody/tr/td[1]/table/tbody/tr/td[2]/em/button" );
-            Thread.sleep( 2000 );
-            
-            // We don't actually check if the User was added/saved, to be a valid test we would need to do that,
-            // but for now, we are just trying to get selenium to hack the request method.
-
-        }
-        catch ( Throwable t )
-        {
-            Nexus.stop();
-            throw t;
-        }
+        selenium.open( "/" );
+        selenium.type( "q", "sonatype nexus" );
+        selenium.click( "btnG" );
+        selenium.waitForPageToLoad( "30000" );
+        selenium.click( "link=Download Nexus" );
+        selenium.waitForPageToLoad( "30000" );
+        Assert.assertTrue( selenium.isTextPresent( "Release 1.3.1" ) );
     }
 
-    protected void login( String username, String password )
-    {
-        selenium.click( "login-link" );
-        selenium.type( "usernamefield", username );
-        selenium.type( "passwordfield", password );
-        selenium.click( "loginbutton" );
-    }
-
-    private String getJavaScript( String resource )
-        throws IOException
-    {
-        
-        
-        return FileUtils.fileRead( this.getResource( resource ) );
-    }
-    
-    private File getResource( String resource )
-    {
-        log.debug( "Looking for resource: " + resource );
-        URL classURL = Thread.currentThread().getContextClassLoader().getResource( resource );
-        log.debug( "found: " + classURL );
-
-        try
-        {
-            return classURL == null ? null : new File( URLDecoder.decode( classURL.getFile(), "UTF-8" ) );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            throw new RuntimeException( "This test assumes the use of default encoding: " + e.getMessage(), e );
-        }
-    }
-
-    @Override
+    @After
     public void tearDown()
         throws Exception
     {
-        super.tearDown();
-        
-        Nexus.stop();
+        selenium.stop();
     }
 
-    
-    
-    
 }
