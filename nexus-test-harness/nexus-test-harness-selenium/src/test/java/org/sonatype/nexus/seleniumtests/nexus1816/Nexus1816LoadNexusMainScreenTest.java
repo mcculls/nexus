@@ -11,7 +11,7 @@
  * Sonatype Nexus (TM) Professional Version is available from Sonatype, Inc.
  * "Sonatype" and "Sonatype Nexus" are trademarks of Sonatype, Inc.
  */
-package org.sonatype.nexus.seleniumtests;
+package org.sonatype.nexus.seleniumtests.nexus1816;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -23,7 +23,7 @@ import org.sonatype.nexus.test.utils.TestProperties;
 import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 
-public class UserSeleniumTest
+public class Nexus1816LoadNexusMainScreenTest
     extends AbstractNexusIntegrationTest
 {
 
