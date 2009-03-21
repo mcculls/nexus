@@ -13,13 +13,10 @@
  */
 package org.sonatype.nexus.seleniumtests;
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.server.SeleniumServer;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.test.utils.TestProperties;
 
@@ -29,18 +26,8 @@ import com.thoughtworks.selenium.Selenium;
 public class UserSeleniumTest
     extends AbstractNexusIntegrationTest
 {
-    private static Logger log = Logger.getLogger( UserSeleniumTest.class );
 
     private Selenium selenium;
-
-    @BeforeClass
-    public static void init()
-        throws Exception
-    {
-         SeleniumServer.main( new String[] { "-port", TestProperties.getString( "selenium-server-port" ) } );
-//        final SeleniumServer seleniumProxy = new SeleniumServer( TestProperties.getInteger( "selenium-server-port" ) );
-//        seleniumProxy.start();
-    }
 
     @Before
     public void setUp()
@@ -50,20 +37,15 @@ public class UserSeleniumTest
             new DefaultSelenium( "localhost", TestProperties.getInteger( "selenium-server-port" ), "firefox",
                                  nexusBaseUrl );
         selenium.start();
-        selenium.setContext( this.getClass().getName() );
     }
 
     @Test
     public void findNexus()
         throws Throwable
     {
-        selenium.open( "/" );
-        selenium.type( "q", "sonatype nexus" );
-        selenium.click( "btnG" );
+        selenium.open( nexusBaseUrl );
         selenium.waitForPageToLoad( "30000" );
-        selenium.click( "link=Download Nexus" );
-        selenium.waitForPageToLoad( "30000" );
-        Assert.assertTrue( selenium.isTextPresent( "Release 1.3.1" ) );
+        Assert.assertTrue( selenium.isTextPresent( "Welcome to the Sonatype Nexus Maven Repository Manager." ) );
     }
 
     @After
