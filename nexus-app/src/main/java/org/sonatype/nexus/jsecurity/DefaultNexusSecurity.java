@@ -13,6 +13,7 @@
  */
 package org.sonatype.nexus.jsecurity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,6 +116,13 @@ public class DefaultNexusSecurity
                 methodProperty.setValue( buf.toString() );
             }
         }
+    }
+
+    public void saveConfiguration()
+        throws IOException
+    {
+        // not used
+        
     }
 
 }
