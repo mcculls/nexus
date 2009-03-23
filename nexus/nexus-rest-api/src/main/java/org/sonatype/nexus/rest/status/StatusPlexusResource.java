@@ -17,19 +17,23 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
+import org.sonatype.nexus.Nexus;
 import org.sonatype.nexus.SystemStatus;
 import org.sonatype.nexus.configuration.validator.ValidationMessage;
 import org.sonatype.nexus.rest.authentication.AbstractUIPermissionCalculatingPlexusResource;
+import org.sonatype.nexus.rest.model.NexusAuthenticationClientPermissions;
 import org.sonatype.nexus.rest.model.StatusConfigurationValidationResponse;
 import org.sonatype.nexus.rest.model.StatusResource;
 import org.sonatype.nexus.rest.model.StatusResourceResponse;
 import org.sonatype.plexus.rest.resource.ManagedPlexusResource;
 import org.sonatype.plexus.rest.resource.PathProtectionDescriptor;
+import org.sonatype.security.rest.model.AuthenticationClientPermissions;
 
 @Component( role = ManagedPlexusResource.class, hint = "StatusPlexusResource" )
 public class StatusPlexusResource
@@ -37,6 +41,9 @@ public class StatusPlexusResource
     implements ManagedPlexusResource
 {
 
+    @Requirement
+    private Nexus nexus;
+    
     @Override
     public Object getPayloadInstance()
     {
@@ -59,7 +66,7 @@ public class StatusPlexusResource
     public Object get( Context context, Request request, Response response, Variant variant )
         throws ResourceException
     {
-        SystemStatus status = getNexus().getSystemStatus();
+        SystemStatus status = this.nexus.getSystemStatus();
 
         StatusResource resource = new StatusResource();
 
@@ -113,7 +120,7 @@ public class StatusPlexusResource
             }
         }
 
-        resource.setClientPermissions( getClientPermissionsForCurrentUser( request ) );
+        resource.setClientPermissions( getNexusClientPermissionsForCurrentUser( request ) );
 
         resource.setBaseUrl( getContextRoot( request ).toString() );
 
@@ -122,6 +129,21 @@ public class StatusPlexusResource
         result.setData( resource );
 
         return result;
+    }
+    
+    // FIXME: DIRTY HACK, Modello is not all that model extending friendly 
+    private NexusAuthenticationClientPermissions getNexusClientPermissionsForCurrentUser( Request request ) throws ResourceException
+    {
+        NexusAuthenticationClientPermissions nexusAuthClientPerms = new NexusAuthenticationClientPermissions();
+        
+        AuthenticationClientPermissions clientPerms = getClientPermissionsForCurrentUser( request );
+        
+        nexusAuthClientPerms.setLoggedIn( clientPerms.isLoggedIn() );
+        nexusAuthClientPerms.setLoggedInUsername( clientPerms.getLoggedInUsername() );
+        nexusAuthClientPerms.setLoggedInUserSource( clientPerms.getLoggedInUserSource() );
+        nexusAuthClientPerms.setPermissions( clientPerms.getPermissions() );
+        
+        return nexusAuthClientPerms;
     }
 
     private String spit( Throwable t )

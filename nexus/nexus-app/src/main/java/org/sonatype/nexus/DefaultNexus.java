@@ -50,7 +50,6 @@ import org.sonatype.nexus.feeds.NexusArtifactEvent;
 import org.sonatype.nexus.feeds.SystemEvent;
 import org.sonatype.nexus.feeds.SystemProcess;
 import org.sonatype.nexus.index.IndexerManager;
-import org.sonatype.nexus.jsecurity.NexusSecurity;
 import org.sonatype.nexus.log.LogManager;
 import org.sonatype.nexus.log.SimpleLog4jConfig;
 import org.sonatype.nexus.maven.tasks.SnapshotRemovalRequest;
@@ -87,6 +86,7 @@ import org.sonatype.nexus.tasks.RemoveRepoFolderTask;
 import org.sonatype.nexus.tasks.SynchronizeShadowsTask;
 import org.sonatype.nexus.timeline.RepositoryIdTimelineFilter;
 import org.sonatype.nexus.timeline.TimelineFilter;
+import org.sonatype.security.PlexusSecurity;
 
 /**
  * The default Nexus implementation.
@@ -163,10 +163,10 @@ public class DefaultNexus
     private CacheManager cacheManager;
 
     /**
-     * The NexusSecurity.
+     * The PlexusSecurity.
      */
     @Requirement
-    private NexusSecurity security;
+    private PlexusSecurity security;
 
     /**
      * The SecurityConfiguration component.

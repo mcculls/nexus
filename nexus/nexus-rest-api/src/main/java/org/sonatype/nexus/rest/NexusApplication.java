@@ -30,11 +30,89 @@ import org.sonatype.nexus.Nexus;
 import org.sonatype.nexus.plugins.rest.NexusResourceBundle;
 import org.sonatype.nexus.plugins.rest.StaticResource;
 import org.sonatype.nexus.proxy.events.AbstractEvent;
-import org.sonatype.nexus.proxy.events.ApplicationEventMulticaster;
 import org.sonatype.nexus.proxy.events.EventListener;
 import org.sonatype.nexus.proxy.events.NexusStartedEvent;
 import org.sonatype.nexus.proxy.events.NexusStoppedEvent;
-import org.sonatype.nexus.rest.model.*;
+import org.sonatype.nexus.rest.model.AuthenticationSettings;
+import org.sonatype.nexus.rest.model.ConfigurationsListResource;
+import org.sonatype.nexus.rest.model.ConfigurationsListResourceResponse;
+import org.sonatype.nexus.rest.model.ContentListResource;
+import org.sonatype.nexus.rest.model.ContentListResourceResponse;
+import org.sonatype.nexus.rest.model.FeedListResource;
+import org.sonatype.nexus.rest.model.FeedListResourceResponse;
+import org.sonatype.nexus.rest.model.GlobalConfigurationListResource;
+import org.sonatype.nexus.rest.model.GlobalConfigurationListResourceResponse;
+import org.sonatype.nexus.rest.model.GlobalConfigurationResource;
+import org.sonatype.nexus.rest.model.GlobalConfigurationResourceResponse;
+import org.sonatype.nexus.rest.model.LogsListResource;
+import org.sonatype.nexus.rest.model.LogsListResourceResponse;
+import org.sonatype.nexus.rest.model.MirrorResource;
+import org.sonatype.nexus.rest.model.MirrorResourceListRequest;
+import org.sonatype.nexus.rest.model.MirrorResourceListResponse;
+import org.sonatype.nexus.rest.model.MirrorStatusResource;
+import org.sonatype.nexus.rest.model.MirrorStatusResourceListResponse;
+import org.sonatype.nexus.rest.model.NFCRepositoryResource;
+import org.sonatype.nexus.rest.model.NFCResource;
+import org.sonatype.nexus.rest.model.NFCResourceResponse;
+import org.sonatype.nexus.rest.model.NexusArtifact;
+import org.sonatype.nexus.rest.model.NexusAuthenticationClientPermissions;
+import org.sonatype.nexus.rest.model.NexusResponse;
+import org.sonatype.nexus.rest.model.PlexusComponentListResource;
+import org.sonatype.nexus.rest.model.PlexusComponentListResourceResponse;
+import org.sonatype.nexus.rest.model.RemoteConnectionSettings;
+import org.sonatype.nexus.rest.model.RemoteHttpProxySettings;
+import org.sonatype.nexus.rest.model.RepositoryBaseResource;
+import org.sonatype.nexus.rest.model.RepositoryContentClassListResource;
+import org.sonatype.nexus.rest.model.RepositoryContentClassListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryGroupListResource;
+import org.sonatype.nexus.rest.model.RepositoryGroupListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryGroupMemberRepository;
+import org.sonatype.nexus.rest.model.RepositoryGroupResource;
+import org.sonatype.nexus.rest.model.RepositoryGroupResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryListResource;
+import org.sonatype.nexus.rest.model.RepositoryListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryMetaResource;
+import org.sonatype.nexus.rest.model.RepositoryMetaResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryProxyResource;
+import org.sonatype.nexus.rest.model.RepositoryResource;
+import org.sonatype.nexus.rest.model.RepositoryResourceRemoteStorage;
+import org.sonatype.nexus.rest.model.RepositoryResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryRouteListResource;
+import org.sonatype.nexus.rest.model.RepositoryRouteListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryRouteMemberRepository;
+import org.sonatype.nexus.rest.model.RepositoryRouteResource;
+import org.sonatype.nexus.rest.model.RepositoryRouteResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryShadowResource;
+import org.sonatype.nexus.rest.model.RepositoryStatusListResource;
+import org.sonatype.nexus.rest.model.RepositoryStatusListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryStatusResource;
+import org.sonatype.nexus.rest.model.RepositoryStatusResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryTargetListResource;
+import org.sonatype.nexus.rest.model.RepositoryTargetListResourceResponse;
+import org.sonatype.nexus.rest.model.RepositoryTargetResource;
+import org.sonatype.nexus.rest.model.RepositoryTargetResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceAdvancedResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceBaseResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceDailyResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceListResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceListResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceMonthlyResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceOnceResource;
+import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceResourceStatus;
+import org.sonatype.nexus.rest.model.ScheduledServiceResourceStatusResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceTypePropertyResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceTypeResource;
+import org.sonatype.nexus.rest.model.ScheduledServiceTypeResourceResponse;
+import org.sonatype.nexus.rest.model.ScheduledServiceWeeklyResource;
+import org.sonatype.nexus.rest.model.SearchResponse;
+import org.sonatype.nexus.rest.model.SmtpSettings;
+import org.sonatype.nexus.rest.model.StatusConfigurationValidationResponse;
+import org.sonatype.nexus.rest.model.StatusResource;
+import org.sonatype.nexus.rest.model.StatusResourceResponse;
+import org.sonatype.nexus.rest.model.WastebasketResource;
+import org.sonatype.nexus.rest.model.WastebasketResourceResponse;
 import org.sonatype.nexus.rest.repositories.RepositoryBaseResourceConverter;
 import org.sonatype.nexus.rest.repositories.RepositoryResourceResponseConverter;
 import org.sonatype.nexus.rest.schedules.ScheduledServiceBaseResourceConverter;
@@ -48,6 +126,43 @@ import org.sonatype.plexus.rest.resource.PlexusResource;
 import org.sonatype.plexus.rest.resource.error.ErrorMessage;
 import org.sonatype.plexus.rest.resource.error.ErrorResponse;
 import org.sonatype.plexus.rest.xstream.AliasingListConverter;
+import org.sonatype.plexus.rest.xstream.SingleValueDateConverter;
+import org.sonatype.security.rest.model.AuthenticationClientPermissions;
+import org.sonatype.security.rest.model.AuthenticationLoginResource;
+import org.sonatype.security.rest.model.AuthenticationLoginResourceResponse;
+import org.sonatype.security.rest.model.ClientPermission;
+import org.sonatype.security.rest.model.ExternalRoleMappingResource;
+import org.sonatype.security.rest.model.ExternalRoleMappingResourceResponse;
+import org.sonatype.security.rest.model.PlexusRoleListResourceResponse;
+import org.sonatype.security.rest.model.PlexusRoleResource;
+import org.sonatype.security.rest.model.PlexusUserListResourceResponse;
+import org.sonatype.security.rest.model.PlexusUserResource;
+import org.sonatype.security.rest.model.PlexusUserResourceResponse;
+import org.sonatype.security.rest.model.PlexusUserSearchCriteriaResource;
+import org.sonatype.security.rest.model.PlexusUserSearchCriteriaResourceRequest;
+import org.sonatype.security.rest.model.PrivilegeListResourceResponse;
+import org.sonatype.security.rest.model.PrivilegeProperty;
+import org.sonatype.security.rest.model.PrivilegeResource;
+import org.sonatype.security.rest.model.PrivilegeResourceRequest;
+import org.sonatype.security.rest.model.PrivilegeStatusResource;
+import org.sonatype.security.rest.model.PrivilegeStatusResourceResponse;
+import org.sonatype.security.rest.model.PrivilegeTypePropertyResource;
+import org.sonatype.security.rest.model.PrivilegeTypeResource;
+import org.sonatype.security.rest.model.PrivilegeTypeResourceResponse;
+import org.sonatype.security.rest.model.RoleListResourceResponse;
+import org.sonatype.security.rest.model.RoleResource;
+import org.sonatype.security.rest.model.RoleResourceRequest;
+import org.sonatype.security.rest.model.RoleResourceResponse;
+import org.sonatype.security.rest.model.UserChangePasswordRequest;
+import org.sonatype.security.rest.model.UserChangePasswordResource;
+import org.sonatype.security.rest.model.UserForgotPasswordRequest;
+import org.sonatype.security.rest.model.UserForgotPasswordResource;
+import org.sonatype.security.rest.model.UserListResourceResponse;
+import org.sonatype.security.rest.model.UserResource;
+import org.sonatype.security.rest.model.UserResourceRequest;
+import org.sonatype.security.rest.model.UserResourceResponse;
+import org.sonatype.security.rest.model.UserToRoleResource;
+import org.sonatype.security.rest.model.UserToRoleResourceRequest;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -59,7 +174,7 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Nexus REST Application. This will ultimately replace the two applications we have now, and provide us plugin UI
  * extension capability.
- *
+ * 
  * @author cstamas
  */
 @Component( role = Application.class, hint = "nexus" )
@@ -73,7 +188,7 @@ public class NexusApplication
     
     @Requirement
     private ApplicationEventMulticaster applicationEventMulticaster;
-
+    
     @Requirement
     private PlexusWebConfiguration plexusWebConfiguration;
 
@@ -296,8 +411,14 @@ public class NexusApplication
         xstream.omitField( AuthenticationLoginResource.class, "modelEncoding" );
         xstream.omitField( AuthenticationClientPermissions.class, "modelEncoding" );
         xstream.alias( "authentication-login", AuthenticationLoginResourceResponse.class );
-
+        
         xstream.omitField( StatusResource.class, "modelEncoding" );
+        xstream.omitField( NexusAuthenticationClientPermissions.class, "modelEncoding" );
+        xstream.registerLocalConverter(
+            NexusAuthenticationClientPermissions.class,
+            "permissions",
+            new AliasingListConverter( ClientPermission.class, "permission" ) );
+        
         xstream.omitField( StatusResourceResponse.class, "modelEncoding" );
         xstream.omitField( StatusConfigurationValidationResponse.class, "modelEncoding" );
         xstream.alias( "status", StatusResourceResponse.class );
@@ -501,21 +622,21 @@ public class NexusApplication
             PlexusRoleResource.class,
             "plexus-role" ) );
 
-
+        
         xstream.omitField( PlexusUserSearchCriteriaResourceRequest.class, "modelEncoding" );
         xstream.alias( "user-search", PlexusUserSearchCriteriaResourceRequest.class );
         xstream.omitField( PlexusUserSearchCriteriaResource.class, "modelEncoding" );
-
+        
         xstream.omitField( MirrorResourceListRequest.class, "modelEncoding" );
         xstream.omitField( MirrorResourceListResponse.class, "modelEncoding" );
         xstream.omitField( MirrorStatusResourceListResponse.class, "modelEncoding" );
         xstream.omitField( MirrorResource.class, "modelEncoding" );
         xstream.omitField( MirrorStatusResource.class, "modelEncoding" );
-
+        
         xstream.alias( "mirror-list-request", MirrorResourceListRequest.class );
         xstream.alias( "mirror-list-response", MirrorResourceListResponse.class );
         xstream.alias( "mirror-status-list-response", MirrorStatusResourceListResponse.class );
-
+        
         xstream.registerLocalConverter( MirrorResourceListRequest.class, "data", new AliasingListConverter(
             MirrorResource.class,
             "mirrorResource" ) );
@@ -525,7 +646,7 @@ public class NexusApplication
         xstream.registerLocalConverter( MirrorStatusResourceListResponse.class, "data", new AliasingListConverter(
             MirrorStatusResource.class,
             "mirrorResource" ) );
-
+        
         // Maven model
         xstream.omitField( Model.class, "modelEncoding" );
         xstream.omitField( ModelBase.class, "modelEncoding" );
@@ -552,7 +673,7 @@ public class NexusApplication
 
     /**
      * "Decorating" the root with our resources.
-     *
+     * 
      * @TODO Move this to PlexusResources, except Status (see isStarted usage below!)
      */
     @Override

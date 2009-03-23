@@ -26,12 +26,13 @@ import org.restlet.resource.ResourceException;
 import org.sonatype.jsecurity.model.CUserRoleMapping;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
 import org.sonatype.jsecurity.realms.tools.NoSuchRoleMappingException;
-import org.sonatype.nexus.rest.model.UserToRoleResource;
-import org.sonatype.nexus.rest.model.UserToRoleResourceRequest;
+import org.sonatype.nexus.Nexus;
 import org.sonatype.plexus.rest.resource.PlexusResource;
 import org.sonatype.plexus.rest.resource.PlexusResourceException;
 import org.sonatype.plexus.rest.resource.error.ErrorMessage;
 import org.sonatype.plexus.rest.resource.error.ErrorResponse;
+import org.sonatype.security.rest.model.UserToRoleResource;
+import org.sonatype.security.rest.model.UserToRoleResourceRequest;
 
 public class UserToRolePRTest
     extends PlexusTestCase
@@ -277,6 +278,10 @@ public class UserToRolePRTest
         super.setUp();
 
         FileUtils.copyFile( new File( TEST_CONFIG ), new File( NEXUS_WORK, "/conf/security.xml" ) );
+        
+        // this resource  does not setup Nexus on its own anymore, we need to do this manual
+        // (it will configure itself automagically)
+        this.lookup( Nexus.class );
     }
 
     @Override

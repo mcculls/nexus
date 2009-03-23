@@ -33,10 +33,10 @@ import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.jsecurity.model.Configuration;
 import org.sonatype.jsecurity.model.io.xpp3.SecurityConfigurationXpp3Reader;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
-import org.sonatype.nexus.rest.model.PrivilegeProperty;
-import org.sonatype.nexus.rest.model.PrivilegeStatusResource;
-import org.sonatype.nexus.rest.model.RoleResource;
-import org.sonatype.nexus.rest.model.UserResource;
+import org.sonatype.security.rest.model.PrivilegeProperty;
+import org.sonatype.security.rest.model.PrivilegeStatusResource;
+import org.sonatype.security.rest.model.RoleResource;
+import org.sonatype.security.rest.model.UserResource;
 
 public class SecurityConfigUtil
 {

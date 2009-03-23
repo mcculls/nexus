@@ -13,7 +13,6 @@
  */
 package org.sonatype.nexus.rest.privileges;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.codehaus.plexus.component.annotations.Component;
@@ -22,7 +21,6 @@ import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
 import org.sonatype.jsecurity.realms.privileges.application.ApplicationPrivilegeMethodPropertyDescriptor;
 import org.sonatype.jsecurity.realms.tools.InvalidConfigurationException;
 import org.sonatype.jsecurity.realms.tools.dao.SecurityPrivilege;
@@ -31,13 +29,12 @@ import org.sonatype.nexus.jsecurity.realms.TargetPrivilegeDescriptor;
 import org.sonatype.nexus.jsecurity.realms.TargetPrivilegeGroupPropertyDescriptor;
 import org.sonatype.nexus.jsecurity.realms.TargetPrivilegeRepositoryPropertyDescriptor;
 import org.sonatype.nexus.jsecurity.realms.TargetPrivilegeRepositoryTargetPropertyDescriptor;
-import org.sonatype.nexus.rest.model.PrivilegeListResourceResponse;
-import org.sonatype.nexus.rest.model.PrivilegeResource;
-import org.sonatype.nexus.rest.model.PrivilegeResourceRequest;
-import org.sonatype.nexus.rest.model.PrivilegeStatusResource;
 import org.sonatype.plexus.rest.resource.PathProtectionDescriptor;
 import org.sonatype.plexus.rest.resource.PlexusResource;
 import org.sonatype.plexus.rest.resource.PlexusResourceException;
+import org.sonatype.security.rest.model.PrivilegeListResourceResponse;
+import org.sonatype.security.rest.model.PrivilegeResource;
+import org.sonatype.security.rest.model.PrivilegeResourceRequest;
 
 /**
  * Handles the GET and POST request for the Nexus privileges.
@@ -48,6 +45,7 @@ import org.sonatype.plexus.rest.resource.PlexusResourceException;
 public class PrivilegeListPlexusResource
     extends AbstractPrivilegePlexusResource
 {
+    
     public PrivilegeListPlexusResource()
     {
         this.setModifiable( true );
@@ -62,7 +60,7 @@ public class PrivilegeListPlexusResource
     @Override
     public String getResourceUri()
     {
-        return "/privileges";
+        return "/privileges_target";
     }
 
     @Override
@@ -71,26 +69,7 @@ public class PrivilegeListPlexusResource
         return new PathProtectionDescriptor( getResourceUri(), "authcBasic,perms[nexus:privileges]" );
     }
 
-    @Override
-    public Object get( Context context, Request request, Response response, Variant variant )
-        throws ResourceException
-    {
-        PrivilegeListResourceResponse result = new PrivilegeListResourceResponse();
-
-        Collection<SecurityPrivilege> privs = getNexusSecurity().listPrivileges();
-
-        for ( SecurityPrivilege priv : privs )
-        {
-            PrivilegeStatusResource res = nexusToRestModel( priv, request );
-
-            if ( res != null )
-            {
-                result.addData( res );
-            }
-        }
-
-        return result;
-    }
+    
 
     @Override
     public Object post( Context context, Request request, Response response, Object payload )
@@ -111,7 +90,7 @@ public class PrivilegeListPlexusResource
                 throw new PlexusResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "Configuration error.",
-                    getNexusErrorResponse( "type", "Not allowed privilege type!" ) );
+                    getErrorResponse( "type", "Not allowed privilege type!" ) );
             }
 
             List<String> methods = resource.getMethod();
@@ -121,7 +100,7 @@ public class PrivilegeListPlexusResource
                 throw new PlexusResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "Configuration error.",
-                    getNexusErrorResponse( "method", "No method(s) supplied, must select at least one method." ) );
+                    getErrorResponse( "method", "No method(s) supplied, must select at least one method." ) );
             }
             else
             {
@@ -160,7 +139,7 @@ public class PrivilegeListPlexusResource
 
                         priv.addProperty( prop );
 
-                        getNexusSecurity().createPrivilege( priv );
+                        getPlexusSecurity().createPrivilege( priv );
 
                         result.addData( nexusToRestModel( priv, request ) );
                     }

@@ -27,95 +27,22 @@ import org.sonatype.nexus.proxy.events.AbstractEvent;
 import org.sonatype.nexus.proxy.events.EventListener;
 import org.sonatype.security.DefaultPlexusSecurity;
 
-@Component( role = NexusSecurity.class )
-public class DefaultNexusSecurity
-    extends DefaultPlexusSecurity
-    implements NexusSecurity
+@Component( role = PlexusSecurity.class )
+public class DefaultNexusSecurity extends DefaultPlexusSecurity
 {
     @Requirement
-    private PrivilegeInheritanceManager privInheritance;
-
-    private List<EventListener> listeners = new ArrayList<EventListener>();
-
+    private Nexus nexus;
+    
+   
     @Override
-    public void save()
+    public String getAnonymousUsername()
     {
-        super.save();
-
-        // TODO: can we do the same here as with nexus config?
-        notifyProximityEventListeners( new ConfigurationChangeEvent( this, null ) );
+        return this.nexus.getAnonymousUsername();
     }
 
     @Override
-    public void createPrivilege( SecurityPrivilege privilege, ValidationContext context )
-        throws InvalidConfigurationException
+    public boolean isAnonymousAccessEnabled()
     {
-        addInheritedPrivileges( privilege );
-        super.createPrivilege( privilege, context );
+        return this.nexus.isAnonymousAccessEnabled();
     }
-
-    public void addProximityEventListener( EventListener listener )
-    {
-        listeners.add( listener );
-    }
-
-    public void removeProximityEventListener( EventListener listener )
-    {
-        listeners.remove( listener );
-    }
-
-    public void notifyProximityEventListeners( AbstractEvent evt )
-    {
-        for ( EventListener l : listeners )
-        {
-            try
-            {
-                if ( getLogger().isDebugEnabled() )
-                {
-                    getLogger().debug( "Notifying component about security config change: " + l.getClass().getName() );
-                }
-
-                l.onProximityEvent( evt );
-            }
-            catch ( Exception e )
-            {
-                getLogger().info( "Unexpected exception in listener", e );
-            }
-        }
-    }
-
-    private void addInheritedPrivileges( SecurityPrivilege privilege )
-    {
-        CProperty methodProperty = null;
-
-        for ( CProperty property : (List<CProperty>) privilege.getProperties() )
-        {
-            if ( property.getKey().equals( "method" ) )
-            {
-                methodProperty = property;
-                break;
-            }
-        }
-
-        if ( methodProperty != null )
-        {
-            List<String> inheritedMethods = privInheritance.getInheritedMethods( methodProperty.getValue() );
-
-            StringBuffer buf = new StringBuffer();
-
-            for ( String method : inheritedMethods )
-            {
-                buf.append( method );
-                buf.append( "," );
-            }
-
-            if ( buf.length() > 0 )
-            {
-                buf.setLength( buf.length() - 1 );
-
-                methodProperty.setValue( buf.toString() );
-            }
-        }
-    }
-
 }

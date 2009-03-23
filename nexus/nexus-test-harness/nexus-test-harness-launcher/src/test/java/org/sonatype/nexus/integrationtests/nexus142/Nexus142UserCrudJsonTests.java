@@ -27,10 +27,10 @@ import org.restlet.data.Method;
 import org.restlet.data.Response;
 import org.sonatype.jsecurity.model.CUser;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
-import org.sonatype.security.PasswordGenerator;
-import org.sonatype.nexus.rest.model.UserResource;
 import org.sonatype.nexus.test.utils.SecurityConfigUtil;
 import org.sonatype.nexus.test.utils.UserMessageUtil;
+import org.sonatype.security.PasswordGenerator;
+import org.sonatype.security.rest.model.UserResource;
 
 /**
  * CRUD tests for JSON request/response.
