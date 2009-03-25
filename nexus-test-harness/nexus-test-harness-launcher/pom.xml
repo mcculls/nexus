@@ -29,6 +29,7 @@
         <version>1.0-SNAPSHOT</version>
         <executions>
           <execution>
+          <phase>initialize</phase>
             <goals>
               <goal>setup-environment</goal>
             </goals>

@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -107,9 +108,7 @@ public class UnforkedAppBooter
     }
 
     private ClassLoader getForkedClassloader()
-        throws FileNotFoundException,
-            IOException,
-            MalformedURLException
+        throws FileNotFoundException, IOException, MalformedURLException
     {
         if ( forkedCL == null )
         {
@@ -124,20 +123,37 @@ public class UnforkedAppBooter
     }
 
     private ArrayList<URL> getClasspath()
-        throws FileNotFoundException,
-            IOException,
-            MalformedURLException
+        throws FileNotFoundException, IOException, MalformedURLException
     {
-        String conf = System.getProperty( "classpath.conf" );
+        InputStream classpath = getClass().getResourceAsStream( "/classpath.conf" );
+        BufferedReader r = new BufferedReader( new InputStreamReader( classpath ) );
 
         ArrayList<URL> urls = new ArrayList<URL>();
-        BufferedReader r = new BufferedReader( new InputStreamReader( new FileInputStream( conf ) ) );
         try
         {
             String str;
             while ( ( str = r.readLine() ) != null )
             {
-                urls.add( new File( str ).toURI().toURL() );
+                File file = new File( str );
+                if ( !file.exists() )
+                {
+                    throw new FileNotFoundException( "Not found " + file );
+                }
+                else if ( file.isFile() )
+                {
+                    urls.add( file.toURI().toURL() );
+
+                }
+                else if ( file.isDirectory() )
+                {
+                    for ( File jar : file.listFiles() )
+                    {
+                        if ( jar.isFile() && jar.getName().endsWith( ".jar" ) )
+                        {
+                            urls.add( jar.toURI().toURL() );
+                        }
+                    }
+                }
             }
         }
         finally
@@ -193,20 +209,22 @@ public class UnforkedAppBooter
         return cfg;
     }
 
-    private Map<String, String> getContext() throws InterpolationException
+    private Map<String, String> getContext()
+        throws InterpolationException
     {
         Map<String, String> context = new LinkedHashMap<String, String>();
         for ( Map.Entry<String, String> e : systemProperties.entrySet() )
         {
             String key = e.getKey();
-            if ( key.startsWith( "plexus." ) ) {
+            if ( key.startsWith( "plexus." ) )
+            {
                 key = key.substring( "plexus.".length() );
             }
             context.put( key, e.getValue() );
         }
         context.put( "basedir", basedir.getAbsolutePath() );
         context.put( "configuration", configuration.getAbsolutePath() );
-        
+
         File containerPropertiesFile = new File( configuration.getParentFile(), "plexus.properties" );
 
         if ( containerPropertiesFile.exists() )
@@ -229,22 +247,22 @@ public class UnforkedAppBooter
             {
                 System.err.println( "Failed to load plexus properties: " + containerPropertiesFile );
             }
-            
+
             RegexBasedInterpolator interpolator = new RegexBasedInterpolator();
 
             interpolator.addValueSource( new MapBasedValueSource( containerProperties ) );
             interpolator.addValueSource( new MapBasedValueSource( System.getProperties() ) );
             interpolator.addValueSource( new MapBasedValueSource( context ) );
-            
+
             for ( Object key : containerProperties.keySet() )
             {
-                if ( ! context.containsKey( key ) )
+                if ( !context.containsKey( key ) )
                 {
                     context.put( (String) key, interpolator.interpolate( (String) containerProperties.get( key ) ) );
                 }
             }
         }
-        
+
         return context;
     }
 

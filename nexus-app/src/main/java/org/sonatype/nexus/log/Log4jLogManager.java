@@ -31,7 +31,7 @@ import org.sonatype.nexus.util.EnhancedProperties;
 
 /**
  * Log4J log manager.
- * 
+ *
  * @author cstamas
  * @author juven
  */
@@ -95,7 +95,11 @@ public class Log4jLogManager
 
             if ( appender instanceof FileAppender )
             {
-                files.add( new File( ( (FileAppender) appender ).getFile() ) );
+                String file = ( (FileAppender) appender ).getFile();
+                if ( file != null )
+                {
+                    files.add( new File( file ) );
+                }
             }
         }
 
