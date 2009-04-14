@@ -1,6 +1,7 @@
 package org.sonatype.nexus.mock;
 
 import junit.framework.TestCase;
+import org.sonatype.nexus.mock.rest.MockHelper;
 
 public class NexusTestCase extends TestCase {
     private static MockNexusEnvironment env;
@@ -28,6 +29,7 @@ public class NexusTestCase extends TestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        MockHelper.checkAssertions();
         super.tearDown();
     }
 }

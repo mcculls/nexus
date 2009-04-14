@@ -99,20 +99,28 @@ public class Component {
     }
 
     public void waitForHidden() {
-        ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
+        boolean success = ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
             @Override
             public boolean checkCondition(long elapsedTimeInMs) {
                 return hidden();
             }
         }, TimeUnit.SECONDS, 15);
+
+        if (!success) {
+            throw new RuntimeException("Timeout");
+        }
     }
 
     public void waitForVisible() {
-        ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
+        boolean success = ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
             @Override
             public boolean checkCondition(long elapsedTimeInMs) {
                 return visible();
             }
         }, TimeUnit.SECONDS, 15);
+
+        if (!success) {
+            throw new RuntimeException("Timeout");
+        }
     }
 }

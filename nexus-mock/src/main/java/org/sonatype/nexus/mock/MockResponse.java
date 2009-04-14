@@ -2,12 +2,14 @@ package org.sonatype.nexus.mock;
 
 import org.restlet.data.Status;
 import org.sonatype.plexus.rest.resource.PlexusResource;
+import junit.framework.AssertionFailedError;
 
 public class MockResponse
 {
     protected Status status;
     protected Object response;
     protected Object payload;
+    private AssertionFailedError assertionFailedError;
 
     public MockResponse( Status status, Object payload )
     {
@@ -36,7 +38,17 @@ public class MockResponse
         this.response = response;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(Object payload) throws AssertionFailedError {
         this.payload = payload;
+    }
+
+    public void setAssertionFailure(AssertionFailedError assertionFailedError) {
+        this.assertionFailedError = assertionFailedError;
+    }
+
+    public void checkAssertion() {
+        if (assertionFailedError != null) {
+            throw assertionFailedError;
+        }
     }
 }
