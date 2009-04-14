@@ -103,6 +103,7 @@
     </pluginRepository>
   </pluginRepositories>
   <modules>
+    <module>nexus-mock</module>
     <module>nexus-utils</module>
     <module>nexus-api</module>
     <module>nexus-oss-edition</module>

@@ -522,6 +522,7 @@ Sonatype.utils = {
   
   changePassword: function( expiredUsername ) {
     var w = new Ext.Window({
+      id: 'change-password-window',
       title: 'Change Password',
       closable: true,
       autoWidth: false,
@@ -577,6 +578,7 @@ Sonatype.utils = {
           ],
           buttons: [
             {
+              id: 'change-password-button',
               text: 'Change Password',
               formBind: true,
               scope: this,
