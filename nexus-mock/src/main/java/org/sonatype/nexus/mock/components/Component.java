@@ -1,6 +1,9 @@
 package org.sonatype.nexus.mock.components;
 
 import com.thoughtworks.selenium.Selenium;
+import org.sonatype.nexus.mock.util.ThreadUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class Component {
     private Component parent;
@@ -88,7 +91,7 @@ public class Component {
     }
 
     public boolean hidden() {
-        return evalTrue(".hidden");
+        return evalTrue(" == null") || evalTrue(".hidden");
     }
 
     public boolean visible() {
@@ -96,10 +99,20 @@ public class Component {
     }
 
     public void waitForHidden() {
-        waitForEvalTrue(".hidden == true");
+        ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
+            @Override
+            public boolean checkCondition(long elapsedTimeInMs) {
+                return hidden();
+            }
+        }, TimeUnit.SECONDS, 15);
     }
 
     public void waitForVisible() {
-        waitForEvalTrue(".hidden == false");
+        ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
+            @Override
+            public boolean checkCondition(long elapsedTimeInMs) {
+                return visible();
+            }
+        }, TimeUnit.SECONDS, 15);
     }
 }

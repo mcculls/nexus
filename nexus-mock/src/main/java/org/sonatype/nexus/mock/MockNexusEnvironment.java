@@ -33,17 +33,6 @@ public class MockNexusEnvironment
 
     public static Server createSimpleJettyServer( int port )
     {
-        System.out.println(MockNexusEnvironment.class.getResource("components.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("/components.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("/plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("META-INF/plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("META-INF/plexus/plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("META-INF/plexus/components.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("/META-INF/plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("/META-INF/plexus/plexus.xml"));
-        System.out.println(MockNexusEnvironment.class.getResource("/META-INF/plexus/components.xml"));
-
         Server server = new Server();
 
         SelectChannelConnector connector = new SelectChannelConnector();

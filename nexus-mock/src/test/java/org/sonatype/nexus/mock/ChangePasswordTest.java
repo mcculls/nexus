@@ -2,7 +2,10 @@ package org.sonatype.nexus.mock;
 
 import org.sonatype.nexus.mock.models.User;
 import org.sonatype.nexus.mock.pages.ChangePasswordWindow;
+import org.sonatype.nexus.mock.pages.PasswordChangedWindow;
 import org.sonatype.nexus.mock.rest.MockHelper;
+import org.sonatype.nexus.rest.users.UserChangePasswordPlexusResource;
+import org.sonatype.nexus.rest.model.UserChangePasswordRequest;
 import org.restlet.data.Status;
 
 public class ChangePasswordTest extends SeleniumTest {
@@ -11,8 +14,20 @@ public class ChangePasswordTest extends SeleniumTest {
 
         ChangePasswordWindow window = main.securityPanel().clickChangePassword();
 
-        MockHelper.getResponseMap().put("/users_changepw", new MockResponse(Status.CLIENT_ERROR_BAD_REQUEST, null));
+        MockResponse resp = new MockResponse(Status.SUCCESS_NO_CONTENT, null) {
+            @Override
+            public Status getStatus() {
+                UserChangePasswordRequest r = (UserChangePasswordRequest) payload;
+                assertEquals("password", r.getData().getOldPassword());
+                assertEquals("newPassword", r.getData().getNewPassword());
+                
+                return super.getStatus();
+            }
+        };
+        MockHelper.getResponseMap().put("/users_changepw", resp);
 
-        window.populate("password", "newPassword", "newPassword").changePasswordExpectingSuccess();
+        PasswordChangedWindow passwordChangedWindow = window.populate("password", "newPassword", "newPassword").changePasswordExpectingSuccess();
+
+        passwordChangedWindow.clickOk();
     }
 }

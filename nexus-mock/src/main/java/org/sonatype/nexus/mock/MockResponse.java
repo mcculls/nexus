@@ -1,12 +1,13 @@
 package org.sonatype.nexus.mock;
 
 import org.restlet.data.Status;
+import org.sonatype.plexus.rest.resource.PlexusResource;
 
 public class MockResponse
 {
-    private Status status;
-
-    private Object response;
+    protected Status status;
+    protected Object response;
+    protected Object payload;
 
     public MockResponse( Status status, Object payload )
     {
@@ -33,5 +34,9 @@ public class MockResponse
     public void setResponse( Object response )
     {
         this.response = response;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 }

@@ -68,6 +68,7 @@ public class ProxyPlexusResource
         }
         else
         {
+            mr.setPayload(payload);
             response.setStatus( mr.getStatus() );
 
             return mr.getResponse();

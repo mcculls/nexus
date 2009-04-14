@@ -28,8 +28,10 @@ public class ChangePasswordWindow extends Window {
         return this;
     }
 
-    public void changePasswordExpectingSuccess() {
+    public PasswordChangedWindow changePasswordExpectingSuccess() {
         button.click();
         waitForHidden();
+
+        return new PasswordChangedWindow(selenium);
     }
 }
