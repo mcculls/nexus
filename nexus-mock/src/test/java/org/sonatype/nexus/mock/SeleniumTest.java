@@ -8,6 +8,7 @@ import org.sonatype.nexus.mock.rest.MockHelper;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 
 public abstract class SeleniumTest extends NexusTestCase {
     protected Selenium selenium;
@@ -18,7 +19,8 @@ public abstract class SeleniumTest extends NexusTestCase {
         super.setUp();
 
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
-            Selenium original = new DefaultSelenium("localhost", 4444, "*firefox", "http://localhost:12345");
+            String ip = InetAddress.getLocalHost().getHostAddress();
+            Selenium original = new DefaultSelenium("localhost", 4444, "*firefox", "http://" + ip + ":12345");
 
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

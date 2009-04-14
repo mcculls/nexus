@@ -7,7 +7,7 @@ public class MainPage {
 
     public MainPage(Selenium selenium) {
         this.selenium = selenium;
-        selenium.open("http://localhost:12345/nexus");
+        selenium.open("/nexus");
     }
 
     public boolean loginLinkAvailable() {
