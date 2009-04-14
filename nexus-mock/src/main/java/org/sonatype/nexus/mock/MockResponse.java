@@ -48,7 +48,9 @@ public class MockResponse
 
     public void checkAssertion() {
         if (assertionFailedError != null) {
-            throw assertionFailedError;
+            AssertionFailedError error = assertionFailedError;
+            assertionFailedError = null; // reset so we don't KEEP throwing it on future checks
+            throw error;
         }
     }
 }

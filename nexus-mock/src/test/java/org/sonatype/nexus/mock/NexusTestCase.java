@@ -8,8 +8,6 @@ public class NexusTestCase extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        super.setUp();
-
         if (env == null) {
             env = new MockNexusEnvironment(12345, "/nexus");
             env.start();
@@ -29,7 +27,11 @@ public class NexusTestCase extends TestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        MockHelper.checkAssertions();
-        super.tearDown();
+        try {
+            MockHelper.checkAssertions();
+        } finally {
+            // always clear out the mocks
+            MockHelper.clearMocks();
+        }
     }
 }

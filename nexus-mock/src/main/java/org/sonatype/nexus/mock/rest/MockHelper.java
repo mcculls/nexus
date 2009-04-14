@@ -50,10 +50,17 @@ public class MockHelper
 
     public static void checkAssertions() {
         List<MockResponse> list = responses.get();
-        for (MockResponse mockResponse : list) {
-            mockResponse.checkAssertion();
+        if (list != null) {
+            for (MockResponse mockResponse : list) {
+                mockResponse.checkAssertion();
+            }
         }
+    }
 
-        list.clear();
+    public static void clearMocks() {
+        List<MockResponse> list = responses.get();
+        if (list != null) {
+            list.clear();
+        }
     }
 }
