@@ -3,7 +3,7 @@ package org.sonatype.nexus.mock;
 import junit.framework.TestCase;
 import org.sonatype.nexus.mock.rest.MockHelper;
 
-public class NexusTestCase extends TestCase {
+public abstract class NexusTestCase extends TestCase {
     private static MockNexusEnvironment env;
 
     @Override
