@@ -104,7 +104,10 @@ public class MockNexusEnvironment
 
         containerContext.put( "security-xml-file", new File( "target/nexus-work/conf/security.xml" ).getAbsolutePath() );
 
-        containerContext.put("index.template.file", "templates/index-debug.vm");
+        File webappRoot = new File("../nexus-webapp/src/main/webapp");
+        if (webappRoot.exists()) {
+            containerContext.put("index.template.file", "templates/index-debug.vm");
+        }
 
         // for EHCache component
         System.setProperty( "nexus.home", new File( "target/nexus-work" ).getAbsolutePath() );
@@ -141,9 +144,14 @@ public class MockNexusEnvironment
         // add mock nexus
         ContextHandlerCollection ctxHandler = new ContextHandlerCollection();
 
+        File webappRoot = new File("../nexus-webapp/src/main/webapp");
+        if (!webappRoot.exists()) {
+            webappRoot = new File("target/nexus-ui");
+        }
+
         WebAppContext webapp = new WebAppContext(
             ctxHandler,
-            new File( "../nexus-webapp/src/main/webapp" ).getAbsolutePath(),
+            webappRoot.getAbsolutePath(),
             contextPath );
 
         // spoof in our simplified web.xml
