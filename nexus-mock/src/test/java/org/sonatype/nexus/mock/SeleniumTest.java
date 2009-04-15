@@ -15,7 +15,11 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.Inet4Address;
 import java.io.*;
+import java.util.Enumeration;
 
 @Ignore
 @RunWith(SeleniumJUnitRunner.class)
@@ -24,10 +28,31 @@ public abstract class SeleniumTest extends NexusTestCase {
     protected MainPage main;
     protected Description description;
 
+    private static String getLocalIp() throws SocketException {
+        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+        while (e.hasMoreElements()) {
+            NetworkInterface ni = e.nextElement();
+
+            if (!ni.getDisplayName().startsWith("vmnet")) {
+                Enumeration<InetAddress> i = ni.getInetAddresses();
+                while (i.hasMoreElements()) {
+                    InetAddress ia = i.nextElement();
+                    if (ia instanceof Inet4Address) {
+                        if (!ia.getHostAddress().startsWith("127.0.")) {
+                            return ia.getHostAddress();
+                        }
+                    }
+                }
+            }
+        }
+
+        return "localhost";
+    }
+
     @Before
     public void seleniumSetup() throws Exception {
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
-            String ip = InetAddress.getLocalHost().getHostAddress();
+            String ip = getLocalIp();
             Selenium original = new DefaultSelenium("172.16.0.125", 4444, "*firefox", "http://" + ip + ":12345");
 
             @Override
