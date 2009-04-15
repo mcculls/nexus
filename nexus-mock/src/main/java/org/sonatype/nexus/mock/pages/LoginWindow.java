@@ -5,14 +5,19 @@ import org.sonatype.nexus.mock.components.TextField;
 import org.sonatype.nexus.mock.components.Button;
 import org.sonatype.nexus.mock.components.Window;
 import org.sonatype.nexus.mock.models.User;
+import org.sonatype.nexus.mock.util.ThreadUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginWindow extends Window {
     private TextField username;
     private TextField password;
     private Button loginButton;
+    private MainPage mainPage;
 
-    public LoginWindow(Selenium selenium) {
+    public LoginWindow(Selenium selenium, MainPage mainPage) {
         super(selenium, "window.Ext.getCmp('login-window')");
+        this.mainPage = mainPage;
 
         username = new TextField(selenium, "window.Ext.getCmp('usernamefield')");
         password = new TextField(selenium, "window.Ext.getCmp('passwordfield')");
@@ -47,5 +52,13 @@ public class LoginWindow extends Window {
     public void loginExpectingSuccess() {
         login();
         waitForHidden();
+
+        // wait for the login-link to change
+        ThreadUtils.waitFor(new ThreadUtils.WaitCondition() {
+            @Override
+            public boolean checkCondition(long elapsedTimeInMs) {
+                return !mainPage.loginLinkAvailable();
+            }
+        }, TimeUnit.SECONDS, 15);
     }
 }

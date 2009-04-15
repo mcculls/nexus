@@ -23,7 +23,7 @@ public class MainPage {
             throw new RuntimeException("Login link not found!");
         }
 
-        return new LoginWindow(selenium);
+        return new LoginWindow(selenium, this);
     }
 
     public ViewsPanel viewsPanel() {
