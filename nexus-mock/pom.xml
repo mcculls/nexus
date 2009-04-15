@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium.client-drivers</groupId>
             <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0-beta-2</version>
+            <version>1.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.seleniumhq.selenium.server</groupId>
@@ -65,6 +65,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>openqa-snapshots</id>
+            <name>OpenQA Snapshots</name>
+            <url>http://nexus.openqa.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>

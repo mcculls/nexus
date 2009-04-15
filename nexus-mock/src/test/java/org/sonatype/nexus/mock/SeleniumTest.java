@@ -15,9 +15,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 
 @Ignore
 @RunWith(SeleniumJUnitRunner.class)
@@ -39,7 +37,7 @@ public abstract class SeleniumTest extends NexusTestCase {
                 return method.invoke(original, args);
             }
         });
-        selenium.start();
+        selenium.start("captureNetworkTraffic=true");
         selenium.getEval("window.moveTo(1,1); window.resizeTo(1021,737);");
         main = new MainPage(selenium);
     }
@@ -92,6 +90,15 @@ public abstract class SeleniumTest extends NexusTestCase {
     }
 
     public void captureNetworkTraffic() {
-        // todo
+        try {
+            File parent = new File("target/network-traffic/");
+            //noinspection ResultOfMethodCallIgnored
+            parent.mkdirs();
+
+            FileOutputStream fos = new FileOutputStream(new File(parent, description.getDisplayName() + ".txt"));
+            fos.write(selenium.captureNetworkTraffic("TODO").getBytes("UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
