@@ -10,7 +10,7 @@ public class LoginTest extends SeleniumTest {
     public void goodLogin() {
         main.clickLogin().populate(User.ADMIN).loginExpectingSuccess();
 
-        assertFalse("Login link should not be available", !main.loginLinkAvailable());
+        assertFalse("Login link should not be available", main.loginLinkAvailable());
     }
 
     @Test
