@@ -37,7 +37,7 @@ public class MockNexusEnvironment
 
         SelectChannelConnector connector = new SelectChannelConnector();
 
-        connector.setHost( "localhost" );
+        connector.setHost(null);
 
         connector.setPort( port );
 
