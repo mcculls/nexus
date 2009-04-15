@@ -28,7 +28,7 @@ public abstract class SeleniumTest extends NexusTestCase {
     public void seleniumSetup() throws Exception {
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             String ip = InetAddress.getLocalHost().getHostAddress();
-            Selenium original = new DefaultSelenium("localhost", 4444, "*firefox", "http://" + ip + ":12345");
+            Selenium original = new DefaultSelenium("172.16.0.125", 4444, "*firefox", "http://" + ip + ":12345");
 
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
