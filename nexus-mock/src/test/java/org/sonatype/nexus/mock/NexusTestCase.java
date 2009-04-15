@@ -1,13 +1,17 @@
 package org.sonatype.nexus.mock;
 
-import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.sonatype.nexus.mock.rest.MockHelper;
 
-public abstract class NexusTestCase extends TestCase {
+@Ignore
+public abstract class NexusTestCase {
     private static MockNexusEnvironment env;
 
-    @Override
-    protected void setUp() throws Exception {
+    @BeforeClass
+    public synchronized static void startNexus() throws Exception {
         if (env == null) {
             env = new MockNexusEnvironment(12345, "/nexus");
             env.start();
@@ -25,13 +29,13 @@ public abstract class NexusTestCase extends TestCase {
         }
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        try {
-            MockHelper.checkAssertions();
-        } finally {
-            // always clear out the mocks
-            MockHelper.clearMocks();
-        }
+    @Before
+    public void mockSetup() {
+        MockHelper.clearMocks();
+    }
+
+    @After
+    public void mockCleanup() {
+        MockHelper.checkAssertions();
     }
 }

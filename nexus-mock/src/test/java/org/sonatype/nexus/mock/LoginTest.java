@@ -2,15 +2,19 @@ package org.sonatype.nexus.mock;
 
 import org.sonatype.nexus.mock.models.User;
 import org.sonatype.nexus.mock.pages.LoginWindow;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class LoginTest extends SeleniumTest {
-    public void testGoodLogin() {
+    @Test
+    public void goodLogin() {
         main.clickLogin().populate(User.ADMIN).loginExpectingSuccess();
 
-        assertFalse("Login link should not be available", main.loginLinkAvailable());
+        assertFalse("Login link should not be available", !main.loginLinkAvailable());
     }
 
-    public void testMissingPassword() {
+    @Test
+    public void missingPassword() {
         LoginWindow loginWindow = main.clickLogin().populate(new User("bad", ""));
 
         assertTrue("Login button should be disabled if password is bad", loginWindow.getLoginButton().disabled());

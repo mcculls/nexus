@@ -4,9 +4,12 @@ import org.sonatype.nexus.mock.models.User;
 import org.sonatype.nexus.mock.pages.ViewsPanel;
 import org.sonatype.nexus.mock.pages.AdministrationPanel;
 import org.sonatype.nexus.mock.pages.SecurityPanel;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class RolesUITest extends SeleniumTest {
-    public void testAdminRole() {
+    @Test
+    public void admin() {
         main.clickLogin().populate(User.ADMIN).loginExpectingSuccess();
 
         // views/repositories
@@ -52,7 +55,8 @@ public class RolesUITest extends SeleniumTest {
         assertFalse("Privileges link should not be visible", securityPanel.privilegesAvailable());
     }
 
-    public void testRoleAdminRole() {
+    @Test
+    public void roleAdmin() {
         main.clickLogin().populate(User.ROLE_ADMIN).loginExpectingSuccess();
 
         // views/repositories

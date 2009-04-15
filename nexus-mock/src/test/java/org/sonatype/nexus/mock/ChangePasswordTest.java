@@ -4,13 +4,15 @@ import org.sonatype.nexus.mock.models.User;
 import org.sonatype.nexus.mock.pages.ChangePasswordWindow;
 import org.sonatype.nexus.mock.pages.PasswordChangedWindow;
 import org.sonatype.nexus.mock.rest.MockHelper;
-import org.sonatype.nexus.rest.users.UserChangePasswordPlexusResource;
 import org.sonatype.nexus.rest.model.UserChangePasswordRequest;
 import org.restlet.data.Status;
 import junit.framework.AssertionFailedError;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class ChangePasswordTest extends SeleniumTest {
-    public void testChangePasswordSuccess() {
+    @Test
+    public void changePasswordSuccess() {
         main.clickLogin().populate(User.ADMIN).loginExpectingSuccess();
 
         ChangePasswordWindow window = main.securityPanel().clickChangePassword();
