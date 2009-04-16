@@ -105,10 +105,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemProperties>
-                        <propert>
+                        <property>
                             <name>jettyPort</name>
                             <value>${jettyPort}</value>
-                        </propert>
+                        </property>
                         <property>
                           <name>seleniumServer</name>
                           <value>${seleniumServer}</value>
