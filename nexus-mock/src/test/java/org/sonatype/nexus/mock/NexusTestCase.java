@@ -14,8 +14,11 @@ public abstract class NexusTestCase {
     @BeforeClass
     public synchronized static void startNexus() throws Exception {
         if (env == null) {
+            System.out.println("NexusTestCase.startNexus - 1");
             env = new MockNexusEnvironment(PropUtil.get("jettyPort", 12345), "/nexus");
+            System.out.println("NexusTestCase.startNexus - 2");
             env.start();
+            System.out.println("NexusTestCase.startNexus - 3");
 
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 @Override

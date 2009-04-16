@@ -33,6 +33,7 @@ public class MockNexusEnvironment
 
     public static Server createSimpleJettyServer( int port )
     {
+        System.out.println("MockNexusEnvironment.createSimpleJettyServer");
         Server server = new Server();
 
         SelectChannelConnector connector = new SelectChannelConnector();
@@ -73,6 +74,7 @@ public class MockNexusEnvironment
     public PlexusContainer createPlexusContainer()
         throws Exception
     {
+        System.out.println("MockNexusEnvironment.createPlexusContainer");
         if ( plexusContainer == null )
         {
             ClassWorld cw = new ClassWorld( "default", Thread.currentThread().getContextClassLoader() );
@@ -96,6 +98,7 @@ public class MockNexusEnvironment
 
     protected Map<Object, Object> createContainerContext()
     {
+        System.out.println("MockNexusEnvironment.createContainerContext");
         Map<Object, Object> containerContext = new HashMap<Object, Object>();
 
         containerContext.put( "basedir", new File( "" ).getAbsolutePath() );
@@ -118,6 +121,7 @@ public class MockNexusEnvironment
     public void start()
         throws Exception
     {
+        System.out.println("MockNexusEnvironment.start");
         getServer().start();
     }
 
@@ -134,6 +138,7 @@ public class MockNexusEnvironment
     public void addNexus( Server server, String contextPath )
         throws Exception
     {
+        System.out.println("MockNexusEnvironment.addNexus");
         // prepare config
         FileUtils.copyFile( new File("src/test/resources/nexus-1.xml"), new File( "target/nexus-work/conf/nexus.xml" ) );
         FileUtils.copyFile( new File("src/test/resources/security-1.xml"), new File( "target/nexus-work/conf/security.xml" ) );
