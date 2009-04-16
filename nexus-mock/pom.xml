@@ -38,9 +38,9 @@
             <type>war</type>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.seleniumhq.selenium.server</groupId>-->
-            <!--<artifactId>selenium-server</artifactId>-->
-            <!--<version>1.0-beta-2</version>-->
+        <!--<groupId>org.seleniumhq.selenium.server</groupId>-->
+        <!--<artifactId>selenium-server</artifactId>-->
+        <!--<version>1.0-beta-2</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.seleniumhq.selenium.client-drivers</groupId>
@@ -61,8 +61,8 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-			<version>4.5</version>
-			<scope>compile</scope>
+            <version>4.5</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <repositories>
@@ -102,6 +102,26 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>port-allocator-maven-plugin</artifactId>
+                <version>1.1-SNAPSHOT</version>
+                <configuration>
+                    <ports>
+                        <port>
+                            <name>jettyPort</name>
+                        </port>
+                    </ports>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>allocate-ports</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemProperties>
@@ -110,16 +130,16 @@
                             <value>${jettyPort}</value>
                         </property>
                         <property>
-                          <name>seleniumServer</name>
-                          <value>${seleniumServer}</value>
+                            <name>seleniumServer</name>
+                            <value>${seleniumServer}</value>
                         </property>
                         <property>
-                          <name>seleniumPort</name>
-                          <value>${seleniumPort}</value>
+                            <name>seleniumPort</name>
+                            <value>${seleniumPort}</value>
                         </property>
                         <property>
-                          <name>seleniumBrowser</name>
-                          <value>${seleniumBrowser}</value>
+                            <name>seleniumBrowser</name>
+                            <value>${seleniumBrowser}</value>
                         </property>
                     </systemProperties>
                 </configuration>
