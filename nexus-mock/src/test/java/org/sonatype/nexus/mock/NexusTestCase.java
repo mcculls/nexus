@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Before;
 import org.sonatype.nexus.mock.rest.MockHelper;
+import org.sonatype.nexus.mock.util.PropUtil;
 
 @Ignore
 public abstract class NexusTestCase {
@@ -13,29 +14,7 @@ public abstract class NexusTestCase {
     @BeforeClass
     public synchronized static void startNexus() throws Exception {
         if (env == null) {
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            System.out.println(System.getProperty("jettyPort"));
-            env = new MockNexusEnvironment(12345, "/nexus");
+            env = new MockNexusEnvironment(PropUtil.get("jettyPort", 12345), "/nexus");
             env.start();
 
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

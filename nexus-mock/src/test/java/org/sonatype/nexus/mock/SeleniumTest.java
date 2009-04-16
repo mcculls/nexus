@@ -4,6 +4,7 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import org.sonatype.nexus.mock.pages.MainPage;
 import org.sonatype.nexus.mock.rest.MockHelper;
+import org.sonatype.nexus.mock.util.PropUtil;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.Ignore;
@@ -53,10 +54,10 @@ public abstract class SeleniumTest extends NexusTestCase {
     public void seleniumSetup() throws Exception {
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             String ip = getLocalIp();
-            String seleniumServer = System.getProperty("seleniumServer", "localhost");
-            int seleniumPort = Integer.getInteger("seleniumPort", 4444);
-            String seleniumBrowser = System.getProperty("seleniumBrowser", "*firefox");
-            Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":12345");
+            String seleniumServer = PropUtil.get("seleniumServer", "localhost");
+            int seleniumPort = PropUtil.get("seleniumPort", 4444);
+            String seleniumBrowser = PropUtil.get("seleniumBrowser", "*firefox");
+            Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":" + PropUtil.get("jettyPort", 12345));
 
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
