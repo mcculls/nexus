@@ -101,6 +101,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemProperties>
+                        <property>
+                          <name>seleniumServer</name>
+                          <value>${seleniumServer}</value>
+                        </property>
+                        <property>
+                          <name>seleniumPort</name>
+                          <value>${seleniumPort}</value>
+                        </property>
+                        <property>
+                          <name>seleniumBrowser</name>
+                          <value>${seleniumBrowser}</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -53,7 +53,10 @@ public abstract class SeleniumTest extends NexusTestCase {
     public void seleniumSetup() throws Exception {
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             String ip = getLocalIp();
-            Selenium original = new DefaultSelenium("172.16.0.125", 4444, "*iexplore", "http://" + ip + ":12345");
+            String seleniumServer = System.getProperty("seleniumServer", "localhost");
+            int seleniumPort = Integer.getInteger("seleniumPort", 4444);
+            String seleniumBrowser = System.getProperty("seleniumBrowser", "*firefox");
+            Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":12345");
 
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
