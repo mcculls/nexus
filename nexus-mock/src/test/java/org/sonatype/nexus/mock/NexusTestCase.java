@@ -13,6 +13,28 @@ public abstract class NexusTestCase {
     @BeforeClass
     public synchronized static void startNexus() throws Exception {
         if (env == null) {
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
+            System.out.println(System.getProperty("jettyPort"));
             env = new MockNexusEnvironment(12345, "/nexus");
             env.start();
 
