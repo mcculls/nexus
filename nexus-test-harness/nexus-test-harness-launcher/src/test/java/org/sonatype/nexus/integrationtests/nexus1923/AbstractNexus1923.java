@@ -2,6 +2,9 @@ package org.sonatype.nexus.integrationtests.nexus1923;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.Assert;
@@ -11,20 +14,24 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.sonatype.nexus.index.context.IndexingContext;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
+import org.sonatype.nexus.rest.model.NexusArtifact;
 import org.sonatype.nexus.rest.model.RepositoryResource;
 import org.sonatype.nexus.rest.model.RepositoryResourceRemoteStorage;
 import org.sonatype.nexus.rest.model.ScheduledServiceBaseResource;
 import org.sonatype.nexus.rest.model.ScheduledServicePropertyResource;
 import org.sonatype.nexus.tasks.descriptors.ReindexTaskDescriptor;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
+import org.sonatype.nexus.test.utils.SearchMessageUtil;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
 
 public abstract class AbstractNexus1923
     extends AbstractNexusIntegrationTest
 {
     protected RepositoryMessageUtil repoUtils;
+    protected SearchMessageUtil searchUtils;
         
     protected static final String HOSTED_REPO_ID = "incremental_repo";
+    protected static final String OTHER_HOSTED_REPO_ID = "incremental_repo_other";
     protected static final String PROXY_REPO_ID = "incremental_repo_proxy";
     protected static final String FIRST_ARTIFACT = "firstArtifact";
     protected static final String SECOND_ARTIFACT = "secondArtifact";
@@ -32,7 +39,8 @@ public abstract class AbstractNexus1923
     protected static final String FOURTH_ARTIFACT = "fourthArtifact";
     protected static final String FIFTH_ARTIFACT = "fifthArtifact";
     protected static final String HOSTED_REINDEX_TASK_NAME = "incremental_reindex";
-    protected static final String PROXY_REINDEX_TASK_NAME = "incremental_reindex_proxy";
+    protected static final String OTHER_HOSTED_REINDEX_TASK_NAME = "incremental_reindex_other";
+    protected static final String PROXY_REINDEX_TASK_NAME = "incremental_reindex_proxy";    
     
     public AbstractNexus1923()
         throws Exception
@@ -45,12 +53,17 @@ public abstract class AbstractNexus1923
                 MediaType.APPLICATION_JSON,
                 getRepositoryTypeRegistry() );
         
+        this.searchUtils = new SearchMessageUtil();
+        
         FileUtils.deleteDirectory( getHostedRepositoryStorageDirectory() );
         FileUtils.deleteDirectory( getHostedRepositoryLocalIndexDirectory() );
         FileUtils.deleteDirectory( getHostedRepositoryRemoteIndexDirectory() );
         FileUtils.deleteDirectory( getProxyRepositoryStorageDirectory() );
         FileUtils.deleteDirectory( getProxyRepositoryLocalIndexDirectory() );
         FileUtils.deleteDirectory( getProxyRepositoryRemoteIndexDirectory() );
+        FileUtils.deleteDirectory( getOtherHostedRepositoryStorageDirectory() );
+        FileUtils.deleteDirectory( getOtherHostedRepositoryLocalIndexDirectory() );
+        FileUtils.deleteDirectory( getOtherHostedRepositoryRemoteIndexDirectory() );
     }
     
     private RepositoryResource createRepository()
@@ -93,6 +106,17 @@ public abstract class AbstractNexus1923
         repoUtils.createRepository( resource );
     }
     
+    protected void createOtherHostedRepository()
+        throws Exception
+    {
+        RepositoryResource resource = createRepository();
+        resource.setId( OTHER_HOSTED_REPO_ID );
+        resource.setName( OTHER_HOSTED_REPO_ID );
+        resource.setRepoType( "hosted" );
+        resource.setAllowWrite( true );
+        repoUtils.createRepository( resource );   
+    }
+    
     private String createReindexTask( String repositoryId, String taskName )
         throws Exception
     {
@@ -126,6 +150,12 @@ public abstract class AbstractNexus1923
         return createReindexTask( PROXY_REPO_ID, PROXY_REINDEX_TASK_NAME );
     }
     
+    protected String createOtherHostedReindexTask()
+        throws Exception
+    {
+        return createReindexTask( OTHER_HOSTED_REPO_ID, OTHER_HOSTED_REINDEX_TASK_NAME );
+    }
+    
     private void reindexRepository( String taskId, String taskName )
         throws Exception
     {
@@ -146,6 +176,12 @@ public abstract class AbstractNexus1923
         reindexRepository( taskId, PROXY_REINDEX_TASK_NAME );
     }
     
+    protected void reindexOtherHostedRepository( String taskId )
+        throws Exception
+    {
+        reindexRepository( taskId, OTHER_HOSTED_REINDEX_TASK_NAME );
+    }
+    
     private File getRepositoryLocalIndexDirectory( String repositoryId )
     {
         return new File( AbstractNexusIntegrationTest.nexusWorkDir + "/indexer/" + repositoryId + "-local/" );
@@ -159,6 +195,11 @@ public abstract class AbstractNexus1923
     protected File getProxyRepositoryLocalIndexDirectory()
     {
         return getRepositoryLocalIndexDirectory( PROXY_REPO_ID );
+    }
+    
+    protected File getOtherHostedRepositoryLocalIndexDirectory()
+    {
+        return getRepositoryLocalIndexDirectory( OTHER_HOSTED_REPO_ID );
     }
     
     private File getRepositoryRemoteIndexDirectory( String repositoryId )
@@ -176,6 +217,11 @@ public abstract class AbstractNexus1923
         return getRepositoryRemoteIndexDirectory( PROXY_REPO_ID );
     }
     
+    protected File getOtherHostedRepositoryRemoteIndexDirectory()
+    {
+        return getRepositoryRemoteIndexDirectory( OTHER_HOSTED_REPO_ID );
+    }
+    
     private File getRepositoryStorageDirectory( String repositoryId )
     {
         return new File( AbstractNexusIntegrationTest.nexusWorkDir + "/storage/" + repositoryId + "/" );
@@ -191,6 +237,11 @@ public abstract class AbstractNexus1923
         return getRepositoryStorageDirectory( PROXY_REPO_ID );
     }
     
+    protected File getOtherHostedRepositoryStorageDirectory()
+    {
+        return getRepositoryStorageDirectory( OTHER_HOSTED_REPO_ID );
+    }
+    
     private File getRepositoryIndex( File directory )
     {
         return new File( directory, IndexingContext.INDEX_FILE + ".gz");
@@ -204,6 +255,11 @@ public abstract class AbstractNexus1923
     protected File getProxyRepositoryIndex()
     {
         return getRepositoryIndex( getProxyRepositoryStorageIndexDirectory() );
+    }
+    
+    protected File getOtherHostedRepositoryIndex()
+    {
+        return getRepositoryIndex( getOtherHostedRepositoryStorageIndexDirectory() );
     }
     
     private Properties getRepositoryIndexProperties( File baseDir )
@@ -240,6 +296,12 @@ public abstract class AbstractNexus1923
         return getRepositoryIndexProperties( getProxyRepositoryStorageIndexDirectory() );
     }
     
+    protected Properties getOtherHostedRepositoryIndexProperties()
+        throws Exception
+    {
+        return getRepositoryIndexProperties( getOtherHostedRepositoryStorageIndexDirectory() );
+    }
+    
     private File getRepositoryIndexIncrement( File directory, String id )
     {
         return new File( directory, IndexingContext.INDEX_FILE + "." + id + ".gz" );
@@ -253,6 +315,11 @@ public abstract class AbstractNexus1923
     protected File getProxyRepositoryIndexIncrement( String id )
     {
         return getRepositoryIndexIncrement( getProxyRepositoryStorageIndexDirectory(), id ); 
+    }
+    
+    protected File getOtherHostedRepositoryIndexIncrement( String id )
+    {
+        return getRepositoryIndexIncrement( getOtherHostedRepositoryStorageIndexDirectory(), id ); 
     }
     
     private File getRepositoryStorageIndexDirectory( String repositoryId )
@@ -270,21 +337,118 @@ public abstract class AbstractNexus1923
         return getRepositoryStorageIndexDirectory( PROXY_REPO_ID );
     }
     
-    private void validateCurrentIncrementalCounter( Properties properties, int current )
-        throws Exception
+    protected File getOtherHostedRepositoryStorageIndexDirectory()
     {
-        Assert.assertEquals( properties.getProperty( IndexingContext.INDEX_CHUNK_COUNTER ), Integer.toString( current ) );
+        return getRepositoryStorageIndexDirectory( OTHER_HOSTED_REPO_ID );
     }
     
-    protected void validateCurrentHostedIncrementalCounter( int current )
+    private void validateCurrentIncrementalCounter( Properties properties, Integer current )
+        throws Exception
+    {
+        if ( current == null )
+        {
+            Assert.assertNull( properties.getProperty( IndexingContext.INDEX_CHUNK_COUNTER ) );
+        }
+        else
+        {
+            Assert.assertEquals( properties.getProperty( IndexingContext.INDEX_CHUNK_COUNTER ), Integer.toString( current ) );
+        }
+    }
+    
+    protected void validateCurrentHostedIncrementalCounter( Integer current )
         throws Exception
     {
         validateCurrentIncrementalCounter( getHostedRepositoryIndexProperties(), current );
     }
     
-    protected void validateCurrentProxyIncrementalCounter( int current )
+    protected void validateCurrentProxyIncrementalCounter( Integer current )
         throws Exception
     {
         validateCurrentIncrementalCounter( getProxyRepositoryIndexProperties(), current );
+    }
+    
+    protected void validateCurrentOtherHostedIncrementalCounter( int current )
+        throws Exception
+    {
+        validateCurrentIncrementalCounter( getOtherHostedRepositoryIndexProperties(), current );
+    }
+    
+    private void searchForArtifactInIndex( String artifact, String repositoryId, boolean shouldFind )
+        throws Exception
+    {
+        Map<String, String> args = new HashMap<String, String>();
+        args.put( "r", repositoryId );
+        
+        if ( FIRST_ARTIFACT.equals( artifact ) )
+        {            
+            args.put( "a", "ant" );
+        }
+        else if ( SECOND_ARTIFACT.equals( artifact ) )
+        {            
+            args.put( "a", "asm" );
+        }
+        else if ( THIRD_ARTIFACT.equals( artifact ) )
+        {            
+            args.put( "a", "commons-attributes-api" );
+        }
+        else if ( FOURTH_ARTIFACT.equals( artifact ) )
+        {            
+            args.put( "a", "commons-cli" );
+        }
+        else if ( FIFTH_ARTIFACT.equals( artifact ) )
+        {            
+            args.put( "a", "commons-io" );
+        }
+        
+        List<NexusArtifact> artifacts = searchUtils.searchFor( args );
+        
+        Assert.assertEquals( artifacts.size() > 0, shouldFind );
+    }
+    
+    protected void searchForArtifactInHostedIndex( String artifact, boolean shouldFind )
+        throws Exception
+    {
+        searchForArtifactInIndex( artifact, HOSTED_REPO_ID, shouldFind );
+    }
+    
+    protected void searchForArtifactInProxyIndex( String artifact, boolean shouldFind )
+        throws Exception
+    {
+        searchForArtifactInIndex( artifact, PROXY_REPO_ID, shouldFind );
+    }
+    
+    protected void searchForArtifactInOtherHostedIndex( String artifact, boolean shouldFind )
+        throws Exception
+    {
+        searchForArtifactInIndex( artifact, OTHER_HOSTED_REPO_ID, shouldFind );
+    }
+    
+    protected void deleteAllNonHiddenContent( File directory )
+        throws Exception
+    {
+        if ( directory.isDirectory()
+            && directory.exists() )
+        {
+            File[] files = directory.listFiles();
+            
+            if ( files != null
+                && files.length > 0 )
+            {
+                for ( int i = 0 ; i < files.length ; i++ )
+                {
+                    if ( files[i].isDirectory() )
+                    {
+                        if ( !files[i].getName().startsWith( "." ) )
+                        {
+                            FileUtils.deleteDirectory( files[i] );
+                        }
+                    }
+                    else
+                    {
+                        files[i].delete();
+                    }
+                }
+            }
+        }
     }
 }
