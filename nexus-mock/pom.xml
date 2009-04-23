@@ -132,10 +132,6 @@
               <value>${jettyPort}</value>
             </property>
             <property>
-              <name>seleniumServer</name>
-              <value>${seleniumServer}</value>
-            </property>
-            <property>
               <name>seleniumPort</name>
               <value>${seleniumPort}</value>
             </property>
