@@ -66,6 +66,7 @@ import org.sonatype.nexus.proxy.repository.ShadowRepository;
 import org.sonatype.nexus.proxy.storage.local.fs.DefaultFSLocalRepositoryStorage;
 import org.sonatype.nexus.scheduling.NexusScheduler;
 import org.sonatype.nexus.tasks.ReindexTask;
+import org.sonatype.nexus.util.ContextUtils;
 
 /**
  * Indexer Manager. This is a thin layer above Nexus Indexer and simply manages indexingContext additions, updates and
@@ -975,11 +976,13 @@ public class DefaultIndexerManager
     
     private void copyIndexPropertiesToTempDir( Repository repository, File tempDir )
     {
-        ResourceStoreRequest req = new ResourceStoreRequest( "/.index/" + IndexingContext.INDEX_FILE + ".properties", true );
         InputStream is = null;
         try
         {
-            StorageFileItem item = ( StorageFileItem ) repository.retrieveItem( req );
+            // Need to use RepositoryUID to get around security
+            Map<String,Object> context = new HashMap<String,Object>();
+            ContextUtils.setFlag( context, ResourceStoreRequest.CTX_LOCAL_ONLY_FLAG, Boolean.TRUE );
+            StorageFileItem item = ( StorageFileItem ) repository.retrieveItem( repository.createUid( "/.index/" + IndexingContext.INDEX_FILE + ".properties" ), context );
             
             is = item.getInputStream();
             

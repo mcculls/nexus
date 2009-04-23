@@ -107,14 +107,11 @@ public class Nexus1923ProxyIncrementalIndex
         
         //Make sure the indexes exist, and that a new one has been created with
         //the deletes
-        //TODO SKIP FOR NOW, BUT NEED TO FIX
-        /*
         Assert.assertTrue( getProxyRepositoryIndex().exists() );
         Assert.assertTrue( getProxyRepositoryIndexIncrement( "1" ).exists() );
         Assert.assertTrue( getProxyRepositoryIndexIncrement( "2" ).exists() );
         Assert.assertTrue( getProxyRepositoryIndexIncrement( "3" ).exists() );
         Assert.assertFalse( getProxyRepositoryIndexIncrement( "4" ).exists() );
-        */
         
         searchForArtifactInProxyIndex( FIRST_ARTIFACT, true );
         searchForArtifactInProxyIndex( SECOND_ARTIFACT, true );
