@@ -14,6 +14,8 @@ extends AbstractNexus1923
     @Test
     public void validateIncrementalIndexesCreated()
         throws Exception
-    {
+    { 
+        createHostedRepository();
+        createOtherHostedRepository();
     }
 }

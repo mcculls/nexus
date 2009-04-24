@@ -90,33 +90,5 @@ public class Nexus1923ProxyIncrementalIndex
         searchForArtifactInProxyIndex( THIRD_ARTIFACT, true );
         searchForArtifactInProxyIndex( FOURTH_ARTIFACT, true );
         searchForArtifactInProxyIndex( FIFTH_ARTIFACT, false );
-        
-        //Now delete some items and put some back
-        deleteAllNonHiddenContent( getHostedRepositoryStorageDirectory() );
-        deleteAllNonHiddenContent( getProxyRepositoryStorageDirectory() );
-        FileUtils.copyDirectoryStructure( getTestFile( FIRST_ARTIFACT ), 
-            hostedRepoStorageDirectory );
-        FileUtils.copyDirectoryStructure( getTestFile( SECOND_ARTIFACT ), 
-            hostedRepoStorageDirectory );
-        
-        //Reindex
-        reindexHostedRepository( hostedReindexId );
-        
-        //reindex proxy and make sure we cant search for the now missing items
-        reindexProxyRepository( proxyReindexId );
-        
-        //Make sure the indexes exist, and that a new one has been created with
-        //the deletes
-        Assert.assertTrue( getProxyRepositoryIndex().exists() );
-        Assert.assertTrue( getProxyRepositoryIndexIncrement( "1" ).exists() );
-        Assert.assertTrue( getProxyRepositoryIndexIncrement( "2" ).exists() );
-        Assert.assertTrue( getProxyRepositoryIndexIncrement( "3" ).exists() );
-        Assert.assertFalse( getProxyRepositoryIndexIncrement( "4" ).exists() );
-        
-        searchForArtifactInProxyIndex( FIRST_ARTIFACT, true );
-        searchForArtifactInProxyIndex( SECOND_ARTIFACT, true );
-        searchForArtifactInProxyIndex( THIRD_ARTIFACT, false );
-        searchForArtifactInProxyIndex( FOURTH_ARTIFACT, false );
-        searchForArtifactInProxyIndex( FIFTH_ARTIFACT, false );
     }
 }
