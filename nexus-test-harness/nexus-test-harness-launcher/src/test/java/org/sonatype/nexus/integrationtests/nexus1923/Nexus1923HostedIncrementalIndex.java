@@ -38,7 +38,7 @@ public class Nexus1923HostedIncrementalIndex
         //Now make sure there is an index file, and no incremental files
         Assert.assertTrue( getHostedRepositoryIndex().exists() );
         Assert.assertFalse( getHostedRepositoryIndexIncrement( "1" ).exists() );
-        validateCurrentHostedIncrementalCounter( null );
+        validateCurrentHostedIncrementalCounter( 0 );
         
         //Now make sure that the search is properly working
         searchForArtifactInHostedIndex( FIRST_ARTIFACT, true );

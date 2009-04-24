@@ -45,6 +45,8 @@ public abstract class AbstractNexus1923
     protected static final String THIRD_HOSTED_REPO_ID = "incremental_repo_third";
 
     protected static final String PROXY_REPO_ID = "incremental_repo_proxy";
+    
+    protected static final String GROUP_ID = "index_group";
 
     protected static final String FIRST_ARTIFACT = "firstArtifact";
 
@@ -61,6 +63,8 @@ public abstract class AbstractNexus1923
     protected static final String SECOND_HOSTED_REINDEX_TASK_NAME = "incremental_reindex_second";
 
     protected static final String PROXY_REINDEX_TASK_NAME = "incremental_reindex_proxy";
+    
+    protected static final String GROUP_REINDEX_TASK_NAME = "incremental_reindex_group";
 
     public AbstractNexus1923()
         throws Exception
@@ -72,19 +76,6 @@ public abstract class AbstractNexus1923
         this.groupUtils = new GroupMessageUtil( this.getJsonXStream(), MediaType.APPLICATION_JSON );
 
         this.searchUtils = new SearchMessageUtil();
-
-        FileUtils.deleteDirectory( getHostedRepositoryStorageDirectory() );
-        FileUtils.deleteDirectory( getHostedRepositoryLocalIndexDirectory() );
-        FileUtils.deleteDirectory( getHostedRepositoryRemoteIndexDirectory() );
-        FileUtils.deleteDirectory( getProxyRepositoryStorageDirectory() );
-        FileUtils.deleteDirectory( getProxyRepositoryLocalIndexDirectory() );
-        FileUtils.deleteDirectory( getProxyRepositoryRemoteIndexDirectory() );
-        FileUtils.deleteDirectory( getSecondHostedRepositoryStorageDirectory() );
-        FileUtils.deleteDirectory( getSecondHostedRepositoryLocalIndexDirectory() );
-        FileUtils.deleteDirectory( getSecondHostedRepositoryRemoteIndexDirectory() );
-        FileUtils.deleteDirectory( getThirdHostedRepositoryStorageDirectory() );
-        FileUtils.deleteDirectory( getThirdHostedRepositoryLocalIndexDirectory() );
-        FileUtils.deleteDirectory( getThirdHostedRepositoryRemoteIndexDirectory() );
     }
 
     private RepositoryResource createRepository()
@@ -171,7 +162,15 @@ public abstract class AbstractNexus1923
     {
         ScheduledServicePropertyResource prop = new ScheduledServicePropertyResource();
         prop.setId( "repositoryOrGroupId" );
-        prop.setValue( "repo_" + repositoryId );
+        
+        if ( repositoryId.equals( GROUP_ID ) )
+        {
+            prop.setValue( "group_" + repositoryId );
+        }
+        else
+        {
+            prop.setValue( "repo_" + repositoryId );
+        }
 
         ScheduledServiceBaseResource scheduledTask = new ScheduledServiceBaseResource();
         scheduledTask.setEnabled( true );
@@ -255,6 +254,11 @@ public abstract class AbstractNexus1923
     {
         return getRepositoryLocalIndexDirectory( THIRD_HOSTED_REPO_ID );
     }
+    
+    protected File getGroupLocalIndexDirectory()
+    {
+        return getRepositoryLocalIndexDirectory( GROUP_ID );
+    }
 
     private File getRepositoryRemoteIndexDirectory( String repositoryId )
     {
@@ -279,6 +283,11 @@ public abstract class AbstractNexus1923
     protected File getThirdHostedRepositoryRemoteIndexDirectory()
     {
         return getRepositoryRemoteIndexDirectory( THIRD_HOSTED_REPO_ID );
+    }
+    
+    protected File getGroupRemoteIndexDirectory()
+    {
+        return getRepositoryRemoteIndexDirectory( GROUP_ID );
     }
 
     protected File getRepositoryStorageDirectory( String repositoryId )
@@ -305,6 +314,11 @@ public abstract class AbstractNexus1923
     {
         return getRepositoryStorageDirectory( THIRD_HOSTED_REPO_ID );
     }
+    
+    protected File getGroupStorageDirectory()
+    {
+        return getRepositoryStorageDirectory( GROUP_ID );
+    }
 
     protected File getRepositoryIndex( File directory )
     {
@@ -324,6 +338,16 @@ public abstract class AbstractNexus1923
     protected File getSecondHostedRepositoryIndex()
     {
         return getRepositoryIndex( getSecondHostedRepositoryStorageIndexDirectory() );
+    }
+    
+    protected File getThirdHostedRepositoryIndex()
+    {
+        return getRepositoryIndex( getThirdHostedRepositoryStorageIndexDirectory() );
+    }
+    
+    protected File getGroupIndex()
+    {
+        return getRepositoryIndex( getGroupStorageIndexDirectory() );
     }
 
     protected Properties getRepositoryIndexProperties( File baseDir )
@@ -365,6 +389,18 @@ public abstract class AbstractNexus1923
     {
         return getRepositoryIndexProperties( getSecondHostedRepositoryStorageIndexDirectory() );
     }
+    
+    protected Properties getThirdHostedRepositoryIndexProperties()
+        throws Exception
+    {
+        return getRepositoryIndexProperties( getThirdHostedRepositoryStorageIndexDirectory() );
+    }
+    
+    protected Properties getGroupIndexProperties()
+        throws Exception
+    {
+        return getRepositoryIndexProperties( getGroupStorageIndexDirectory() );
+    }
 
     protected File getRepositoryIndexIncrement( File directory, String id )
     {
@@ -385,8 +421,18 @@ public abstract class AbstractNexus1923
     {
         return getRepositoryIndexIncrement( getSecondHostedRepositoryStorageIndexDirectory(), id );
     }
+    
+    protected File getThirdHostedRepositoryIndexIncrement( String id )
+    {
+        return getRepositoryIndexIncrement( getThirdHostedRepositoryStorageIndexDirectory(), id );
+    }
+    
+    protected File getGroupIndexIncrement( String id )
+    {
+        return getRepositoryIndexIncrement( getGroupStorageIndexDirectory(), id );
+    }
 
-    protected File getRepositoryStorageIndexDirectory( String repositoryId )
+    private File getRepositoryStorageIndexDirectory( String repositoryId )
     {
         return new File( AbstractNexusIntegrationTest.nexusWorkDir + "/storage/" + repositoryId + "/.index/" );
     }
@@ -405,8 +451,18 @@ public abstract class AbstractNexus1923
     {
         return getRepositoryStorageIndexDirectory( SECOND_HOSTED_REPO_ID );
     }
+    
+    protected File getThirdHostedRepositoryStorageIndexDirectory()
+    {
+        return getRepositoryStorageIndexDirectory( THIRD_HOSTED_REPO_ID );
+    }
+    
+    protected File getGroupStorageIndexDirectory()
+    {
+        return getRepositoryStorageIndexDirectory( GROUP_ID );
+    }
 
-    protected void validateCurrentIncrementalCounter( Properties properties, Integer current )
+    private void validateCurrentIncrementalCounter( Properties properties, Integer current )
         throws Exception
     {
         if ( current == null )
@@ -436,6 +492,18 @@ public abstract class AbstractNexus1923
         throws Exception
     {
         validateCurrentIncrementalCounter( getSecondHostedRepositoryIndexProperties(), current );
+    }
+    
+    protected void validateCurrentThirdHostedIncrementalCounter( int current )
+        throws Exception
+    {
+        validateCurrentIncrementalCounter( getThirdHostedRepositoryIndexProperties(), current );
+    }
+    
+    protected void validateCurrentGroupIncrementalCounter( int current )
+        throws Exception
+    {
+        validateCurrentIncrementalCounter( getGroupIndexProperties(), current );
     }
 
     private void searchForArtifactInIndex( String artifact, String repositoryId, boolean shouldFind )

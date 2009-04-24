@@ -1,8 +1,5 @@
 package org.sonatype.nexus.integrationtests.nexus1923;
 
-import java.io.File;
-import java.util.Properties;
-
 import junit.framework.Assert;
 
 import org.codehaus.plexus.util.FileUtils;
@@ -11,10 +8,6 @@ import org.junit.Test;
 public class Nexus1923GroupIncrementalIndex
     extends AbstractNexus1923
 {
-    private static final String INDEX_GROUP = "index_group";
-
-    private static final String INDEX_GROUP_TASK = INDEX_GROUP + "-task";
-
     public Nexus1923GroupIncrementalIndex()
         throws Exception
     {
@@ -29,25 +22,36 @@ public class Nexus1923GroupIncrementalIndex
         createSecondHostedRepository();
         createThirdHostedRepository();
 
-        createGroup( INDEX_GROUP, HOSTED_REPO_ID, SECOND_HOSTED_REPO_ID, THIRD_HOSTED_REPO_ID );
+        createGroup( GROUP_ID, HOSTED_REPO_ID, SECOND_HOSTED_REPO_ID, THIRD_HOSTED_REPO_ID );
 
-        String reindexId = createReindexTask( INDEX_GROUP, INDEX_GROUP_TASK );
+        String reindexId = createReindexTask( GROUP_ID, GROUP_REINDEX_TASK_NAME );
 
         FileUtils.copyDirectoryStructure( getTestFile( FIRST_ARTIFACT ), getHostedRepositoryStorageDirectory() );
 
-        reindexRepository( reindexId, INDEX_GROUP_TASK );
+        reindexRepository( reindexId, GROUP_REINDEX_TASK_NAME );
 
         Assert.assertTrue( getHostedRepositoryIndex().exists() );
-        Assert.assertFalse( getHostedRepositoryIndexIncrement( "1" ).exists() );
-        validateCurrentHostedIncrementalCounter( null );
+        Assert.assertTrue( getHostedRepositoryIndexIncrement( "1" ).exists() );
+        Assert.assertFalse( getHostedRepositoryIndexIncrement( "2" ).exists() );
+        validateCurrentHostedIncrementalCounter( 1 );
+        
+        Assert.assertTrue( getSecondHostedRepositoryIndex().exists() );
+        Assert.assertFalse( getSecondHostedRepositoryIndexIncrement( "1" ).exists() );
+        validateCurrentSecondHostedIncrementalCounter( 0 );
+        
+        Assert.assertTrue( getThirdHostedRepositoryIndex().exists() );
+        Assert.assertFalse( getThirdHostedRepositoryIndexIncrement( "1" ).exists() );
+        validateCurrentThirdHostedIncrementalCounter( 0 );
 
+        // Group doesnt create index on creation, so reindex is first pass at creating, thus no
+        // incremental piece
         Assert.assertTrue( getGroupIndex().exists() );
         Assert.assertFalse( getGroupIndexIncrement( "1" ).exists() );
-        //validateCurrentGroupIncrementalCounter( null );
+        validateCurrentGroupIncrementalCounter( 0 );
 
         FileUtils.copyDirectoryStructure( getTestFile( SECOND_ARTIFACT ), getSecondHostedRepositoryStorageDirectory() );
 
-        reindexRepository( reindexId, INDEX_GROUP_TASK );
+        reindexRepository( reindexId, GROUP_REINDEX_TASK_NAME );
 
         Assert.assertTrue( getHostedRepositoryIndex().exists() );
         Assert.assertFalse( getHostedRepositoryIndexIncrement( "1" ).exists() );
@@ -63,32 +67,5 @@ public class Nexus1923GroupIncrementalIndex
         Assert.assertTrue( getGroupIndexIncrement( "2" ).exists() );
         //validateCurrentGroupIncrementalCounter( null );
 
-    }
-
-    protected void validateCurrentGroupIncrementalCounter( Integer current )
-        throws Exception
-    {
-        validateCurrentIncrementalCounter( getGroupIndexProperties(), current );
-    }
-
-    private Properties getGroupIndexProperties()
-        throws Exception
-    {
-        return getRepositoryIndexProperties( getGroupStorageIndexDirectory() );
-    }
-
-    private File getGroupIndexIncrement( String id )
-    {
-        return getRepositoryIndexIncrement( getGroupStorageIndexDirectory(), id );
-    }
-
-    private File getGroupIndex()
-    {
-        return getRepositoryIndex( getGroupStorageIndexDirectory() );
-    }
-
-    protected File getGroupStorageIndexDirectory()
-    {
-        return getRepositoryStorageIndexDirectory( INDEX_GROUP );
     }
 }
