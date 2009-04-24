@@ -39,7 +39,7 @@ public abstract class AbstractNexus1923
 
     protected static final String HOSTED_REPO_ID = "incremental_repo";
 
-    protected static final String OTHER_HOSTED_REPO_ID = "incremental_repo_other";
+    protected static final String SECOND_HOSTED_REPO_ID = "incremental_repo_second";
 
     protected static final String THIRD_HOSTED_REPO_ID = "incremental_repo_third";
 
@@ -57,7 +57,7 @@ public abstract class AbstractNexus1923
 
     protected static final String HOSTED_REINDEX_TASK_NAME = "incremental_reindex";
 
-    protected static final String OTHER_HOSTED_REINDEX_TASK_NAME = "incremental_reindex_other";
+    protected static final String SECOND_HOSTED_REINDEX_TASK_NAME = "incremental_reindex_second";
 
     protected static final String PROXY_REINDEX_TASK_NAME = "incremental_reindex_proxy";
 
@@ -78,9 +78,12 @@ public abstract class AbstractNexus1923
         FileUtils.deleteDirectory( getProxyRepositoryStorageDirectory() );
         FileUtils.deleteDirectory( getProxyRepositoryLocalIndexDirectory() );
         FileUtils.deleteDirectory( getProxyRepositoryRemoteIndexDirectory() );
-        FileUtils.deleteDirectory( getOtherHostedRepositoryStorageDirectory() );
-        FileUtils.deleteDirectory( getOtherHostedRepositoryLocalIndexDirectory() );
-        FileUtils.deleteDirectory( getOtherHostedRepositoryRemoteIndexDirectory() );
+        FileUtils.deleteDirectory( getSecondHostedRepositoryStorageDirectory() );
+        FileUtils.deleteDirectory( getSecondHostedRepositoryLocalIndexDirectory() );
+        FileUtils.deleteDirectory( getSecondHostedRepositoryRemoteIndexDirectory() );
+        FileUtils.deleteDirectory( getThirdHostedRepositoryStorageDirectory() );
+        FileUtils.deleteDirectory( getThirdHostedRepositoryLocalIndexDirectory() );
+        FileUtils.deleteDirectory( getThirdHostedRepositoryRemoteIndexDirectory() );
     }
 
     private RepositoryResource createRepository()
@@ -123,12 +126,12 @@ public abstract class AbstractNexus1923
         repoUtils.createRepository( resource );
     }
 
-    protected void createOtherHostedRepository()
+    protected void createSecondHostedRepository()
         throws Exception
     {
         RepositoryResource resource = createRepository();
-        resource.setId( OTHER_HOSTED_REPO_ID );
-        resource.setName( OTHER_HOSTED_REPO_ID );
+        resource.setId( SECOND_HOSTED_REPO_ID );
+        resource.setName( SECOND_HOSTED_REPO_ID );
         resource.setRepoType( "hosted" );
         resource.setAllowWrite( true );
         repoUtils.createRepository( resource );
@@ -195,10 +198,10 @@ public abstract class AbstractNexus1923
         return createReindexTask( PROXY_REPO_ID, PROXY_REINDEX_TASK_NAME );
     }
 
-    protected String createOtherHostedReindexTask()
+    protected String createSecondHostedReindexTask()
         throws Exception
     {
-        return createReindexTask( OTHER_HOSTED_REPO_ID, OTHER_HOSTED_REINDEX_TASK_NAME );
+        return createReindexTask( SECOND_HOSTED_REPO_ID, SECOND_HOSTED_REINDEX_TASK_NAME );
     }
 
     protected void reindexRepository( String taskId, String taskName )
@@ -221,10 +224,10 @@ public abstract class AbstractNexus1923
         reindexRepository( taskId, PROXY_REINDEX_TASK_NAME );
     }
 
-    protected void reindexOtherHostedRepository( String taskId )
+    protected void reindexSecondHostedRepository( String taskId )
         throws Exception
     {
-        reindexRepository( taskId, OTHER_HOSTED_REINDEX_TASK_NAME );
+        reindexRepository( taskId, SECOND_HOSTED_REINDEX_TASK_NAME );
     }
 
     private File getRepositoryLocalIndexDirectory( String repositoryId )
@@ -242,9 +245,14 @@ public abstract class AbstractNexus1923
         return getRepositoryLocalIndexDirectory( PROXY_REPO_ID );
     }
 
-    protected File getOtherHostedRepositoryLocalIndexDirectory()
+    protected File getSecondHostedRepositoryLocalIndexDirectory()
     {
-        return getRepositoryLocalIndexDirectory( OTHER_HOSTED_REPO_ID );
+        return getRepositoryLocalIndexDirectory( SECOND_HOSTED_REPO_ID );
+    }
+    
+    protected File getThirdHostedRepositoryLocalIndexDirectory()
+    {
+        return getRepositoryLocalIndexDirectory( THIRD_HOSTED_REPO_ID );
     }
 
     private File getRepositoryRemoteIndexDirectory( String repositoryId )
@@ -262,9 +270,14 @@ public abstract class AbstractNexus1923
         return getRepositoryRemoteIndexDirectory( PROXY_REPO_ID );
     }
 
-    protected File getOtherHostedRepositoryRemoteIndexDirectory()
+    protected File getSecondHostedRepositoryRemoteIndexDirectory()
     {
-        return getRepositoryRemoteIndexDirectory( OTHER_HOSTED_REPO_ID );
+        return getRepositoryRemoteIndexDirectory( SECOND_HOSTED_REPO_ID );
+    }
+    
+    protected File getThirdHostedRepositoryRemoteIndexDirectory()
+    {
+        return getRepositoryRemoteIndexDirectory( THIRD_HOSTED_REPO_ID );
     }
 
     protected File getRepositoryStorageDirectory( String repositoryId )
@@ -282,9 +295,14 @@ public abstract class AbstractNexus1923
         return getRepositoryStorageDirectory( PROXY_REPO_ID );
     }
 
-    protected File getOtherHostedRepositoryStorageDirectory()
+    protected File getSecondHostedRepositoryStorageDirectory()
     {
-        return getRepositoryStorageDirectory( OTHER_HOSTED_REPO_ID );
+        return getRepositoryStorageDirectory( SECOND_HOSTED_REPO_ID );
+    }
+    
+    protected File getThirdHostedRepositoryStorageDirectory()
+    {
+        return getRepositoryStorageDirectory( THIRD_HOSTED_REPO_ID );
     }
 
     protected File getRepositoryIndex( File directory )
@@ -302,9 +320,9 @@ public abstract class AbstractNexus1923
         return getRepositoryIndex( getProxyRepositoryStorageIndexDirectory() );
     }
 
-    protected File getOtherHostedRepositoryIndex()
+    protected File getSecondHostedRepositoryIndex()
     {
-        return getRepositoryIndex( getOtherHostedRepositoryStorageIndexDirectory() );
+        return getRepositoryIndex( getSecondHostedRepositoryStorageIndexDirectory() );
     }
 
     protected Properties getRepositoryIndexProperties( File baseDir )
@@ -341,10 +359,10 @@ public abstract class AbstractNexus1923
         return getRepositoryIndexProperties( getProxyRepositoryStorageIndexDirectory() );
     }
 
-    protected Properties getOtherHostedRepositoryIndexProperties()
+    protected Properties getSecondHostedRepositoryIndexProperties()
         throws Exception
     {
-        return getRepositoryIndexProperties( getOtherHostedRepositoryStorageIndexDirectory() );
+        return getRepositoryIndexProperties( getSecondHostedRepositoryStorageIndexDirectory() );
     }
 
     protected File getRepositoryIndexIncrement( File directory, String id )
@@ -362,9 +380,9 @@ public abstract class AbstractNexus1923
         return getRepositoryIndexIncrement( getProxyRepositoryStorageIndexDirectory(), id );
     }
 
-    protected File getOtherHostedRepositoryIndexIncrement( String id )
+    protected File getSecondHostedRepositoryIndexIncrement( String id )
     {
-        return getRepositoryIndexIncrement( getOtherHostedRepositoryStorageIndexDirectory(), id );
+        return getRepositoryIndexIncrement( getSecondHostedRepositoryStorageIndexDirectory(), id );
     }
 
     protected File getRepositoryStorageIndexDirectory( String repositoryId )
@@ -382,9 +400,9 @@ public abstract class AbstractNexus1923
         return getRepositoryStorageIndexDirectory( PROXY_REPO_ID );
     }
 
-    protected File getOtherHostedRepositoryStorageIndexDirectory()
+    protected File getSecondHostedRepositoryStorageIndexDirectory()
     {
-        return getRepositoryStorageIndexDirectory( OTHER_HOSTED_REPO_ID );
+        return getRepositoryStorageIndexDirectory( SECOND_HOSTED_REPO_ID );
     }
 
     protected void validateCurrentIncrementalCounter( Properties properties, Integer current )
@@ -413,10 +431,10 @@ public abstract class AbstractNexus1923
         validateCurrentIncrementalCounter( getProxyRepositoryIndexProperties(), current );
     }
 
-    protected void validateCurrentOtherHostedIncrementalCounter( int current )
+    protected void validateCurrentSecondHostedIncrementalCounter( int current )
         throws Exception
     {
-        validateCurrentIncrementalCounter( getOtherHostedRepositoryIndexProperties(), current );
+        validateCurrentIncrementalCounter( getSecondHostedRepositoryIndexProperties(), current );
     }
 
     private void searchForArtifactInIndex( String artifact, String repositoryId, boolean shouldFind )
@@ -463,10 +481,10 @@ public abstract class AbstractNexus1923
         searchForArtifactInIndex( artifact, PROXY_REPO_ID, shouldFind );
     }
 
-    protected void searchForArtifactInOtherHostedIndex( String artifact, boolean shouldFind )
+    protected void searchForArtifactInSecondHostedIndex( String artifact, boolean shouldFind )
         throws Exception
     {
-        searchForArtifactInIndex( artifact, OTHER_HOSTED_REPO_ID, shouldFind );
+        searchForArtifactInIndex( artifact, SECOND_HOSTED_REPO_ID, shouldFind );
     }
 
     protected void deleteAllNonHiddenContent( File directory )
