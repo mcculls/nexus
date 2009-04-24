@@ -43,20 +43,25 @@ public class Nexus1923GroupIncrementalIndex
 
         Assert.assertTrue( getGroupIndex().exists() );
         Assert.assertFalse( getGroupIndexIncrement( "1" ).exists() );
-        validateCurrentGroupIncrementalCounter( null );
+        //validateCurrentGroupIncrementalCounter( null );
 
         FileUtils.copyDirectoryStructure( getTestFile( SECOND_ARTIFACT ), getOtherHostedRepositoryStorageDirectory() );
 
         reindexRepository( reindexId, INDEX_GROUP_TASK );
 
+        Assert.assertTrue( getHostedRepositoryIndex().exists() );
+        Assert.assertFalse( getHostedRepositoryIndexIncrement( "1" ).exists() );
+        validateCurrentHostedIncrementalCounter( null );
+
         Assert.assertTrue( getOtherHostedRepositoryIndex().exists() );
-        Assert.assertFalse( getOtherHostedRepositoryIndexIncrement( "1" ).exists() );
+        Assert.assertTrue( getOtherHostedRepositoryIndexIncrement( "1" ).exists() );
+        Assert.assertFalse( getOtherHostedRepositoryIndexIncrement( "2" ).exists() );
         validateCurrentHostedIncrementalCounter( null );
 
         Assert.assertTrue( getGroupIndex().exists() );
-        Assert.assertFalse( getGroupIndexIncrement( "1" ).exists() );
-        Assert.assertFalse( getGroupIndexIncrement( "2" ).exists() );
-        validateCurrentGroupIncrementalCounter( null );
+        Assert.assertTrue( getGroupIndexIncrement( "1" ).exists() );
+        Assert.assertTrue( getGroupIndexIncrement( "2" ).exists() );
+        //validateCurrentGroupIncrementalCounter( null );
 
     }
 
