@@ -160,12 +160,18 @@ public class Nexus1923GroupIncrementalIndex
             searchForArtifactInIndex( artifact, whereRepo, true );
             searchForArtifactInIndex( artifact, GROUP_ID, true );
         }
+        
+        List<String> otherArtifacts = getArtifactBut( whatForArtifacts );
+        
+        for ( String artifact : otherArtifacts )
+        {
+            searchForArtifactInIndex( artifact, whereRepo, false );
+        }
 
         List<String> repos = getReposBut( whereRepo );
         for ( String repoId : repos )
         {
-            List<String> artifacts = getArtifactBut( whatForArtifacts );
-            for ( String artifact : artifacts )
+            for ( String artifact : whatForArtifacts )
             {
                 searchForArtifactInIndex( artifact, repoId, false );
             }
@@ -193,12 +199,4 @@ public class Nexus1923GroupIncrementalIndex
         repos.remove( butRepo );
         return repos;
     }
-
-    @Override
-    protected void validateCurrentGroupIncrementalCounter( Integer current )
-        throws Exception
-    {
-        validateCurrentIncrementalCounter( getGroupIndexProperties(), current );
-    }
-
 }

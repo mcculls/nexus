@@ -984,9 +984,13 @@ public class DefaultIndexerManager
             ContextUtils.setFlag( context, ResourceStoreRequest.CTX_LOCAL_ONLY_FLAG, Boolean.TRUE );
             StorageFileItem item = ( StorageFileItem ) repository.retrieveItem( repository.createUid( "/.index/" + IndexingContext.INDEX_FILE + ".properties" ), context );
             
-            is = item.getInputStream();
-            
-            FileUtils.copyStreamToFile( new RawInputStreamFacade( is ), new File( tempDir, IndexingContext.INDEX_FILE + ".properties" ) );
+            // Hack to make sure that group properties isn't retrieved from child repo
+            if ( repository.getId().equals( item.getRepositoryId() ) )
+            {
+                is = item.getInputStream();
+                
+                FileUtils.copyStreamToFile( new RawInputStreamFacade( is ), new File( tempDir, IndexingContext.INDEX_FILE + ".properties" ) );   
+            }
         }
         catch ( Exception e )
         {

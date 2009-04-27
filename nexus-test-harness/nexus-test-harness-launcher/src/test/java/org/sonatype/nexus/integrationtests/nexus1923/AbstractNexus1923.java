@@ -510,7 +510,6 @@ public abstract class AbstractNexus1923
         throws Exception
     {
         Map<String, String> args = new HashMap<String, String>();
-        args.put( "r", repositoryId );
 
         if ( FIRST_ARTIFACT.equals( artifact ) )
         {
@@ -533,7 +532,7 @@ public abstract class AbstractNexus1923
             args.put( "a", "commons-io" );
         }
 
-        List<NexusArtifact> artifacts = searchUtils.searchFor( args );
+        List<NexusArtifact> artifacts = searchUtils.searchFor( args, repositoryId );
 
         Assert.assertEquals( artifacts.size() > 0, shouldFind );
     }
