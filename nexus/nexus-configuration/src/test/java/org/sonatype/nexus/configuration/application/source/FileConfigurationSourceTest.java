@@ -16,18 +16,20 @@ package org.sonatype.nexus.configuration.application.source;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
+import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
 
 public class FileConfigurationSourceTest
     extends AbstractApplicationConfigurationSourceTest
 
 {
-    protected ApplicationConfigurationSource getConfigurationSource()
+    @Override
+    protected SecurityConfigurationSource getConfigurationSource()
         throws Exception
     {
-        return (ApplicationConfigurationSource) lookup( ApplicationConfigurationSource.class, "file" );
+        return lookup( SecurityConfigurationSource.class, "file" );
     }
 
+    @Override
     protected InputStream getOriginatingConfigurationInputStream()
         throws IOException
     {

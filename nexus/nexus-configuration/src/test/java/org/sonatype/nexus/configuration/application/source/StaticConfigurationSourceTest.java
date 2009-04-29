@@ -16,17 +16,17 @@ package org.sonatype.nexus.configuration.application.source;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
+import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
 
 public class StaticConfigurationSourceTest
     extends AbstractApplicationConfigurationSourceTest
 {
 
     @Override
-    protected ApplicationConfigurationSource getConfigurationSource()
+    protected SecurityConfigurationSource getConfigurationSource()
         throws Exception
     {
-        return (ApplicationConfigurationSource) lookup( ApplicationConfigurationSource.class, "static" );
+        return lookup( SecurityConfigurationSource.class, "static" );
     }
 
     @Override
@@ -35,7 +35,7 @@ public class StaticConfigurationSourceTest
     {
         return getClass().getResourceAsStream( "/META-INF/nexus/nexus.xml" );
     }
-    
+
     public void testStoreConfiguration()
         throws Exception
     {

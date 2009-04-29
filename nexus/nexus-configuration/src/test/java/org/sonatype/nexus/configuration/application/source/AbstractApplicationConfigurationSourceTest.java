@@ -18,14 +18,14 @@ import java.io.InputStream;
 
 import org.codehaus.plexus.util.IOUtil;
 import org.sonatype.nexus.configuration.AbstractNexusTestCase;
-import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
+import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
 
 public abstract class AbstractApplicationConfigurationSourceTest
     extends AbstractNexusTestCase
 {
-    protected ApplicationConfigurationSource configurationSource;
+    protected SecurityConfigurationSource configurationSource;
 
-    protected abstract ApplicationConfigurationSource getConfigurationSource()
+    protected abstract SecurityConfigurationSource getConfigurationSource()
         throws Exception;
 
     protected abstract InputStream getOriginatingConfigurationInputStream()
