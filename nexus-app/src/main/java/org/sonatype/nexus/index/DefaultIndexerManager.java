@@ -873,6 +873,8 @@ public class DefaultIndexerManager
                         IndexPackingRequest packReq = new IndexPackingRequest( context, targetDir );
 
                         packReq.setCreateIncrementalChunks( true );
+                        
+                        packReq.setUseTargetProperties( true );
 
                         indexPacker.packIndex( packReq );
 
@@ -945,6 +947,8 @@ public class DefaultIndexerManager
                     IndexPackingRequest packReq = new IndexPackingRequest( context, targetDir );
 
                     packReq.setCreateIncrementalChunks( true );
+                    
+                    packReq.setUseTargetProperties( true );
 
                     indexPacker.packIndex( packReq );
 
