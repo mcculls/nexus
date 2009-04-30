@@ -402,7 +402,7 @@ public class DefaultIndexerManager
     // Reindexing related
     // ----------------------------------------------------------------------------
 
-    public void reindexAllRepositories( String path )
+    public void reindexAllRepositories( String path, boolean fullReindex )
         throws IOException
     {
         List<Repository> reposes = repositoryRegistry.getRepositories();
@@ -417,24 +417,24 @@ public class DefaultIndexerManager
         {
             if ( LocalStatus.IN_SERVICE.equals( repository.getLocalStatus() ) )
             {
-                reindexRepository( repository );
+                reindexRepository( repository, fullReindex );
             }
         }
 
         publishAllIndex();
     }
 
-    public void reindexRepository( String path, String repositoryId )
+    public void reindexRepository( String path, String repositoryId, boolean fullReindex )
         throws NoSuchRepositoryException, IOException
     {
         Repository repository = repositoryRegistry.getRepository( repositoryId );
 
-        reindexRepository( repository );
+        reindexRepository( repository, fullReindex );
 
         publishRepositoryIndex( repositoryId );
     }
 
-    public void reindexRepositoryGroup( String path, String repositoryGroupId )
+    public void reindexRepositoryGroup( String path, String repositoryGroupId, boolean fullReindex )
         throws NoSuchRepositoryException, IOException
     {
         List<Repository> group =
@@ -445,13 +445,13 @@ public class DefaultIndexerManager
 
         for ( Repository repository : group )
         {
-            reindexRepository( repository );
+            reindexRepository( repository, fullReindex );
         }
 
         publishRepositoryGroupIndex( repositoryGroupId );
     }
 
-    protected void reindexRepository( Repository repository )
+    protected void reindexRepository( Repository repository, boolean fullReindex )
         throws IOException
     {
         if ( repository.getRepositoryKind().isFacetAvailable( ShadowRepository.class ) )
@@ -469,7 +469,20 @@ public class DefaultIndexerManager
 
             synchronized ( context )
             {
-                nexusIndexer.scan( context, true );
+                if ( fullReindex )
+                {
+                    File repoDir = context.getRepository();
+                    if ( repoDir != null && repoDir.isDirectory() )
+                    {
+                        File indexDir = new File( repoDir, ".index" );
+                        FileUtils.forceDelete( indexDir );
+                    }
+                    nexusIndexer.scan( context, false );
+                }
+                else
+                {
+                    nexusIndexer.scan( context, true );
+                }
 
                 if ( repository.getRepositoryKind().isFacetAvailable( ProxyRepository.class ) )
                 {
@@ -866,14 +879,15 @@ public class DefaultIndexerManager
                     }
                     else
                     {
-                        // copy the current properties file to the temp directory, this is what the indexer uses to decide
+                        // copy the current properties file to the temp directory, this is what the indexer uses to
+                        // decide
                         // if chunks are necessary, and what to label it as
                         copyIndexPropertiesToTempDir( repository, targetDir );
-                        
+
                         IndexPackingRequest packReq = new IndexPackingRequest( context, targetDir );
 
                         packReq.setCreateIncrementalChunks( true );
-                        
+
                         packReq.setUseTargetProperties( true );
 
                         indexPacker.packIndex( packReq );
@@ -939,7 +953,7 @@ public class DefaultIndexerManager
                     {
                         getLogger().debug( "Packing the merged index context." );
                     }
-                    
+
                     // copy the current properties file to the temp directory, this is what the indexer uses to decide
                     // if chunks are necessary, and what to label it as
                     copyIndexPropertiesToTempDir( groupRepository, targetDir );
@@ -947,7 +961,7 @@ public class DefaultIndexerManager
                     IndexPackingRequest packReq = new IndexPackingRequest( context, targetDir );
 
                     packReq.setCreateIncrementalChunks( true );
-                    
+
                     packReq.setUseTargetProperties( true );
 
                     indexPacker.packIndex( packReq );
@@ -977,29 +991,33 @@ public class DefaultIndexerManager
             }
         }
     }
-    
+
     private void copyIndexPropertiesToTempDir( Repository repository, File tempDir )
     {
         InputStream is = null;
         try
         {
             // Need to use RepositoryUID to get around security
-            Map<String,Object> context = new HashMap<String,Object>();
+            Map<String, Object> context = new HashMap<String, Object>();
             ContextUtils.setFlag( context, ResourceStoreRequest.CTX_LOCAL_ONLY_FLAG, Boolean.TRUE );
-            StorageFileItem item = ( StorageFileItem ) repository.retrieveItem( repository.createUid( "/.index/" + IndexingContext.INDEX_FILE + ".properties" ), context );
-            
+            StorageFileItem item =
+                (StorageFileItem) repository.retrieveItem( repository.createUid( "/.index/"
+                    + IndexingContext.INDEX_FILE + ".properties" ), context );
+
             // Hack to make sure that group properties isn't retrieved from child repo
             if ( repository.getId().equals( item.getRepositoryId() ) )
             {
                 is = item.getInputStream();
-                
-                FileUtils.copyStreamToFile( new RawInputStreamFacade( is ), new File( tempDir, IndexingContext.INDEX_FILE + ".properties" ) );   
+
+                FileUtils.copyStreamToFile( new RawInputStreamFacade( is ), new File( tempDir,
+                                                                                      IndexingContext.INDEX_FILE
+                                                                                          + ".properties" ) );
             }
         }
         catch ( Exception e )
         {
             getLogger().debug( "Unable to copy index properties file, continuing without it", e );
-        }   
+        }
         finally
         {
             if ( is != null )

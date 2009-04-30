@@ -42,6 +42,7 @@ public class ReindexTest
 
     private IndexPacker indexPacker;
 
+    @Override
     protected void setUp()
         throws Exception
     {
@@ -56,6 +57,7 @@ public class ReindexTest
         servletServer.start();
     }
 
+    @Override
     protected void tearDown()
         throws Exception
     {
@@ -148,7 +150,7 @@ public class ReindexTest
 
     /**
      * Will reindex, shift if needed and publish indexes for a "remote" repository (published over jetty component).
-     * 
+     *
      * @param repositoryRoot
      * @param repositoryId
      * @param deleteIndexFiles
@@ -186,7 +188,7 @@ public class ReindexTest
         targetDir.mkdirs();
 
         IndexPackingRequest ipr = new IndexPackingRequest( ctx, targetDir );
-        
+
         ipr.setCreateIncrementalChunks( true );
 
         indexPacker.packIndex( ipr );
@@ -219,7 +221,7 @@ public class ReindexTest
     {
         fillInRepo();
 
-        defaultNexus.reindexRepository( null, "releases" );
+        defaultNexus.reindexRepository( null, "releases", true );
 
         validateIndexWithIdentify(
             true,
@@ -238,7 +240,7 @@ public class ReindexTest
 
         makeCentralPointTo( "http://localhost:12345/central/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         validateIndexWithIdentify( true, "057b8740427ee6d7b0b60792751356cad17dc0d9", "log4j", "log4j", "1.2.12" );
     }
@@ -253,7 +255,7 @@ public class ReindexTest
         makeCentralPointTo( "http://localhost:12345/central/" );
 
         // central is member of public group
-        defaultNexus.reindexRepositoryGroup( null, "public" );
+        defaultNexus.reindexRepositoryGroup( null, "public", true );
 
         validateIndexWithIdentify( true, "057b8740427ee6d7b0b60792751356cad17dc0d9", "log4j", "log4j", "1.2.12" );
     }
@@ -266,7 +268,7 @@ public class ReindexTest
 
         makeCentralPointTo( "http://localhost:12345/central-inc1/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );
@@ -282,7 +284,7 @@ public class ReindexTest
 
         makeCentralPointTo( "http://localhost:12345/central-inc2/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );
@@ -298,7 +300,7 @@ public class ReindexTest
 
         makeCentralPointTo( "http://localhost:12345/central-inc3/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );
@@ -315,7 +317,7 @@ public class ReindexTest
         // day 1
         makeCentralPointTo( "http://localhost:12345/central-inc1-v1/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );
@@ -328,7 +330,7 @@ public class ReindexTest
         // day 2
         makeCentralPointTo( "http://localhost:12345/central-inc2-v1/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );
@@ -341,7 +343,7 @@ public class ReindexTest
         // day 3
         makeCentralPointTo( "http://localhost:12345/central-inc3-v1/" );
 
-        defaultNexus.reindexRepository( null, "central" );
+        defaultNexus.reindexRepository( null, "central", true );
 
         // validation
         validateIndexWithIdentify( true, "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e", "antlr", "antlr", "2.7.6" );

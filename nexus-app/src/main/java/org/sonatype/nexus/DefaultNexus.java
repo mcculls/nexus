@@ -1312,22 +1312,22 @@ public class DefaultNexus
     // =============
     // Search and indexing related
 
-    public void reindexAllRepositories( String path )
+    public void reindexAllRepositories( String path, boolean fullReindex )
         throws IOException
     {
-        indexerManager.reindexAllRepositories( path );
+        indexerManager.reindexAllRepositories( path, fullReindex );
     }
 
-    public void reindexRepository( String path, String repositoryId )
+    public void reindexRepository( String path, String repositoryId, boolean fullReindex )
         throws NoSuchRepositoryException, IOException
     {
-        indexerManager.reindexRepository( path, repositoryId );
+        indexerManager.reindexRepository( path, repositoryId, fullReindex );
     }
 
-    public void reindexRepositoryGroup( String path, String repositoryGroupId )
+    public void reindexRepositoryGroup( String path, String repositoryGroupId, boolean fullReindex )
         throws NoSuchRepositoryException, IOException
     {
-        indexerManager.reindexRepositoryGroup( path, repositoryGroupId );
+        indexerManager.reindexRepositoryGroup( path, repositoryGroupId, fullReindex );
     }
 
     public void downloadAllIndex()

@@ -55,7 +55,7 @@ import org.sonatype.scheduling.schedules.Schedule;
 
 /**
  * The main Nexus application interface.
- * 
+ *
  * @author Jason van Zyl
  * @author cstamas
  */
@@ -82,11 +82,8 @@ public interface Nexus
     <T> Collection<T> getRepositoriesWithFacet( Class<T> f );
 
     StorageItem dereferenceLinkItem( StorageLinkItem item )
-        throws NoSuchResourceStoreException,
-            ItemNotFoundException,
-            AccessDeniedException,
-            IllegalOperationException,
-            StorageException;
+        throws NoSuchResourceStoreException, ItemNotFoundException, AccessDeniedException, IllegalOperationException,
+        StorageException;
 
     RepositoryRouter getRootRouter();
 
@@ -124,75 +121,62 @@ public interface Nexus
     void clearRepositoryGroupCaches( String path, String repositoryGroupId )
         throws NoSuchRepositoryException;
 
-    void reindexAllRepositories( String path )
+    void reindexAllRepositories( String path, boolean fullReindex )
         throws IOException;
 
-    void reindexRepository( String path, String repositoryId )
-        throws NoSuchRepositoryException,
-            IOException;
+    void reindexRepository( String path, String repositoryId, boolean fullReindex )
+        throws NoSuchRepositoryException, IOException;
 
-    void reindexRepositoryGroup( String path, String repositoryGroupId )
-        throws NoSuchRepositoryException,
-            IOException;
+    void reindexRepositoryGroup( String path, String repositoryGroupId, boolean fullReindex )
+        throws NoSuchRepositoryException, IOException;
 
     void publishAllIndex()
         throws IOException;
 
     void publishRepositoryIndex( String repositoryId )
-        throws IOException,
-            NoSuchRepositoryException;
+        throws IOException, NoSuchRepositoryException;
 
     void publishRepositoryGroupIndex( String repositoryGroupId )
-        throws IOException,
-            NoSuchRepositoryException;
+        throws IOException, NoSuchRepositoryException;
 
     void downloadAllIndex()
         throws IOException;
 
     void downloadRepositoryIndex( String repositoryId )
-        throws IOException,
-            NoSuchRepositoryException;
+        throws IOException, NoSuchRepositoryException;
 
     void downloadRepositoryGroupIndex( String repositoryGroupId )
-        throws IOException,
-            NoSuchRepositoryException;
+        throws IOException, NoSuchRepositoryException;
 
     void rebuildAttributesAllRepositories( String path )
         throws IOException;
 
     void rebuildAttributesRepository( String path, String repositoryId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     void rebuildAttributesRepositoryGroup( String path, String repositoryGroupId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     void rebuildMavenMetadataAllRepositories( String path )
         throws IOException;
 
     void rebuildMavenMetadataRepository( String path, String repositoryId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     void rebuildMavenMetadataRepositoryGroup( String path, String repositoryGroupId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     Collection<String> evictAllUnusedProxiedItems( long timestamp )
         throws IOException;
 
     Collection<String> evictRepositoryUnusedProxiedItems( long timestamp, String repositoryId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     Collection<String> evictRepositoryGroupUnusedProxiedItems( long timestamp, String repositoryGroupId )
-        throws NoSuchRepositoryException,
-            IOException;
+        throws NoSuchRepositoryException, IOException;
 
     SnapshotRemovalResult removeSnapshots( SnapshotRemovalRequest request )
-        throws NoSuchRepositoryException,
-            IllegalArgumentException;
+        throws NoSuchRepositoryException, IllegalArgumentException;
 
     void synchronizeShadow( String shadowRepositoryId )
         throws NoSuchRepositoryException;
@@ -220,7 +204,7 @@ public interface Nexus
     List<NexusArtifactEvent> getRecentlyStorageChanges( Integer from, Integer count, Set<String> repositoryIds );
 
     List<NexusArtifactEvent> getRecentlyDeployedOrCachedArtifacts( Integer from, Integer count,
-        Set<String> repositoryIds );
+                                                                   Set<String> repositoryIds );
 
     List<NexusArtifactEvent> getRecentlyCachedArtifacts( Integer from, Integer count, Set<String> repositoryIds );
 
@@ -239,16 +223,13 @@ public interface Nexus
     // ----------------------------------------------------------------------------
 
     <T> ScheduledTask<T> submit( String name, NexusTask<T> task )
-        throws RejectedExecutionException,
-            NullPointerException;
+        throws RejectedExecutionException, NullPointerException;
 
     <T> ScheduledTask<T> schedule( String name, NexusTask<T> nexusTask, Schedule schedule )
-        throws RejectedExecutionException,
-            NullPointerException;
+        throws RejectedExecutionException, NullPointerException;
 
     <T> ScheduledTask<T> updateSchedule( ScheduledTask<T> task )
-        throws RejectedExecutionException,
-            NullPointerException;
+        throws RejectedExecutionException, NullPointerException;
 
     Map<String, List<ScheduledTask<?>>> getAllTasks();
 
@@ -259,18 +240,19 @@ public interface Nexus
 
     /**
      * A factory for tasks.
-     * 
+     *
      * @param taskType
      * @return
      * @throws IllegalArgumentException
      * @deprecated prefer the createTaskInstance(Class<T> type) method instead.
      */
+    @Deprecated
     NexusTask<?> createTaskInstance( String taskType )
         throws IllegalArgumentException;
 
     /**
      * A factory for tasks.
-     * 
+     *
      * @param taskType
      * @return
      * @throws IllegalArgumentException
@@ -344,7 +326,7 @@ public interface Nexus
     /**
      * Returns the local index (the true index for hosted ones, and the true cacheds index for proxy reposes). Every
      * repo has local index.
-     * 
+     *
      * @param repositoryId
      * @return
      * @throws NoSuchRepositoryException
@@ -354,7 +336,7 @@ public interface Nexus
 
     /**
      * Returns the remote index. Only proxy repositories have remote index, otherwise null is returnded.
-     * 
+     *
      * @param repositoryId
      * @return
      * @throws NoSuchRepositoryException
@@ -365,7 +347,7 @@ public interface Nexus
     /**
      * Returns the "best" indexing context. If it has remoteIndex, and it is bigger then local, remote is considered
      * "best", otherwise local.
-     * 
+     *
      * @param repositoryId
      * @return
      * @throws NoSuchRepositoryException
@@ -383,7 +365,7 @@ public interface Nexus
         throws NoSuchRepositoryException;
 
     FlatSearchResponse searchArtifactFlat( String gTerm, String aTerm, String vTerm, String pTerm, String cTerm,
-        String repositoryId, Integer from, Integer count )
+                                           String repositoryId, Integer from, Integer count )
         throws NoSuchRepositoryException;
 
     /**
@@ -398,7 +380,7 @@ public interface Nexus
 
     /**
      * Get the content of configuration file based on the key
-     * 
+     *
      * @param key index in configuration file name list
      * @return
      * @throws IOException

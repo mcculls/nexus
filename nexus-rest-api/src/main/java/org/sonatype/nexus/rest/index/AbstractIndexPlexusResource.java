@@ -107,10 +107,8 @@ public abstract class AbstractIndexPlexusResource
                 }
                 catch ( IOException e )
                 {
-                    throw new ResourceException(
-                        Status.SERVER_ERROR_INTERNAL,
-                        "IOException during configuration retrieval!",
-                        e );
+                    throw new ResourceException( Status.SERVER_ERROR_INTERNAL,
+                                                 "IOException during configuration retrieval!", e );
                 }
             }
             else if ( !StringUtils.isEmpty( query ) )
@@ -128,9 +126,8 @@ public abstract class AbstractIndexPlexusResource
             }
             else
             {
-                throw new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST,
-                    "Search query not found in request! (q OR cn OR g,a,v,p,c)" );
+                throw new ResourceException( Status.CLIENT_ERROR_BAD_REQUEST,
+                                             "Search query not found in request! (q OR cn OR g,a,v,p,c)" );
             }
         }
         catch ( NoSuchRepositoryException e )
@@ -193,6 +190,11 @@ public abstract class AbstractIndexPlexusResource
 
         task.setResourceStorePath( getResourceStorePath( request ) );
 
+        task.setFullReindex( getIsFullReindex() );
+
         handleDelete( task, request );
     }
+
+    protected abstract boolean getIsFullReindex();
+
 }
