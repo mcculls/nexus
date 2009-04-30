@@ -17,16 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.sonatype.nexus.configuration.security.source.SecurityConfigurationSource;
+import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
 
 public class FileConfigurationSourceTest
     extends AbstractApplicationConfigurationSourceTest
 
 {
     @Override
-    protected SecurityConfigurationSource getConfigurationSource()
+    protected ApplicationConfigurationSource getConfigurationSource()
         throws Exception
     {
-        return lookup( SecurityConfigurationSource.class, "file" );
+        return lookup( ApplicationConfigurationSource.class, "file" );
     }
 
     @Override

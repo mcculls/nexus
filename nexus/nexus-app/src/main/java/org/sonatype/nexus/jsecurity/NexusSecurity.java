@@ -13,6 +13,8 @@
  */
 package org.sonatype.nexus.jsecurity;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.sonatype.jsecurity.realms.tools.ConfigurationManager;
 import org.sonatype.jsecurity.realms.tools.NoSuchUserException;
 
@@ -36,4 +38,11 @@ public interface NexusSecurity
 
     void changePassword( String userId, String newPassword )
         throws NoSuchUserException;
+    
+    // TODO: remove me
+    public void startService()
+    throws StartingException;
+    
+    public void stopService()
+    throws StoppingException;
 }

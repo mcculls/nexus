@@ -23,10 +23,10 @@ public class StaticConfigurationSourceTest
 {
 
     @Override
-    protected ApplicationConfigurationSource getConfigurationSource()
+    protected SecurityConfigurationSource getConfigurationSource()
         throws Exception
     {
-        return lookup( ApplicationConfigurationSource.class, "static" );
+        return lookup( SecurityConfigurationSource.class, "static" );
     }
 
     @Override

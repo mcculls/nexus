@@ -18,17 +18,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
-import org.sonatype.nexus.configuration.source.FileConfigurationSource;
+import org.sonatype.nexus.configuration.source.ConfigurationSource;
 
 public class FileConfigurationSourceTest
     extends AbstractSecurityConfigurationSourceTest
 
 {
     @Override
-    protected ApplicationConfigurationSource getConfigurationSource()
+    protected SecurityConfigurationSource getConfigurationSource()
         throws Exception
     {
-        FileConfigurationSource source = ( FileConfigurationSource ) lookup( ApplicationConfigurationSource.class, "file" );
+        FileConfigurationSource source = ( FileConfigurationSource ) lookup( SecurityConfigurationSource.class, "file" );
 
         source.setConfigurationFile( new File( getSecurityConfiguration() ) );
 

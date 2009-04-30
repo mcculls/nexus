@@ -23,9 +23,9 @@ import org.sonatype.nexus.configuration.source.ApplicationConfigurationSource;
 public abstract class AbstractSecurityConfigurationSourceTest
     extends AbstractNexusTestCase
 {
-    protected ApplicationConfigurationSource configurationSource;
+    protected SecurityConfigurationSource configurationSource;
 
-    protected abstract ApplicationConfigurationSource getConfigurationSource()
+    protected abstract SecurityConfigurationSource getConfigurationSource()
         throws Exception;
 
     protected abstract InputStream getOriginatingConfigurationInputStream()
