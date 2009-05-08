@@ -142,6 +142,7 @@
           </systemProperties>
         </configuration>
       </plugin>
+        <!--
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>selenium-maven-plugin</artifactId>
@@ -167,6 +168,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
     </plugins>
   </build>
 </project>
