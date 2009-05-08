@@ -52,13 +52,21 @@ public abstract class SeleniumTest extends NexusTestCase {
 
     @Before
     public void seleniumSetup() throws Exception {
-        selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
-            String ip = getLocalIp();
-            String seleniumServer = PropUtil.get("seleniumServer", "localhost");
-            int seleniumPort = PropUtil.get("seleniumPort", 4444);
-            String seleniumBrowser = PropUtil.get("seleniumBrowser", "*firefox");
-            Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":" + PropUtil.get("jettyPort", 12345));
+        final String ip = getLocalIp();
+        final String seleniumServer = PropUtil.get("seleniumServer", "localhost");
+        final int seleniumPort = PropUtil.get("seleniumPort", 4444);
+        final String seleniumBrowser = PropUtil.get("seleniumBrowser", "*firefox");
+        final Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":" + PropUtil.get("jettyPort", 12345));
 
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+        System.out.println(seleniumServer);
+
+        selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 // check assertions on every remote call we do!
