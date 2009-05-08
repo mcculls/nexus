@@ -59,12 +59,19 @@ public abstract class SeleniumTest extends NexusTestCase {
         final Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":" + PropUtil.get("jettyPort", 12345));
 
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
         System.out.println(seleniumServer);
+        System.out.println(seleniumPort);
 
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             @Override
