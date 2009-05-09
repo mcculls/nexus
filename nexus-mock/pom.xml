@@ -109,9 +109,6 @@
             <port>
               <name>jettyPort</name>
             </port>
-            <port>
-              <name>seleniumPort</name>
-            </port>
           </ports>
         </configuration>
         <executions>
