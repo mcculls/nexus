@@ -58,25 +58,35 @@ public abstract class SeleniumTest extends NexusTestCase {
     public static void openTunnel() throws Exception {
         NexusTestCase.startNexus();
 
-        int port = PropUtil.get("jettyPort", 12345);
 
-        // spin up SSH connection
-        sshConn = new Connection("grid.sonatype.org", 10023);
-        sshConn.connect();
+        if (sshConn == null) {
+            int port = PropUtil.get("jettyPort", 12345);
 
-        // authenticate
-        File pemFile = new File(System.getenv().get("HOME") + "/.ssh/nexus_selenium_rsa");
-        String password = null;
-        if (!pemFile.exists()) {
-            pemFile = new File(System.getenv().get("HOME") + "/.ssh/id_rsa");
-            password = System.getProperty("sshPassword");
-        }
+            // spin up SSH connection
+            sshConn = new Connection("grid.sonatype.org", 10023);
+            sshConn.connect();
 
-        boolean isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
-        if (isAuthenticated) {
-            System.out.println("Requesting remote port forwarding for port " + port);
-            sshConn.requestRemotePortForwarding("", port, "localhost", port);
-            sshConn.createLocalPortForwarder(4444, "localhost", 4444);
+            // authenticate
+            File pemFile = new File(System.getenv().get("HOME") + "/.ssh/nexus_selenium_rsa");
+            String password = null;
+            if (!pemFile.exists()) {
+                pemFile = new File(System.getenv().get("HOME") + "/.ssh/id_rsa");
+                password = System.getProperty("sshPassword");
+            }
+
+            boolean isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
+            if (isAuthenticated) {
+                System.out.println("Requesting remote port forwarding for port " + port);
+                sshConn.requestRemotePortForwarding("", port, "localhost", port);
+                sshConn.createLocalPortForwarder(4444, "localhost", 4444);
+            }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    sshConn.close();
+                }
+            }));
         }
     }
 
