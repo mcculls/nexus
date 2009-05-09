@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.Ignore;
 import org.junit.Before;
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.apache.commons.codec.binary.Base64;
 
 import java.lang.reflect.Proxy;
@@ -22,12 +23,15 @@ import java.net.Inet4Address;
 import java.io.*;
 import java.util.Enumeration;
 
+import ch.ethz.ssh2.Connection;
+
 @Ignore
 @RunWith(SeleniumJUnitRunner.class)
 public abstract class SeleniumTest extends NexusTestCase {
     protected Selenium selenium;
     protected MainPage main;
     protected Description description;
+    private static Connection sshConn;
 
     private static String getLocalIp() throws SocketException {
         Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
@@ -50,28 +54,41 @@ public abstract class SeleniumTest extends NexusTestCase {
         return "localhost";
     }
 
+    @BeforeClass
+    public static void openTunnel() throws Exception {
+        NexusTestCase.startNexus();
+
+        int port = PropUtil.get("jettyPort", 12345);
+
+        // spin up SSH connection
+        sshConn = new Connection("grid.sonatype.org", 10023);
+        sshConn.connect();
+
+        // authenticate
+        File pemFile = new File(System.getenv().get("HOME") + "/.ssh/nexus_selenium_rsa");
+        String password = null;
+        if (!pemFile.exists()) {
+            pemFile = new File(System.getenv().get("HOME") + "/.ssh/id_rsa");
+            password = System.getProperty("sshPassword");
+        }
+
+        boolean isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
+        if (isAuthenticated) {
+            System.out.println("Authenticated!");
+            sshConn.requestRemotePortForwarding("", port, "localhost", port);
+            System.out.println("1");
+            sshConn.createLocalPortForwarder(4444, "localhost", 4444);
+            System.out.println("2");
+        }
+    }
+
     @Before
     public void seleniumSetup() throws Exception {
         final String ip = getLocalIp();
         final String seleniumServer = PropUtil.get("seleniumServer", "localhost");
         final int seleniumPort = PropUtil.get("seleniumPort", 4444);
         final String seleniumBrowser = PropUtil.get("seleniumBrowser", "*firefox");
-        final Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://" + ip + ":" + PropUtil.get("jettyPort", 12345));
-
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
-        System.out.println(seleniumServer);
-        System.out.println(seleniumPort);
+        final Selenium original = new DefaultSelenium(seleniumServer, seleniumPort, seleniumBrowser, "http://localhost:" + PropUtil.get("jettyPort", 12345));
 
         selenium = (Selenium) Proxy.newProxyInstance(Selenium.class.getClassLoader(), new Class<?>[] { Selenium.class }, new InvocationHandler() {
             @Override
