@@ -74,6 +74,7 @@ public abstract class SeleniumTest extends NexusTestCase {
 
         boolean isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
         if (isAuthenticated) {
+            System.out.println("Requesting remote port forwarding for port " + port);
             sshConn.requestRemotePortForwarding("", port, "localhost", port);
             sshConn.createLocalPortForwarder(4444, "localhost", 4444);
         }
