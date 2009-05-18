@@ -5,6 +5,7 @@ import com.thoughtworks.selenium.Selenium;
 import org.sonatype.nexus.mock.pages.MainPage;
 import org.sonatype.nexus.mock.rest.MockHelper;
 import org.sonatype.nexus.mock.util.PropUtil;
+import org.sonatype.nexus.mock.util.SocketTestWaitCondition;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.Ignore;
@@ -58,35 +59,60 @@ public abstract class SeleniumTest extends NexusTestCase {
     public static void openTunnel() throws Exception {
         NexusTestCase.startNexus();
 
+        if (!new SocketTestWaitCondition("localhost", 4444, 250).checkCondition(0)) {
+            if (sshConn == null) {
+                int port = PropUtil.get("jettyPort", 12345);
 
-        if (sshConn == null) {
-            int port = PropUtil.get("jettyPort", 12345);
+                // spin up SSH connection
+                sshConn = new Connection("grid.sonatype.org", 10023);
+                sshConn.connect();
 
-            // spin up SSH connection
-            sshConn = new Connection("grid.sonatype.org", 10023);
-            sshConn.connect();
+                // authenticate
+                boolean usingPersonal = false;
+                File pemFile = new File(System.getenv().get("HOME") + "/.ssh/nexus_selenium_rsa");
+                String password = null;
+                if (!pemFile.exists()) {
+                    pemFile = new File(System.getenv().get("HOME") + "/.ssh/id_rsa");
+                    usingPersonal = true;
+                    password = System.getProperty("sshPassword");
+                }
 
-            // authenticate
-            File pemFile = new File(System.getenv().get("HOME") + "/.ssh/nexus_selenium_rsa");
-            String password = null;
-            if (!pemFile.exists()) {
-                pemFile = new File(System.getenv().get("HOME") + "/.ssh/id_rsa");
-                password = System.getProperty("sshPassword");
-            }
+                boolean isAuthenticated = false;
+                try {
+                    isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
+                } catch (IOException e) {
+                    // ignore
+                }
 
-            boolean isAuthenticated = sshConn.authenticateWithPublicKey("hudson", pemFile, password);
-            if (isAuthenticated) {
+                if (!isAuthenticated) {
+                    System.err.println("**************************************************************");
+                    System.err.println("**************************************************************");
+                    System.err.println("");
+                    System.err.println("Could not authenticate SSH using key:");
+                    System.err.println(pemFile.getPath());
+                    if (usingPersonal) {
+                        System.err.println("");
+                        System.err.println("Perhaps you need to specify the password using -DsshPassword=... ?");
+                        System.err.println("");
+                        System.err.println("Alternatively, grab the nexus_selenium_rsa private key and put it in ~/.ssh");
+                        System.err.println("");
+                    }
+                    System.err.println("");
+                    System.err.println("**************************************************************");
+                    System.err.println("**************************************************************");
+                }
+
                 System.out.println("Requesting remote port forwarding for port " + port);
                 sshConn.requestRemotePortForwarding("", port, "localhost", port);
                 sshConn.createLocalPortForwarder(4444, "localhost", 4444);
-            }
 
-            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    sshConn.close();
-                }
-            }));
+                Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        sshConn.close();
+                    }
+                }));
+            }
         }
     }
 
