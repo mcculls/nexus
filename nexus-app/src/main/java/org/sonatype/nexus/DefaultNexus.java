@@ -522,7 +522,7 @@ public class DefaultNexus
 
     public void updateRepository( CRepository settings )
         throws NoSuchRepositoryException, ConfigurationException, IOException
-    {
+    {        
         // check current settings for download Index
         boolean previousDownloadRemoteIndexes = this.readRepository( settings.getId() ).isDownloadRemoteIndexes();
 
@@ -547,6 +547,12 @@ public class DefaultNexus
         throws NoSuchRepositoryException, IOException, ConfigurationException
     {
         Repository repository = repositoryRegistry.getRepository( id );
+        
+        // Can't mess with nexus-managed repos
+        if ( !repository.isUserManaged() )
+        {
+            throw new NoSuchRepositoryException( repository.getId() );
+        }
 
         // remove the storage folders for the repository
         RemoveRepoFolderTask task = nexusScheduler.createTaskInstance( RemoveRepoFolderTask.class );
