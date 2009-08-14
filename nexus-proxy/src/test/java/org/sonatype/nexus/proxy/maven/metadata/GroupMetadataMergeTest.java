@@ -100,7 +100,7 @@ public class GroupMetadataMergeTest
         assertEquals( "org.sonatype.nexus", md.getGroupId() );
         assertEquals( "nexus", md.getArtifactId() );
 
-        assertEquals( "1.4.1-SNAPSHOT", md.getVersioning().getLatest() );
+        assertEquals( "1.4.0-SNAPSHOT", md.getVersioning().getLatest() );
         assertEquals( "1.3.4", md.getVersioning().getRelease() );
         String[] versions = {
             "1.2.1",
@@ -133,6 +133,139 @@ public class GroupMetadataMergeTest
         assertEquals( "20090527.162714", md.getVersioning().getSnapshot().getTimestamp() );
         assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
         assertEquals( "20090527162714", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGAV2Merge()
+        throws Exception
+    {
+        //Same as gavmerge, but dates are switched, still repo order SHOULD prevail
+        String mdPath = "/md-merge/gav2/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090127.162714", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingGroupID()
+        throws Exception
+    {
+        //Same as gavmerge2, but groupId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090127.162714", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingArtifactID()
+        throws Exception
+    {
+        //Same as gavmerge2, but artifactId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad2/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090127.162714", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingVersion()
+        throws Exception
+    {
+        //Same as gavmerge2, but artifactId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad3/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090127.162714", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingVersions()
+        throws Exception
+    {
+        //Same as gavmerge2, but artifactId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad4/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090331.203702", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 2, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingSnapshot()
+        throws Exception
+    {
+        //Same as gavmerge2, but artifactId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad5/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090331.203702", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 2, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
+    }
+    
+    public void testGavMergeMissingLastUpdated()
+        throws Exception
+    {
+        //Same as gavmerge2, but artifactId is missing (invalid metadata), so merge will still occur
+        String mdPath = "/md-merge/gavbad6/maven-metadata.xml";
+    
+        StorageItem item = getRootRouter().retrieveItem( new ResourceStoreRequest( "/groups/test" + mdPath, false ) );
+        assertTrue( StorageFileItem.class.isAssignableFrom( item.getClass() ) );
+    
+        Metadata md = parseMetadata( (StorageFileItem) item );
+    
+        assertEquals( "org.sonatype.nexus", md.getGroupId() );
+        assertEquals( "nexus", md.getArtifactId() );
+        assertEquals( "1.3.4-SNAPSHOT", md.getVersion() );
+        assertEquals( "20090127.162714", md.getVersioning().getSnapshot().getTimestamp() );
+        assertEquals( 51, md.getVersioning().getSnapshot().getBuildNumber() );
+        assertEquals( "20090331203702", md.getVersioning().getLastUpdated() );
     }
 
     public void testChecksum()

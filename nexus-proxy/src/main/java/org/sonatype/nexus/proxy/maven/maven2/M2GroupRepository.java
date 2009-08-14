@@ -157,14 +157,14 @@ public class M2GroupRepository
         try
         {
             for ( StorageItem item : items )
-            {
+            {                
                 if ( !( item instanceof StorageFileItem ) )
                 {
                     break;
                 }
 
                 StorageFileItem fileItem = (StorageFileItem) item;
-
+                
                 existingMetadatas.add( parseMetadata( fileItem ) );
             }
 
@@ -177,9 +177,14 @@ public class M2GroupRepository
 
             List<MetadataOperation> ops = new ArrayList<MetadataOperation>();
 
-            for ( Metadata metadata : existingMetadatas )
+            for ( int i = 0 ; i < existingMetadatas.size() ; i++ )
             {
-                ops.add( new MergeOperation( new MetadataOperand( metadata ) ) );
+                ops.add( 
+                    new MergeOperation( 
+                        new MetadataOperand( 
+                            existingMetadatas.get( i ) ), 
+                            true, 
+                            ( i + 1 ) < existingMetadatas.size() ) );
             }
 
             MetadataBuilder.changeMetadata( result, ops );

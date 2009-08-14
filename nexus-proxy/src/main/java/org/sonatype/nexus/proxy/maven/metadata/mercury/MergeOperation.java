@@ -31,11 +31,23 @@ public class MergeOperation
     private static final Language LANG = new DefaultLanguage( MergeOperation.class );
 
     private Metadata sourceMetadata;
-
+    
+    private boolean firstWins;
+    
+    private boolean hasMore;
+    
     public MergeOperation( MetadataOperand data )
         throws MetadataException
     {
+        this( data, false, false );
+    }
+
+    public MergeOperation( MetadataOperand data, boolean firstWins, boolean hasMore )
+        throws MetadataException
+    {
         setOperand( data );
+        this.firstWins = firstWins;
+        this.hasMore = hasMore;
     }
 
     /**
@@ -55,8 +67,11 @@ public class MergeOperation
 
         if ( !hasLastUpdatedSet( sourceMetadata ) && !hasLastUpdatedSet( targetMetadata ) )
         {
-            // neither has set, set it to now
-            lastUpdated = Long.toString( System.currentTimeMillis() );
+            if ( !hasMore )
+            {
+                // neither has set, set it to now
+                lastUpdated = Long.toString( System.currentTimeMillis() );
+            }
         }
         else if ( !hasLastUpdatedSet( sourceMetadata ) && hasLastUpdatedSet( targetMetadata ) )
         {
@@ -91,7 +106,7 @@ public class MergeOperation
                 // nothing, bad metadata
                 // TODO: we should do something here, but surely not die
             }
-
+            
             lastUpdated = sourceLU >= targetLU ? Long.toString( sourceLU ) : Long.toString( targetLU );
         }
 
@@ -154,20 +169,44 @@ public class MergeOperation
                     buildNumber = targetMetadata.getVersioning().getSnapshot().getBuildNumber();
                 }
 
-                if ( sourceSnapshot.getBuildNumber() > buildNumber )
+                if ( ( !firstWins || buildNumber == -1 ) 
+                    && sourceSnapshot.getBuildNumber() > buildNumber )
                 {
                     ops.add( new SetSnapshotOperation( new SnapshotOperand( sourceSnapshot ) ) );
                 }
             }
+        }
+        
+        String release = null;
+        String latest = null;
+        
+        if ( firstWins 
+            && targetMetadata.getVersioning() != null )
+        {
+            release = targetMetadata.getVersioning().getRelease();
+            latest = targetMetadata.getVersioning().getLatest();
         }
 
         MetadataBuilder.changeMetadata( targetMetadata, ops );
 
         // versioning.lastUpdate
         // choose the latest
-        if ( targetMetadata.getVersioning() != null && lastUpdated != null )
+        if ( targetMetadata.getVersioning() != null )
         {
-            targetMetadata.getVersioning().setLastUpdated( lastUpdated );
+            if ( hasMore || lastUpdated != null )
+            {
+                targetMetadata.getVersioning().setLastUpdated( lastUpdated );
+            }
+            
+            if ( StringUtils.isNotEmpty( release ) )
+            {
+                targetMetadata.getVersioning().setRelease( release );
+            }
+            
+            if ( StringUtils.isNotEmpty( latest ) )
+            {
+                targetMetadata.getVersioning().setLatest( latest );
+            }
         }
 
         return true;

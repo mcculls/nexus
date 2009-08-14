@@ -159,7 +159,7 @@ public class GroupingBehaviourTest
         assertFalse( contentEquals( new File( getBasedir(), "target/test-classes/repo3" + spoofedPath ), mdmFile ) );
 
         mdm = readMetadata( mdmFile );
-        assertEquals( "1.2", mdm.getVersioning().getRelease() );
+        assertEquals( "1.0", mdm.getVersioning().getRelease() );
         assertEquals( 3, mdm.getVersioning().getVersions().size() );
         // heh? why?
         // assertEquals( "20020202020202", mdm.getVersioning().getLastUpdated() );

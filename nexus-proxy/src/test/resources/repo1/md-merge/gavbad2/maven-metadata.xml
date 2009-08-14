@@ -2,19 +2,12 @@
 <metadata xsi:schemaLocation="http://maven.apache.org/METADATA/1.0.0 http://maven.apache.org/xsd/metadata-1.0.0.xsd" xmlns="http://maven.apache.org/METADATA/1.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<groupId>org.sonatype.nexus</groupId>
-	<artifactId>nexus</artifactId>
+	<version>1.3.4-SNAPSHOT</version>
 	<versioning>
-		<latest>1.3.4</latest>
-		<release>1.3.2</release>
-		<versions>
-			<version>1.2.1</version>
-			<version>1.3.0</version>
-			<version>1.3.1</version>
-			<version>1.3.2</version>
-			<version>1.3.3</version>
-			<version>1.3.4</version>
-		</versions>
-		<lastUpdated>20090520231210</lastUpdated>
+		<snapshot>
+			<timestamp>20090127.162714</timestamp>
+			<buildNumber>51</buildNumber>
+		</snapshot>
+		<lastUpdated>20090127162714</lastUpdated>
 	</versioning>
-
 </metadata>
