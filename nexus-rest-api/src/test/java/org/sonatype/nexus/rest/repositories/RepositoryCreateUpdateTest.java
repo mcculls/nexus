@@ -223,7 +223,7 @@ public class RepositoryCreateUpdateTest
         repositoryResource.setMetadataMaxAge( 23 );
         repositoryResource.setName( "test-name" );
         repositoryResource.setNotFoundCacheTTL( 11 );
-        repositoryResource.setProvider( "maven2" );
+        repositoryResource.setProvider( "default_hosted_release" );
         repositoryResource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
         repositoryResource.setRepoType( "proxy" );
 
@@ -292,7 +292,7 @@ public class RepositoryCreateUpdateTest
         repositoryResource.setMetadataMaxAge( 23 );
         repositoryResource.setName( "test-name" );
         repositoryResource.setNotFoundCacheTTL( 11 );
-        repositoryResource.setProvider( "maven2" );
+        repositoryResource.setProvider( "default_hosted_release" );
         repositoryResource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
         repositoryResource.setRepoType( "proxy" );
 

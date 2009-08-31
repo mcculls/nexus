@@ -85,7 +85,7 @@ public abstract class AbstractNexus1923
     {
         RepositoryResource resource = new RepositoryResource();
 
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
         resource.setChecksumPolicy( ChecksumPolicy.IGNORE.name() );

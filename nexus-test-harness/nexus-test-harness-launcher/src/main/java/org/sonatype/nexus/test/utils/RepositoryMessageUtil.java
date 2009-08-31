@@ -96,7 +96,8 @@ public class RepositoryMessageUtil
         // Assert.assertEquals( repo.getDefaultLocalStorageUrl(), responseResource.getDefaultLocalStorageUrl() ); //
         // TODO: add check for this
 
-        Assert.assertEquals( repo.getFormat(), responseResource.getFormat() );
+        // format is not used anymore, removing the check
+//        Assert.assertEquals( repo.getFormat(), responseResource.getFormat() );
         Assert.assertEquals( repo.getRepoType(), responseResource.getRepoType() );
 
         if ( repo.getRepoType().equals( "virtual" ) )

@@ -109,7 +109,7 @@ public class Nexus1581MirrorMetadataTest
     {
         RepositoryResource resource = new RepositoryResource();
     
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_proxy_release" );
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( "release" );
         resource.setChecksumPolicy( "ignore" );

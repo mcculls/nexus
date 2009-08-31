@@ -228,10 +228,11 @@ Sonatype.repoServer.HostedRepositoryEditor = function( config ) {
   
   this.providerStore = new Ext.data.JsonStore( {
     root: 'data',
-    id: 'provider',
+    id: 'templateId',
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
+      { name: 'templateId' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -285,7 +286,7 @@ Sonatype.repoServer.HostedRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'provider',
+        valueField: 'templateId',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -538,6 +539,7 @@ Sonatype.repoServer.ProxyRepositoryEditor = function( config ) {
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
+      { name: 'templateId' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -591,7 +593,7 @@ Sonatype.repoServer.ProxyRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'provider',
+        valueField: 'templateId',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -1131,6 +1133,7 @@ Sonatype.repoServer.VirtualRepositoryEditor = function( config ) {
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
+      { name: 'templateId' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -1185,7 +1188,7 @@ Sonatype.repoServer.VirtualRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'provider',
+        valueField: 'templateId',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -1256,14 +1259,14 @@ Ext.extend( Sonatype.repoServer.VirtualRepositoryEditor, Sonatype.repoServer.Abs
   templateLoadSuccess: function( form, action ) {
     var rec = {
       data: {
-        provider: this.find( 'name', 'provider' )[0].getValue() 
+        provider: this.find( 'name', 'templateId' )[0].getValue() 
       }
     };
     
     this.afterProviderSelectHandler( null, rec, null );
   },
   afterProviderSelectHandler: function( combo, rec, index ) {
-    var provider = rec.data.provider;
+    var provider = rec.data.templateId;
     var sourceRepoCombo = this.form.findField('shadowOf');
     sourceRepoCombo.clearValue();
     sourceRepoCombo.focus();

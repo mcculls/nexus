@@ -324,8 +324,7 @@ public class Nexus2351DisableRedeployMaven1Test
         repo.setName( repoId );
         repo.setRepoPolicy( releasePolicy.name() );
         repo.setWritePolicy( writePolicy.name() );
-        repo.setProvider( "maven1" );
-        repo.setFormat( "maven1" );
+        repo.setProvider( "maven1_hosted_" + releasePolicy.name().toLowerCase() );
 
         this.repoUtil.createRepository( repo );
     }

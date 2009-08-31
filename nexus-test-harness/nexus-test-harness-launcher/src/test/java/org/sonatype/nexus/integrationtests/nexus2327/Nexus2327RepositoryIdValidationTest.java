@@ -39,7 +39,7 @@ public class Nexus2327RepositoryIdValidationTest
         RepositoryResource resource = new RepositoryResource();
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
 
@@ -55,7 +55,7 @@ public class Nexus2327RepositoryIdValidationTest
         RepositoryResource resource = new RepositoryResource();
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
 

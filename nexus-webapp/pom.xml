@@ -366,4 +366,12 @@
       </plugin>
     </plugins>
   </build>
+  
+      <distributionManagement>
+      <site>
+        <id>test</id>
+        <url>dav:http://localhost:8081/nexus/content/repositories/releases/test</url>
+      </site>
+    </distributionManagement>
+  
 </project>

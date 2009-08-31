@@ -70,7 +70,6 @@ Sonatype.repoServer.referenceData = {
       provider: "",
       syncAtStartup: false,
       exposed: true
-      //realmId: ""
     },
   
     hosted : {
@@ -84,7 +83,6 @@ Sonatype.repoServer.referenceData = {
       notFoundCacheTTL: 0,
       repoPolicy: "",
       provider: "",
-      //realmId: "",
       overrideLocalStorageUrl: "",
       defaultLocalStorageUrl: "",
       downloadRemoteIndexes: true,
@@ -102,7 +100,6 @@ Sonatype.repoServer.referenceData = {
       metadataMaxAge: 0,
       repoPolicy: "",
       provider: "",
-      //realmId: "",
       overrideLocalStorageUrl: "",
       defaultLocalStorageUrl: "",
       downloadRemoteIndexes: true,

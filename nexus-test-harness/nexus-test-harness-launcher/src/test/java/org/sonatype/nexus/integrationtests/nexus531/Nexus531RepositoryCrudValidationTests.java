@@ -54,7 +54,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createNoCheckSumTest" );
         resource.setRepoType( "proxy" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -89,7 +89,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createNoRepoPolicyTest" );
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -157,7 +157,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createNoRepoTypeTest" );
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -191,7 +191,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createNoRepoTypeTest" );
         // resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -226,7 +226,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "" );
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -272,7 +272,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createNoNameTest" );
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -318,7 +318,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createJunkOverrideUrlTest" );
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -351,7 +351,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setId( "createJunkDefaultStorageUrlTest" );
         resource.setRepoType( "proxy" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -382,7 +382,7 @@ public class Nexus531RepositoryCrudValidationTests
         resource.setRepoType( "proxy" ); // [hosted, proxy, virtual]
         resource.setName( "Update Test Repo" );
         // resource.setRepoType( ? )
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );

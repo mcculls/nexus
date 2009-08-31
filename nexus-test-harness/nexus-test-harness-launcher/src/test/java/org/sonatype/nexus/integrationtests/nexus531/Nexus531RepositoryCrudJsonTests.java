@@ -62,7 +62,7 @@ public class Nexus531RepositoryCrudJsonTests
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Create Test Repo" );
         // resource.setRepoType( ? )
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -91,7 +91,7 @@ public class Nexus531RepositoryCrudJsonTests
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Read Test Repo" );
         // resource.setRepoType( ? )
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -126,7 +126,7 @@ public class Nexus531RepositoryCrudJsonTests
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Update Test Repo" );
         // resource.setRepoType( ? )
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -160,7 +160,7 @@ public class Nexus531RepositoryCrudJsonTests
         resource.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         resource.setName( "Delete Test Repo" );
         // resource.setRepoType( ? )
-        resource.setProvider( "maven2" );
+        resource.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         // resource.setAllowWrite( true );
@@ -198,7 +198,7 @@ public class Nexus531RepositoryCrudJsonTests
         repo.setId( "listTestRepo" );
         repo.setRepoType( "hosted" ); // [hosted, proxy, virtual]
         repo.setName( "List Test Repo" );
-        repo.setProvider( "maven2" );
+        repo.setProvider( "default_hosted_release" );
         // format is neglected by server from now on, provider is the new guy in the town
         repo.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         repo.setRepoPolicy( RepositoryPolicy.RELEASE.name() ); // [snapshot, release] Note: needs param name change
