@@ -68,6 +68,7 @@ Ext.extend( Sonatype.repoServer.AbstractRepositoryEditor, Sonatype.ext.FormPanel
   
   providerSelectHandler: function( combo, rec, index ) {
     this.form.findField( 'format' ).setValue( rec.data.format );
+    this.form.findField( 'providerRole' ).setValue( rec.data.providerRole );
     this.afterProviderSelectHandler( combo, rec, index);
   },
   
@@ -228,11 +229,11 @@ Sonatype.repoServer.HostedRepositoryEditor = function( config ) {
   
   this.providerStore = new Ext.data.JsonStore( {
     root: 'data',
-    id: 'templateId',
+    id: 'provider',
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
-      { name: 'templateId' },
+      { name: 'providerRole' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -286,7 +287,7 @@ Sonatype.repoServer.HostedRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'templateId',
+        valueField: 'provider',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -299,6 +300,10 @@ Sonatype.repoServer.HostedRepositoryEditor = function( config ) {
           select: this.providerSelectHandler,
           scope: this
         }
+      },
+      {
+        xtype: 'hidden',
+        name: 'providerRole'
       },
       {
         xtype: 'textfield',
@@ -539,7 +544,7 @@ Sonatype.repoServer.ProxyRepositoryEditor = function( config ) {
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
-      { name: 'templateId' },
+      { name: 'providerRole' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -593,7 +598,7 @@ Sonatype.repoServer.ProxyRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'templateId',
+        valueField: 'provider',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -606,6 +611,10 @@ Sonatype.repoServer.ProxyRepositoryEditor = function( config ) {
           select: this.providerSelectHandler,
           scope: this
         }
+      },
+      {
+        xtype: 'hidden',
+        name: 'providerRole'
       },
       {
         xtype: 'textfield',
@@ -1133,7 +1142,7 @@ Sonatype.repoServer.VirtualRepositoryEditor = function( config ) {
     fields: [
       { name: 'description', sortType:Ext.data.SortTypes.asUCString },
       { name: 'format' },
-      { name: 'templateId' },
+      { name: 'providerRole' },
       { name: 'provider' }
     ],
     sortInfo: { field: 'description', direction: 'asc' },
@@ -1188,7 +1197,7 @@ Sonatype.repoServer.VirtualRepositoryEditor = function( config ) {
         width: 150,
         store: this.providerStore,
         displayField: 'description',
-        valueField: 'templateId',
+        valueField: 'provider',
         editable: false,
         forceSelection: true,
         mode: 'local',
@@ -1201,6 +1210,10 @@ Sonatype.repoServer.VirtualRepositoryEditor = function( config ) {
           select: this.providerSelectHandler,
           scope: this
         }
+      },
+      {
+        xtype: 'hidden',
+        name: 'providerRole'
       },
       {
         xtype: 'textfield',
@@ -1259,14 +1272,14 @@ Ext.extend( Sonatype.repoServer.VirtualRepositoryEditor, Sonatype.repoServer.Abs
   templateLoadSuccess: function( form, action ) {
     var rec = {
       data: {
-        provider: this.find( 'name', 'templateId' )[0].getValue() 
+        provider: this.find( 'name', 'provider' )[0].getValue() 
       }
     };
     
     this.afterProviderSelectHandler( null, rec, null );
   },
   afterProviderSelectHandler: function( combo, rec, index ) {
-    var provider = rec.data.templateId;
+    var provider = rec.data.provider;
     var sourceRepoCombo = this.form.findField('shadowOf');
     sourceRepoCombo.clearValue();
     sourceRepoCombo.focus();

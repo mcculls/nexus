@@ -20,6 +20,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
+import org.apache.maven.model.Repository;
 import org.junit.Test;
 import org.sonatype.nexus.client.NexusClient;
 import org.sonatype.nexus.client.NexusConnectionException;
@@ -122,6 +123,7 @@ public class Nexus725InitialRestClient
         repoResoruce.setName( "Create Test Repo" );
         // repoResoruce.setRepoType( ? )
         repoResoruce.setProvider( "default_hosted_release" );
+        repoResoruce.setProviderRole( Repository.class.getName() );
         // format is neglected by server from now on, provider is the new guy in the town
         repoResoruce.setFormat( "maven2" ); // Repository Format, maven1, maven2, maven-site, eclipse-update-site
         repoResoruce.setWritePolicy( RepositoryWritePolicy.ALLOW_WRITE.name() );

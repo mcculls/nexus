@@ -85,7 +85,7 @@ public class Nexus1730DeleteRepoTest
         repo.setId( "nexus1730-repo" );
         repo.setRepoType( "hosted" );
         repo.setName( "nexus1730-repo" );
-        repo.setProvider( "default_hosted_release" );
+        repo.setProvider( "maven2" );
         repo.setFormat( "maven2" );
         repo.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
         repoUtil.createRepository( repo );   

@@ -106,7 +106,7 @@ public class RepositoryTypesComponentListPlexusResource
             
             resource.setProvider( providerHint );
 
-            resource.setTemplateId( template.getId() );
+            resource.setProviderRole( providerRole );
 
             resource.setFormat( ( ( AbstractRepositoryTemplate ) template ).getContentClass().getId() );
             

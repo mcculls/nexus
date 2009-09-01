@@ -41,7 +41,8 @@ public class Nexus2556BrandNewRepositorySearchTest
     {
         String repoId = "nexus2556-hosted";
         RepositoryResource repo = new RepositoryResource();
-        repo.setProvider( "default_hosted_release" );
+        repo.setProvider( "maven2" );
+        repo.setFormat( "maven2" );
         repo.setRepoPolicy( "release" );
         repo.setChecksumPolicy( "ignore" );
         repo.setBrowseable( false );

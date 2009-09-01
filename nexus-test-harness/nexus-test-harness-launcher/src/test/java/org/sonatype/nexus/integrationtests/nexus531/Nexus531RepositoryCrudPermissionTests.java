@@ -42,7 +42,7 @@ public class Nexus531RepositoryCrudPermissionTests extends AbstractPrivilegeTest
         repo.setId( "testCreatePermission" );
         repo.setName( "testCreatePermission" );
         repo.setRepoType( "hosted" );
-        repo.setProvider( "maven1_hosted_release" );
+        repo.setProvider( "maven1" );
         // format is neglected by server from now on, provider is the new guy in the town
         repo.setFormat( "maven1" );
         repo.setRepoPolicy( RepositoryPolicy.SNAPSHOT.name() );
@@ -95,7 +95,7 @@ public class Nexus531RepositoryCrudPermissionTests extends AbstractPrivilegeTest
         repo.setId( "testUpdatePermission" );
         repo.setName( "testUpdatePermission" );
         repo.setRepoType( "hosted" );
-        repo.setProvider( "maven1_hosted_release" );
+        repo.setProvider( "maven1" );
         // format is neglected by server from now on, provider is the new guy in the town
         repo.setFormat( "maven1" );
         repo.setRepoPolicy( RepositoryPolicy.SNAPSHOT.name() );
@@ -153,7 +153,7 @@ public class Nexus531RepositoryCrudPermissionTests extends AbstractPrivilegeTest
         repo.setId( "testReadPermission" );
         repo.setName( "testReadPermission" );
         repo.setRepoType( "hosted" );
-        repo.setProvider( "maven1_hosted_release" );
+        repo.setProvider( "maven1" );
         // format is neglected by server from now on, provider is the new guy in the town
         repo.setFormat( "maven1" );
         repo.setRepoPolicy( RepositoryPolicy.SNAPSHOT.name() );
@@ -212,7 +212,7 @@ public class Nexus531RepositoryCrudPermissionTests extends AbstractPrivilegeTest
         repo.setId( "testDeletePermission" );
         repo.setName( "testDeletePermission" );
         repo.setRepoType( "hosted" );
-        repo.setProvider( "maven1_hosted_release" );
+        repo.setProvider( "maven1" );
         // format is neglected by server from now on, provider is the new guy in the town
         repo.setFormat( "maven1" );
         repo.setRepoPolicy( RepositoryPolicy.SNAPSHOT.name() );

@@ -119,4 +119,16 @@ public class DefaultRepositoryTemplateProvider
     {
         return getTemplates().getTemplates( filters );
     }
+    
+
+    public ManuallyConfiguredRepositoryTemplate createManuallyTemplate( CRepositoryCoreConfiguration configuration )
+    {
+        ContentClass contentClass =
+            repositoryTypeRegistry
+                .getRepositoryContentClass( configuration.getConfiguration( false ).getProviderRole(), configuration
+                    .getConfiguration( false ).getProviderHint() );
+
+        return new ManuallyConfiguredRepositoryTemplate( this, "manual", "Manually created template", contentClass,
+                                                         null, configuration );
+    }
 }

@@ -68,6 +68,7 @@ Sonatype.repoServer.referenceData = {
       name: "",
       shadowOf: "",
       provider: "",
+      providerRole: "",
       syncAtStartup: false,
       exposed: true
     },
@@ -83,6 +84,7 @@ Sonatype.repoServer.referenceData = {
       notFoundCacheTTL: 0,
       repoPolicy: "",
       provider: "",
+      providerRole: "",
       overrideLocalStorageUrl: "",
       defaultLocalStorageUrl: "",
       downloadRemoteIndexes: true,
@@ -100,6 +102,7 @@ Sonatype.repoServer.referenceData = {
       metadataMaxAge: 0,
       repoPolicy: "",
       provider: "",
+      providerRole: "",
       overrideLocalStorageUrl: "",
       defaultLocalStorageUrl: "",
       downloadRemoteIndexes: true,

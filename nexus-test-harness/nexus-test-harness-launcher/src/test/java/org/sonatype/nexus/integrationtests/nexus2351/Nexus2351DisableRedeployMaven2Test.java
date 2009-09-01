@@ -481,7 +481,8 @@ public class Nexus2351DisableRedeployMaven2Test
         repo.setName( repoId );
         repo.setRepoPolicy( releasePolicy.name() );
         repo.setWritePolicy( writePolicy.name() );
-        repo.setProvider( "default_hosted_"+releasePolicy.name().toLowerCase() );
+        repo.setProvider( "maven2" );
+        repo.setFormat( "maven2" );
         repo.setIndexable( false );
 
       this.repoUtil.createRepository( repo );        

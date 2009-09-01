@@ -15,8 +15,6 @@ package org.sonatype.nexus.integrationtests.nexus688;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -27,10 +25,10 @@ import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.sonatype.nexus.integrationtests.AbstractNexusIntegrationTest;
 import org.sonatype.nexus.proxy.maven.RepositoryPolicy;
+import org.sonatype.nexus.proxy.repository.RepositoryWritePolicy;
 import org.sonatype.nexus.rest.model.RepositoryProxyResource;
 import org.sonatype.nexus.rest.model.RepositoryResource;
 import org.sonatype.nexus.rest.model.RepositoryResourceRemoteStorage;
-import org.sonatype.nexus.proxy.repository.RepositoryWritePolicy;
 import org.sonatype.nexus.tasks.ReindexTask;
 import org.sonatype.nexus.test.utils.RepositoryMessageUtil;
 import org.sonatype.nexus.test.utils.TaskScheduleUtil;
@@ -62,7 +60,7 @@ public class Nexus688ReindexOnRepoAdd
         resource.setId( "nexus688-repoTestIndexable" );
         resource.setRepoType( "hosted" );
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "default_hosted_release" );
+        resource.setProvider( "maven2" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
@@ -91,7 +89,7 @@ public class Nexus688ReindexOnRepoAdd
         resource.setId( "nexus688-repoTestNotIndexable" );
         resource.setRepoType( "hosted" );
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "default_hosted_release" );
+        resource.setProvider( "maven2" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
@@ -120,7 +118,7 @@ public class Nexus688ReindexOnRepoAdd
         resource.setId( "nexus688-proxyRepoTestIndexableWithInvalidURL" );
         resource.setRepoType( "proxy" );
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "default_hosted_release" );
+        resource.setProvider( "maven2" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
@@ -153,7 +151,7 @@ public class Nexus688ReindexOnRepoAdd
         resource.setId( "nexus688-proxyRepoTestIndexable" );
         resource.setRepoType( "proxy" );
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "default_hosted_release" );
+        resource.setProvider( "maven2" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
@@ -186,7 +184,7 @@ public class Nexus688ReindexOnRepoAdd
         resource.setId( "nexus688-proxyRepoTestNotIndexable" );
         resource.setRepoType( "proxy" );
         resource.setName( "Create Test Repo" );
-        resource.setProvider( "default_hosted_release" );
+        resource.setProvider( "maven2" );
         // format is neglected by server from now on, provider is the new guy in the town
         resource.setFormat( "maven2" );
         resource.setRepoPolicy( RepositoryPolicy.RELEASE.name() );
