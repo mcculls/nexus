@@ -126,10 +126,10 @@
     <nexus.indexer.version>1.2.4</nexus.indexer.version>
     <nexus.repository.metadata.version>1.0.0</nexus.repository.metadata.version>
     <!-- Shared with nexus-client, hence it is properties'ed -->
-    <plexus.restlet.bridge.version>1.8</plexus.restlet.bridge.version>
+    <plexus.restlet.bridge.version>1.8.1-SNAPSHOT</plexus.restlet.bridge.version>
     <micromailer.version>1.0.2</micromailer.version>
     <mercury.version>1.0-alpha-6</mercury.version>
-    <restlet.version>1.1.1-b6</restlet.version>
+    <restlet.version>1.1.6-SONATYPE-5348</restlet.version>
     <plexus-jetty6.version>1.6</plexus-jetty6.version>
     <plexus-task-scheduler.version>1.1</plexus-task-scheduler.version>
     <plexus-digest.version>1.1</plexus-digest.version>
