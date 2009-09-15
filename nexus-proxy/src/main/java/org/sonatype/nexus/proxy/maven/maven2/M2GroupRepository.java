@@ -78,9 +78,7 @@ public class M2GroupRepository
 
     @Override
     protected StorageItem doRetrieveItem( RepositoryItemUid uid, Map<String, Object> context )
-        throws IllegalOperationException,
-            ItemNotFoundException,
-            StorageException
+        throws IllegalOperationException, ItemNotFoundException, StorageException
     {
         if ( M2ArtifactRecognizer.isMetadata( uid.getPath() ) && !M2ArtifactRecognizer.isChecksum( uid.getPath() ) )
         {
@@ -99,13 +97,12 @@ public class M2GroupRepository
 
         return super.doRetrieveItem( uid, context );
     }
-    
+
     /**
      * Parse a maven Metadata object from a storage file item
      */
     private Metadata parseMetadata( StorageFileItem fileItem )
-        throws IOException,
-            MetadataException
+        throws IOException, MetadataException
     {
         InputStream inputStream = null;
 
@@ -134,10 +131,7 @@ public class M2GroupRepository
      * Aggregates metadata from all member repositories
      */
     private StorageItem doRetrieveMetadata( RepositoryItemUid uid, Map<String, Object> context )
-        throws StorageException,
-            IllegalOperationException,
-            UnsupportedStorageOperationException,
-            ItemNotFoundException
+        throws StorageException, IllegalOperationException, UnsupportedStorageOperationException, ItemNotFoundException
     {
         List<StorageItem> items = doRetrieveItems( uid, context );
 
@@ -165,7 +159,22 @@ public class M2GroupRepository
 
                 StorageFileItem fileItem = (StorageFileItem) item;
 
-                existingMetadatas.add( parseMetadata( fileItem ) );
+                try
+                {
+                    existingMetadatas.add( parseMetadata( fileItem ) );
+                }
+                catch ( IOException e )
+                {
+                    getLogger().warn(
+                        "IOException during parse of metadata UID=\"" + fileItem.getRepositoryItemUid().toString()
+                            + "\", will be skipped from aggregation!", e );
+                }
+                catch ( MetadataException e )
+                {
+                    getLogger().warn(
+                        "Metadata exception during parse of metadata from UID=\""
+                            + fileItem.getRepositoryItemUid().toString() + "\", will be skipped from aggregation!", e );
+                }
             }
 
             if ( existingMetadatas.isEmpty() )
@@ -233,9 +242,7 @@ public class M2GroupRepository
     }
 
     protected void storeDigest( RepositoryItemUid uid, MessageDigest digest, Map<String, Object> context )
-        throws IOException,
-            UnsupportedStorageOperationException,
-            IllegalOperationException
+        throws IOException, UnsupportedStorageOperationException, IllegalOperationException
     {
         byte[] bytes = ( new String( Hex.encodeHex( digest.digest() ) ) + "\n" ).getBytes();
 
@@ -263,8 +270,8 @@ public class M2GroupRepository
 
         if ( evt instanceof ConfigurationChangeEvent )
         {
-            ApplicationConfiguration cfg = (ApplicationConfiguration) ( (ConfigurationChangeEvent) evt )
-                .getNotifiableConfiguration();
+            ApplicationConfiguration cfg =
+                (ApplicationConfiguration) ( (ConfigurationChangeEvent) evt ).getNotifiableConfiguration();
 
             mergeMetadata = cfg.getConfiguration().getRouting().getGroups().isMergeMetadata();
         }
