@@ -1,0 +1,5 @@
+This package comes from nexus-indexer and contains comply used classes.
+Though, we don't want to change nexus-indexer, this classes are now duplicated.
+
+At best, nexus-indexer would refer to this component and remove it's own.
+To be done or discussed.
