@@ -226,46 +226,6 @@ Sonatype.repoServer.RepoServer = function(){
     },
     
     addNexusNavigationItems: function( nexusPanel ) {      
-      if(sp.checkPermission('nexus:index', sp.READ)){
-        nexusPanel.add(
-          {
-            title: 'Artifact Search',
-            id: 'st-nexus-search',
-            items: [
-              {
-                xtype: 'trigger',
-                id: 'quick-search--field',
-                triggerClass: 'x-form-search-trigger',
-                repoPanel: this,
-                width: 140,
-                listeners: {
-                  'specialkey': {
-                    fn: function(f, e){
-                      if(e.getKey() == e.ENTER){
-                        this.onTriggerClick();
-                      }
-                    }
-                  }
-                },
-                onTriggerClick: function(a,b,c){
-                  var v = this.getRawValue();
-                  if ( v.length > 0 ) {
-                    var panel = Sonatype.view.mainTabPanel.addOrShowTab(
-                        'nexus-search', Sonatype.repoServer.SearchPanel, { title: 'Search' } );
-                    panel.startQuickSearch( v );
-                  }
-                }
-              },
-              {
-                title: 'Advanced Search',
-                tabCode: Sonatype.repoServer.SearchPanel,
-                tabId: 'nexus-search',
-                tabTitle: 'Search'
-              }
-            ]
-          }
-        );
-      }
       
       //Views Group **************************************************
       nexusPanel.add( {
