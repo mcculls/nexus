@@ -36,6 +36,12 @@ import org.sonatype.nexus.tasks.DeleteRepositoryFoldersTask;
 import org.sonatype.plexus.appevents.Event;
 
 /**
+ * Toni:
+ * Split {@link RepositoryRegistryRepositoryEventInspector} into two parts.
+ * One is this and the other is the extracted indexer logic.
+ * This indexer related inspector now sits in lucene indexer plugin and is called
+ * IndexingRepositoryRegistryRepositoryEventInspector.
+ * 
  * @author Juven Xu
  */
 @Component( role = EventInspector.class, hint = "RepositoryRegistryRepositoryEvent" )
@@ -170,41 +176,12 @@ public class RepositoryRegistryRepositoryEventInspector
         }
     }
 
-    // TODO TONI - should be moved to plugin.
     private void inspectForIndexerManager( Event<?> evt, Repository repository )
     {
         try
         {
-            // we are handling repo events, like addition and removal
-            if ( evt instanceof RepositoryRegistryEventAdd )
+           if ( evt instanceof RepositoryRegistryEventRemove )
             {
-                // getIndexerManager().addRepositoryIndexContext( repository.getId() );
-
-                // getIndexerManager().setRepositoryIndexContextSearchable( repository.getId(),
-                // repository.isSearchable() );
-
-                // TODO TONI - reinvent indexing tasks through event system.
-                // create the initial index
-                if ( nexusStarted && repository.isIndexable() )
-                {
-                    // Create the initial index for the repository
-                    // ReindexTask rt = nexusScheduler.createTaskInstance( ReindexTask.class );
-
-                    if ( repository.getRepositoryKind().isFacetAvailable( GroupRepository.class ) )
-                    {
-                        // rt.setRepositoryGroupId( repository.getId() );
-                    }
-                    else
-                    {
-                        // rt.setRepositoryId( repository.getId() );
-                    }
-                    // nexusScheduler.submit( "Create initial index.", rt );
-                }
-            }
-            else if ( evt instanceof RepositoryRegistryEventRemove )
-            {
-                // getIndexerManager().removeRepositoryIndexContext( repository.getId(), false );
-
                 // remove the storage folders for the repository
                 DeleteRepositoryFoldersTask task =
                     nexusScheduler.createTaskInstance( DeleteRepositoryFoldersTask.class );
@@ -213,10 +190,7 @@ public class RepositoryRegistryRepositoryEventInspector
 
                 nexusScheduler.submit( "Remove repository folder", task );
             }
-            else if ( evt instanceof RepositoryConfigurationUpdatedEvent )
-            {
-                // getIndexerManager().updateRepositoryIndexContext( repository.getId() );
-            }
+            
         }
         catch ( Exception e )
         {

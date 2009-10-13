@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import com.thoughtworks.xstream.XStream;
 import org.codehaus.plexus.component.repository.ComponentDescriptor;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.SelectorUtils;
@@ -61,19 +62,31 @@ public abstract class AbstractPluginTestCase
                 PlexusComponentGleanerRequest request = new PlexusComponentGleanerRequest( className, ClassLoader
                     .getSystemClassLoader()
                 );
+                if( className.contains( "$" ) )
+                {
+                    continue;
+                }
+                if (className.endsWith( "RepositoryRegistryRepositoryEventInspector" )) {
+                    System.out.println( "foo" );
+                }
 
                 PlexusComponentGleanerResponse gleanerResponse = plexusComponentGleaner.glean( request );
 
                 if( gleanerResponse != null && gleanerResponse.getComponentDescriptor() != null )
                 {
                     ComponentDescriptor<?> componentDescriptor = gleanerResponse.getComponentDescriptor();
-//                    System.out.println( "... ... adding component role=\"" + componentDescriptor.getRole()
-//                        + "\", hint=\"" + componentDescriptor.getRoleHint() + "\"" );
-//                    System.out.println( new XStream().toXML( componentDescriptor ) );
+
+                    System.out.println( "... ... adding component role=\"" + componentDescriptor.getRole()
+                                        + "\", hint=\"" + componentDescriptor.getRoleHint() + "\""
+                    );
+                    System.out.println( new XStream().toXML( componentDescriptor ) );
 
                     this.getContainer().addComponentDescriptor( componentDescriptor );
+
                 }
+               
             }
+
         }
         catch( Exception e )
         {
