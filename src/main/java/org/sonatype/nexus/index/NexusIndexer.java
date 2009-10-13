@@ -21,6 +21,7 @@ import org.sonatype.nexus.index.context.IndexingContext;
 import org.sonatype.nexus.index.context.UnsupportedExistingLuceneIndexException;
 import org.sonatype.nexus.index.packer.IndexPacker;
 import org.sonatype.nexus.index.updater.IndexUpdater;
+import org.sonatype.plugin.Managed;
 
 /**
  * The Nexus indexer is a statefull facade that maintains state of indexing
