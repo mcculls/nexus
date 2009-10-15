@@ -66,9 +66,6 @@ public abstract class AbstractPluginTestCase
                 {
                     continue;
                 }
-                if (className.endsWith( "RepositoryRegistryRepositoryEventInspector" )) {
-                    System.out.println( "foo" );
-                }
 
                 PlexusComponentGleanerResponse gleanerResponse = plexusComponentGleaner.glean( request );
 
@@ -76,10 +73,10 @@ public abstract class AbstractPluginTestCase
                 {
                     ComponentDescriptor<?> componentDescriptor = gleanerResponse.getComponentDescriptor();
 
-                    System.out.println( "... ... adding component role=\"" + componentDescriptor.getRole()
-                                        + "\", hint=\"" + componentDescriptor.getRoleHint() + "\""
-                    );
-                    System.out.println( new XStream().toXML( componentDescriptor ) );
+          //          System.out.println( "... ... adding component role=\"" + componentDescriptor.getRole()
+          //                              + "\", hint=\"" + componentDescriptor.getRoleHint() + "\""
+          //          );
+          //          System.out.println( new XStream().toXML( componentDescriptor ) );
 
                     this.getContainer().addComponentDescriptor( componentDescriptor );
 

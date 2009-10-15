@@ -13,53 +13,13 @@
  */
 package org.sonatype.nexus.proxy.maven;
 
-import org.sonatype.nexus.index.context.DocumentFilter;
 
 public enum RepositoryPolicy
 {
-    RELEASE
-        {
-        public DocumentFilter getFilter()
-            {
-            return new DocumentFilter()
-                {
 
-                public boolean accept( Object doc )
-                    {
-                    throw new UnsupportedOperationException( "We don't support this filters anymore." );
-                }
-            };
-        }
-    },
+    RELEASE,
 
-    SNAPSHOT
-        {
-        public DocumentFilter getFilter()
-            {
-            return new DocumentFilter()
-                {
-                public boolean accept( Object doc )
-                    {
-                    throw new UnsupportedOperationException( "We don't support this filters anymore." );
-
-                }
-            };
-        }
-    },
+    SNAPSHOT,
 
     MIXED
-        {
-        public DocumentFilter getFilter()
-            {
-            return new DocumentFilter()
-                {
-                public boolean accept( Object doc )
-                    {
-                    throw new UnsupportedOperationException( "We don't support this filters anymore." );
-                }
-            };
-        }
-    };
-
-    public abstract DocumentFilter getFilter();
 }
