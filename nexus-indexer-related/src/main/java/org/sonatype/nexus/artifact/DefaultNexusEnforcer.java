@@ -7,7 +7,6 @@
 package org.sonatype.nexus.artifact;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.nexus.artifact.NexusEnforcer;
 
 /**
  * The Default Nexus Enforcer.  At some piont this can all be config based, but for now
