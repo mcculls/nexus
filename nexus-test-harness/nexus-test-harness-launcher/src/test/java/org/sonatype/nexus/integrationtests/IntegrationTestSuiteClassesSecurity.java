@@ -87,7 +87,6 @@ import org.sonatype.nexus.integrationtests.nexus688.Nexus688ReindexOnRepoAdd;
 import org.sonatype.nexus.integrationtests.nexus778.Nexus778SearchResultsFilteringTest;
 import org.sonatype.nexus.integrationtests.nexus779.Nexus779RssFeedFilteringTest;
 import org.sonatype.nexus.integrationtests.nexus782.Nexus782UploadWithClassifier;
-import org.sonatype.nexus.integrationtests.nexus810.Nexus810PackageNamesInNexusConf;
 import org.sonatype.nexus.integrationtests.nexus810.Nexus810PackageNamesInRestMessages;
 import org.sonatype.nexus.integrationtests.nexus930.Nexus930AutoDiscoverComponent;
 import org.sonatype.nexus.integrationtests.nexus947.Nexus947GroupBrowsing;
@@ -165,7 +164,6 @@ import org.sonatype.nexus.integrationtests.upgrades.nexus652.Nexus652Beta5To10Up
     Nexus531RepositoryCrudPermissionTests.class,
     Nexus532GroupCrudPermissionTests.class,
     Nexus810PackageNamesInRestMessages.class,
-    Nexus810PackageNamesInNexusConf.class,
     Nexus782UploadWithClassifier.class,
     Nexus688ReindexOnRepoAdd.class,
     Nexus384DotAndDashSearchTest.class,
