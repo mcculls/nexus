@@ -13,7 +13,9 @@
  */
 Sonatype.repoServer.ArtifactInformationPanel = function( config ) {
   var config = config || {};
-  var defaultConfig = {};
+  var defaultConfig = {
+    artifactInformationLayout: 'horizontal'
+  };
   Ext.apply( this, config, defaultConfig );
   
   this.sp = Sonatype.lib.Permissions;
@@ -21,84 +23,136 @@ Sonatype.repoServer.ArtifactInformationPanel = function( config ) {
   this.linkDivId = Ext.id();
   this.linkLabelId = Ext.id();
   
+  var items = [];
+  
+  if ( this.artifactInformationLayout == 'horizontal' ) {
+    items.push({
+      xtype: 'panel',
+      layout: 'column',
+      anchor: Sonatype.view.FIELD_OFFSET + ' -10',
+      items: [
+        {
+          xtype: 'panel',
+          layout: 'form',
+          columnWidth: .4,
+          labelWidth: 70,
+          items: [
+            {
+              xtype: 'textfield',
+              fieldLabel: 'Group',
+              name: 'groupId',
+              anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+              allowBlank: true,
+              readOnly: true
+            },
+            {
+              xtype: 'textfield',
+              fieldLabel: 'Artifact',
+              name: 'artifactId',
+              anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+              allowBlank: true,
+              readOnly: true
+            },
+            {
+              xtype: 'textfield',
+              fieldLabel: 'Version',
+              name: 'version',
+              anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+              allowBlank: true,
+              readOnly: true
+            },
+            {
+              xtype: 'panel',
+              html: '<div class="x-form-item" tabindex="-1">' + 
+                '<label id="' + this.linkLabelId + '" class="x-form-item-label" style="width: 70px;"></label>' +
+                '<div id="' + this.linkDivId + '" class="x-form-element" style="padding-left: 75px; padding-top: 3px">' +
+                '</div><div class="x-form-clear-left"/></div>'
+            }
+          ]
+        },
+        {
+          xtype: 'panel',
+          layout: 'form',
+          columnWidth: .6,
+          labelWidth: 30,
+          items: [
+            {
+              xtype: 'textarea',
+              fieldLabel: 'XML',
+              anchor: Sonatype.view.FIELD_OFFSET,
+              height: 100,
+              name: 'xml',
+              allowBlank: true,
+              readOnly: true
+            }
+          ]
+        }
+      ]
+    });
+  }
+  else if ( this.artifactInformationLayout == 'vertical' ) {
+    items.push({
+      xtype: 'panel',
+      layout: 'form',
+      anchor: Sonatype.view.FIELD_OFFSET + ' -10',
+      labelWidth: 70,
+      items: [
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Group',
+          name: 'groupId',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Artifact',
+          name: 'artifactId',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Version',
+          name: 'version',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'panel',
+          html: '<div class="x-form-item" tabindex="-1">' + 
+            '<label id="' + this.linkLabelId + '" class="x-form-item-label" style="width: 70px;"></label>' +
+            '<div id="' + this.linkDivId + '" class="x-form-element" style="padding-left: 75px; padding-top: 3px">' +
+            '</div><div class="x-form-clear-left"/></div>'
+        },
+        {
+          xtype: 'textarea',
+          fieldLabel: 'XML',
+          anchor: Sonatype.view.FIELD_OFFSET,
+          height: 100,
+          name: 'xml',
+          allowBlank: true,
+          readOnly: true
+        }
+      ]
+    });
+  }
+  
   this.formPanel = new Ext.form.FormPanel( {
     autoScroll: true,
     border: false,
     frame: true,
     collapsible: false,
     collapsed: false,
-        
-    items: [
-      { 
-        xtype: 'panel',
-        layout: 'column',
-        anchor: Sonatype.view.FIELD_OFFSET + ' -10',
-        items: [
-          {
-            xtype: 'panel',
-            layout: 'form',
-            columnWidth: .4,
-            labelWidth: 70,
-            items: [
-              {
-                xtype: 'textfield',
-                fieldLabel: 'Group',
-                name: 'groupId',
-                anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-                allowBlank: true,
-                readOnly: true
-              },
-              {
-                xtype: 'textfield',
-                fieldLabel: 'Artifact',
-                name: 'artifactId',
-                anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-                allowBlank: true,
-                readOnly: true
-              },
-              {
-                xtype: 'textfield',
-                fieldLabel: 'Version',
-                name: 'version',
-                anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-                allowBlank: true,
-                readOnly: true
-              },
-              {
-                xtype: 'panel',
-                html: '<div class="x-form-item" tabindex="-1">' + 
-                  '<label id="' + this.linkLabelId + '" class="x-form-item-label" style="width: 70px;"></label>' +
-                  '<div id="' + this.linkDivId + '" class="x-form-element" style="padding-left: 75px; padding-top: 3px">' +
-                  '</div><div class="x-form-clear-left"/></div>'
-              }
-            ]
-          },
-          {
-            xtype: 'panel',
-            layout: 'form',
-            columnWidth: .6,
-            labelWidth: 30,
-            items: [
-              {
-                xtype: 'textarea',
-                fieldLabel: 'XML',
-                anchor: Sonatype.view.FIELD_OFFSET,
-                height: 100,
-                name: 'xml',
-                allowBlank: true,
-                readOnly: true
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    items: items
   } );
 
   Sonatype.repoServer.ArtifactInformationPanel.superclass.constructor.call( this, {
     title: 'Artifact Information',
     layout: 'fit',
-    region: 'south',
     collapsible: false,
     collapsed: false,
     split: true,
@@ -163,7 +217,8 @@ Ext.extend( Sonatype.repoServer.ArtifactInformationPanel, Ext.Panel, {
 Sonatype.Events.addListener('artifactContainerInit', function(artifactContainer) {
   artifactContainer.add( new Sonatype.repoServer.ArtifactInformationPanel( { 
     name: 'artifactInformationPanel',
-    tabTitle: 'Artifact Information' 
+    tabTitle: 'Artifact Information',
+    artifactInformationLayout: artifactContainer.artifactInformationLayout
   } ) );
 });
 
