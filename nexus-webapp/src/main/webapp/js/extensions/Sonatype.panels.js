@@ -47,6 +47,7 @@ Ext.extend( Sonatype.panels.AutoTabPanel, Ext.Panel, {
           autoScroll: false,
           frame: false,
           border: false,
+          layoutOnTabChange: true,
           items: [ first ]
         } );
   

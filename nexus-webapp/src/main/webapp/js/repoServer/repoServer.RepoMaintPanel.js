@@ -453,7 +453,7 @@ Ext.extend( Sonatype.repoServer.RepositoryBrowsePanel, Ext.tree.TreePanel, {
     if ( e.target.nodeName == 'A' ) return; // no menu on links
 
     if ( this.nodeClickEvent ) {
-      Sonatype.Events.fireEvent( this.nodeClickEvent, node );
+      Sonatype.Events.fireEvent( this.nodeClickEvent, node, this.nodeClickPassthru );
     }
   },
 
@@ -614,23 +614,4 @@ Ext.extend( Sonatype.repoServer.RepositoryBrowsePanel, Ext.tree.TreePanel, {
     }
   }
   
-} );
-
-Sonatype.Events.addListener( 'repositoryViewInit', function( cardPanel, rec ) {
-  if ( rec.data.resourceURI ) {
-    cardPanel.add( new Sonatype.repoServer.RepositoryBrowsePanel( { 
-      payload: rec,
-      name: 'browsestorage',
-      tabTitle: 'Browse Storage'
-    } ) );
-    if ( rec.data.repoType != 'virtual' 
-      && rec.data.format == 'maven2' ) {
-      cardPanel.add( new Sonatype.repoServer.RepositoryBrowsePanel( { 
-        payload: rec,
-        name: 'browseindex',
-        tabTitle: 'Browse Index',
-        browseIndex: true
-      } ) );
-    }
-  }
 } );
