@@ -20,7 +20,7 @@ Sonatype.repoServer.RepositoryBrowserContainer = function( config ) {
     artifactInformationLayout: 'vertical'
   });
   
-  Sonatype.repoServer.RepositoryBrowsePanel.superclass.constructor.call( this, {
+  Sonatype.repoServer.RepositoryBrowserContainer.superclass.constructor.call( this, {
     layout: 'border',
     items: [
       this.repositoryBrowser,
