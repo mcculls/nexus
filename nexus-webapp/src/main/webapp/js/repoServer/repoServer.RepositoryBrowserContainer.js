@@ -6,34 +6,47 @@ Sonatype.repoServer.RepositoryBrowserContainer = function( config ) {
   };
   Ext.apply( this, config, defaultConfig );
   
-  this.repositoryBrowser = new Sonatype.repoServer.RepositoryBrowsePanel( { 
-    payload: this.payload,
-    tabTitle: this.tabTitle,
-    browseIndex: this.browseIndex,
-    region: 'center',
-    nodeClickEvent: 'nodeClickedEvent',
-    nodeClickPassthru: {
-      container: this
-    }
-  });
+  var items = [];
   
-  this.artifactContainer = new Sonatype.repoServer.ArtifactContainer({
-    collapsible: true,
-    collapsed: true,
-    region: 'east',
-    split: true,
-    width: 500,
-    artifactInformationLayout: 'vertical'
-  });
+  if ( this.browseIndex ) {
+    this.repositoryBrowser = new Sonatype.repoServer.IndexBrowserPanel({
+      payload: this.payload,
+      tabTitle: this.tabTitle,
+      region: 'center',
+      nodeClickEvent: 'indexNodeClickedEvent',
+      nodeClickPassthru: {
+        container: this
+      }
+    });
+    
+    this.artifactContainer = new Sonatype.repoServer.ArtifactContainer({
+      collapsible: true,
+      collapsed: true,
+      region: 'east',
+      split: true,
+      width: 500,
+      artifactInformationLayout: 'vertical'
+    });
+    
+    items.push(this.repositoryBrowser);
+    items.push(this.artifactContainer);
+  }
+  else {                        
+    this.repositoryBrowser = new Sonatype.repoServer.RepositoryBrowsePanel( { 
+      payload: this.payload,
+      tabTitle: this.tabTitle,
+      browseIndex: false,
+      region: 'center'
+    });
+    
+    items.push(this.repositoryBrowser);
+  }
   
   Sonatype.repoServer.RepositoryBrowserContainer.superclass.constructor.call( this, {
     layout: 'border',
     //this hideMode causes the tab to properly render when coming back from hidden
     hideMode: 'offsets',
-    items: [
-      this.repositoryBrowser,
-      this.artifactContainer
-    ]
+    items: items
   });
 };
 
@@ -61,15 +74,17 @@ Sonatype.Events.addListener( 'repositoryViewInit', function( cardPanel, rec ) {
   }
 } );
 
-Sonatype.Events.addListener( 'nodeClickedEvent', function( node, passthru ) {
+Sonatype.Events.addListener( 'indexNodeClickedEvent', function( node, passthru ) {
   if ( passthru 
       && passthru.container ) {
     if ( node 
         && node.isLeaf() ) {
       passthru.container.artifactContainer.updateArtifact({
-        groupId: 'test-group',
-        artifactId: 'test-artifact',
-        version: '1.0-SNAPSHOT'
+        groupId: node.attributes.groupId,
+        artifactId: node.attributes.artifactId,
+        version: node.attributes.version,
+        artifactLink: '',
+        pomLink: ''
       });
     }
     else {

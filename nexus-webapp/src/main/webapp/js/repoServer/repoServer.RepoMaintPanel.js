@@ -388,7 +388,6 @@ Sonatype.repoServer.RepositoryBrowsePanel = function( config ) {
     listeners: {
       click: this.nodeClickHandler,
       contextMenu: this.nodeContextMenuHandler,
-      expandnode: this.indexBrowserExpandFollowup,
       scope: this
     } 
   } );
@@ -411,44 +410,9 @@ Ext.extend( Sonatype.repoServer.RepositoryBrowsePanel, Ext.tree.TreePanel, {
   },
 
   getBrowsePathSnippet: function() {
-    return this.browseIndex ?
-      Sonatype.config.browseIndexPathSnippet : Sonatype.config.browsePathSnippet;
+    return Sonatype.config.browsePathSnippet;
   },
   
-  indexBrowserExpandFollowup: function( node ) {
-    if ( this.browseIndex && ! node.attributes.localStorageUpdated && node.firstChild ) {
-      node.attributes.localStorageUpdated = true;
-      Ext.Ajax.request({
-        url: node.id.replace( Sonatype.config.browseIndexPathSnippet, Sonatype.config.browsePathSnippet ) + '?isLocal',
-        suppressStatus: 404,
-        success: function( response, options ) {
-          var decodedResponse = Ext.decode( response.responseText );
-          if ( decodedResponse.data ) {
-            var data = decodedResponse.data;
-            for ( var j = 0; j < node.childNodes.length; j++ ) {
-              var indexNode = node.childNodes[j];
-              indexNode.attributes.localStorageUpdated = true;
-              for ( var i = 0; i < data.length; i++ ) {
-                var contentNode = data[i];
-                if ( contentNode.text == indexNode.text ) {
-                  indexNode.ui.iconNode.className = 'x-tree-node-nexus-icon';
-                  indexNode.attributes.localStorageUpdated = false;
-                  break;
-                }
-              }
-            }
-          }
-        },
-        failure: function( response, options ) {
-          for ( var j = 0; j < node.childNodes.length; j++ ) {
-            node.childNodes[j].attributes.localStorageUpdated = true;
-          }
-        },
-        scope: this
-      });
-    }
-  },
-
   nodeClickHandler: function( node, e ) {
     if ( e.target.nodeName == 'A' ) return; // no menu on links
 

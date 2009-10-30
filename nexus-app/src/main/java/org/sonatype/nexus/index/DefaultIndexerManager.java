@@ -60,6 +60,10 @@ import org.sonatype.nexus.index.creator.MavenPluginArtifactInfoIndexCreator;
 import org.sonatype.nexus.index.creator.MinimalArtifactInfoIndexCreator;
 import org.sonatype.nexus.index.packer.IndexPacker;
 import org.sonatype.nexus.index.packer.IndexPackingRequest;
+import org.sonatype.nexus.index.treeview.DefaultMergedTreeNode;
+import org.sonatype.nexus.index.treeview.DefaultMergedTreeNodeFactory;
+import org.sonatype.nexus.index.treeview.DefaultTreeNode;
+import org.sonatype.nexus.index.treeview.IndexTreeView;
 import org.sonatype.nexus.index.updater.IndexUpdateRequest;
 import org.sonatype.nexus.index.updater.IndexUpdater;
 import org.sonatype.nexus.index.updater.ResourceFetcher;
@@ -143,6 +147,9 @@ public class DefaultIndexerManager
 
     @Requirement
     private MimeUtil mimeUtil;
+    
+    @Requirement
+    private IndexTreeView indexTreeView;
 
     private File workingDirectory;
 
@@ -1875,5 +1882,32 @@ public class DefaultIndexerManager
                 lock.unlock();
             }
         }
+    }
+    
+    public DefaultTreeNode listNodes( Repository repository, String path )
+    {
+        try
+        {
+            IndexingContext ctx = getRepositoryBestIndexContext( repository.getId() );
+            
+            if ( ctx != null )
+            {
+                DefaultMergedTreeNodeFactory factory = new DefaultMergedTreeNodeFactory( ctx, repository );
+                
+                return ( DefaultMergedTreeNode ) indexTreeView.listNodes( factory, path );
+            }
+        }
+        catch ( NoSuchRepositoryException e )
+        {
+            //can't get to this case, we have the repository object already, really shouldn't occur
+            getLogger().error( "Repository not found", e );
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            getLogger().error( "Error retrieving index nodes", e );
+        }
+        
+        return null;
     }
 }
