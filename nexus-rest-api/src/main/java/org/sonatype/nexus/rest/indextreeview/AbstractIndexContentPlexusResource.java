@@ -11,7 +11,7 @@
  * Sonatype Nexus (TM) Professional Version is available from Sonatype, Inc.
  * "Sonatype" and "Sonatype Nexus" are trademarks of Sonatype, Inc.
  */
-package org.sonatype.nexus.rest;
+package org.sonatype.nexus.rest.indextreeview;
 
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
@@ -22,8 +22,11 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.sonatype.nexus.index.IndexerManager;
-import org.sonatype.nexus.index.treeview.DefaultTreeNode;
+import org.sonatype.nexus.index.treeview.TreeNode;
+import org.sonatype.nexus.index.treeview.TreeNodeFactory;
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
+import org.sonatype.nexus.proxy.repository.Repository;
+import org.sonatype.nexus.rest.AbstractNexusPlexusResource;
 import org.sonatype.plexus.rest.resource.PlexusResourceException;
 
 import com.thoughtworks.xstream.XStream;
@@ -50,7 +53,7 @@ public abstract class AbstractIndexContentPlexusResource
     {
         super.configureXStream( xstream );
         
-        xstream.processAnnotations( IndexTreeViewResponseDTO.class );
+        xstream.processAnnotations( IndexBrowserTreeViewResponseDTO.class );
     }
 
     @Override
@@ -66,14 +69,16 @@ public abstract class AbstractIndexContentPlexusResource
         
         try
         {
-            DefaultTreeNode node = indexerManager.listNodes( getRepositoryRegistry().getRepository( getRepositoryId( request ) ), path );
+            Repository repository = getRepositoryRegistry().getRepository( getRepositoryId( request ) );
+            TreeNodeFactory factory = new IndexBrowserTreeNodeFactory( indexerManager.getRepositoryBestIndexContext( repository.getId() ), repository );
+            TreeNode node = indexerManager.listNodes( factory, repository, path );
             
             if ( node == null )
             {
                 throw new PlexusResourceException( Status.SERVER_ERROR_INTERNAL, "Unable to retrieve index tree nodes" );
             }
             
-            return new IndexTreeViewResponseDTO( node );
+            return new IndexBrowserTreeViewResponseDTO( node );
         }
         catch ( NoSuchRepositoryException e )
         {

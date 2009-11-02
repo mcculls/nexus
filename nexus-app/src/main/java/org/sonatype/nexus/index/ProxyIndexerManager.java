@@ -15,11 +15,13 @@ package org.sonatype.nexus.index;
 
 import java.io.IOException;
 import java.util.Map;
+
 import org.apache.lucene.search.Query;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.nexus.index.context.IndexingContext;
-import org.sonatype.nexus.index.treeview.DefaultTreeNode;
+import org.sonatype.nexus.index.treeview.TreeNode;
+import org.sonatype.nexus.index.treeview.TreeNodeFactory;
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
 import org.sonatype.nexus.proxy.item.StorageItem;
 import org.sonatype.nexus.proxy.repository.Repository;
@@ -305,9 +307,9 @@ public class ProxyIndexerManager
         indexer().removeItemFromIndex( repository, item );
     }
     
-    public DefaultTreeNode listNodes( Repository repository, String path )
+    public TreeNode listNodes( TreeNodeFactory factory, Repository repository, String path )
     {
-        return indexer().listNodes( repository, path );
+        return indexer().listNodes( factory, repository, path );
     }
 
 }

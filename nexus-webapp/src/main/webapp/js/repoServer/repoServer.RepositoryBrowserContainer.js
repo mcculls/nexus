@@ -83,8 +83,11 @@ Sonatype.Events.addListener( 'indexNodeClickedEvent', function( node, passthru )
         groupId: node.attributes.groupId,
         artifactId: node.attributes.artifactId,
         version: node.attributes.version,
-        artifactLink: '',
-        pomLink: ''
+        repoId: node.attributes.repositoryId,
+        classifier: node.attributes.classifier,
+        extension: node.attributes.extension,
+        artifactLink: node.attributes.artifactUri,
+        pomLink: node.attributes.pomUri
       });
     }
     else {
