@@ -1,5 +1,6 @@
 package org.sonatype.nexus.rest.indextreeview;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.sonatype.nexus.index.ArtifactInfo;
 import org.sonatype.nexus.index.context.IndexingContext;
 import org.sonatype.nexus.index.treeview.DefaultMergedTreeNodeFactory;
@@ -10,9 +11,12 @@ import org.sonatype.nexus.proxy.repository.Repository;
 public class IndexBrowserTreeNodeFactory
     extends DefaultMergedTreeNodeFactory
 {
-    public IndexBrowserTreeNodeFactory( IndexingContext ctx, Repository repository )
+    private String baseLinkUrl;
+    
+    public IndexBrowserTreeNodeFactory( IndexingContext ctx, Repository repository, String baseLinkUrl )
     {
         super( ctx, repository );
+        this.baseLinkUrl = baseLinkUrl;
     }
 
     @Override
@@ -22,8 +26,9 @@ public class IndexBrowserTreeNodeFactory
         
         iNode.setClassifier( ai.classifier );
         iNode.setExtension( ai.fextension );
-        iNode.setArtifactUri( buildArtifactUri() );
-        iNode.setPomUri( buildPomUri() );
+        iNode.setPackaging( ai.packaging );
+        iNode.setArtifactUri( buildArtifactUri( iNode ) );
+        iNode.setPomUri( buildPomUri( iNode ) );
 
         return iNode;
     }
@@ -34,13 +39,47 @@ public class IndexBrowserTreeNodeFactory
         return new IndexBrowserTreeNode( tview, this );
     }
     
-    protected String buildArtifactUri()
+    protected String buildArtifactUri( IndexBrowserTreeNode node )
     {
-        return null;
+        if ( StringUtils.isEmpty( node.getPackaging() ) 
+            || "pom".equals( node.getPackaging() ) )
+        {
+            return "";
+        }
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append( "?r=" );
+        sb.append( node.getRepositoryId() );
+        sb.append( "&g=" );
+        sb.append( node.getGroupId() );
+        sb.append( "&a=" );
+        sb.append( node.getArtifactId() );
+        sb.append( "&v=" );
+        sb.append( node.getVersion() );
+        sb.append( "&p=" );
+        sb.append(  node.getPackaging() );
+
+        return this.baseLinkUrl + sb.toString();
     }
     
-    protected String buildPomUri()
+    protected String buildPomUri( IndexBrowserTreeNode node )
     {
-        return null;
+        if ( StringUtils.isNotEmpty( node.getClassifier() ) )
+        {
+            return "";
+        }
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append( "?r=" );
+        sb.append( node.getRepositoryId() );
+        sb.append( "&g=" );
+        sb.append( node.getGroupId() );
+        sb.append( "&a=" );
+        sb.append( node.getArtifactId() );
+        sb.append( "&v=" );
+        sb.append( node.getVersion() );
+        sb.append( "&p=pom" );
+
+        return this.baseLinkUrl + sb.toString();
     }
 }

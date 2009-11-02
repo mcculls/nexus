@@ -70,7 +70,12 @@ public abstract class AbstractIndexContentPlexusResource
         try
         {
             Repository repository = getRepositoryRegistry().getRepository( getRepositoryId( request ) );
-            TreeNodeFactory factory = new IndexBrowserTreeNodeFactory( indexerManager.getRepositoryBestIndexContext( repository.getId() ), repository );
+            
+            TreeNodeFactory factory = new IndexBrowserTreeNodeFactory( 
+                indexerManager.getRepositoryBestIndexContext( repository.getId() ), 
+                repository, 
+                createRedirectBaseRef( request ).toString() );
+            
             TreeNode node = indexerManager.listNodes( factory, repository, path );
             
             if ( node == null )

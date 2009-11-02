@@ -9,8 +9,9 @@ public class IndexBrowserTreeNode
 {
     private String classifier;
     private String extension;
+    private String packaging;
     private String artifactUri;
-    private String pomUri;
+    private String pomUri;    
     
     public IndexBrowserTreeNode( IndexTreeView tview, TreeNodeFactory factory )
     {
@@ -55,5 +56,15 @@ public class IndexBrowserTreeNode
     public void setPomUri( String pomUri )
     {
         this.pomUri = pomUri;
+    }
+    
+    public String getPackaging()
+    {
+        return packaging;
+    }
+    
+    public void setPackaging( String packaging )
+    {
+        this.packaging = packaging;
     }
 }
