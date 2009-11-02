@@ -14,7 +14,7 @@
 Sonatype.repoServer.ArtifactInformationPanel = function( config ) {
   var config = config || {};
   var defaultConfig = {
-    artifactInformationLayout: 'horizontal'
+    halfSize: false
   };
   Ext.apply( this, config, defaultConfig );
   
@@ -25,7 +25,57 @@ Sonatype.repoServer.ArtifactInformationPanel = function( config ) {
   
   var items = [];
   
-  if ( this.artifactInformationLayout == 'horizontal' ) {
+  if ( this.halfSize == true ) {
+    items.push({
+      xtype: 'panel',
+      layout: 'form',
+      anchor: Sonatype.view.FIELD_OFFSET + ' -10',
+      labelWidth: 70,
+      items: [
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Group',
+          name: 'groupId',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Artifact',
+          name: 'artifactId',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'textfield',
+          fieldLabel: 'Version',
+          name: 'version',
+          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
+          allowBlank: true,
+          readOnly: true
+        },
+        {
+          xtype: 'panel',
+          html: '<div class="x-form-item" tabindex="-1">' + 
+            '<label id="' + this.linkLabelId + '" class="x-form-item-label" style="width: 70px;"></label>' +
+            '<div id="' + this.linkDivId + '" class="x-form-element" style="padding-left: 75px; padding-top: 3px">' +
+            '</div><div class="x-form-clear-left"/></div>'
+        },
+        {
+          xtype: 'textarea',
+          fieldLabel: 'XML',
+          anchor: Sonatype.view.FIELD_OFFSET,
+          height: 100,
+          name: 'xml',
+          allowBlank: true,
+          readOnly: true
+        }
+      ]
+    });
+  }
+  else {
     items.push({
       xtype: 'panel',
       layout: 'column',
@@ -86,56 +136,6 @@ Sonatype.repoServer.ArtifactInformationPanel = function( config ) {
               readOnly: true
             }
           ]
-        }
-      ]
-    });
-  }
-  else if ( this.artifactInformationLayout == 'vertical' ) {
-    items.push({
-      xtype: 'panel',
-      layout: 'form',
-      anchor: Sonatype.view.FIELD_OFFSET + ' -10',
-      labelWidth: 70,
-      items: [
-        {
-          xtype: 'textfield',
-          fieldLabel: 'Group',
-          name: 'groupId',
-          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-          allowBlank: true,
-          readOnly: true
-        },
-        {
-          xtype: 'textfield',
-          fieldLabel: 'Artifact',
-          name: 'artifactId',
-          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-          allowBlank: true,
-          readOnly: true
-        },
-        {
-          xtype: 'textfield',
-          fieldLabel: 'Version',
-          name: 'version',
-          anchor: Sonatype.view.FIELD_OFFSET_WITH_SCROLL,
-          allowBlank: true,
-          readOnly: true
-        },
-        {
-          xtype: 'panel',
-          html: '<div class="x-form-item" tabindex="-1">' + 
-            '<label id="' + this.linkLabelId + '" class="x-form-item-label" style="width: 70px;"></label>' +
-            '<div id="' + this.linkDivId + '" class="x-form-element" style="padding-left: 75px; padding-top: 3px">' +
-            '</div><div class="x-form-clear-left"/></div>'
-        },
-        {
-          xtype: 'textarea',
-          fieldLabel: 'XML',
-          anchor: Sonatype.view.FIELD_OFFSET,
-          height: 100,
-          name: 'xml',
-          allowBlank: true,
-          readOnly: true
         }
       ]
     });
@@ -218,7 +218,7 @@ Sonatype.Events.addListener('artifactContainerInit', function(artifactContainer)
   artifactContainer.add( new Sonatype.repoServer.ArtifactInformationPanel( { 
     name: 'artifactInformationPanel',
     tabTitle: 'Artifact Information',
-    artifactInformationLayout: artifactContainer.artifactInformationLayout
+    halfSize: artifactContainer.halfSize
   } ) );
 });
 

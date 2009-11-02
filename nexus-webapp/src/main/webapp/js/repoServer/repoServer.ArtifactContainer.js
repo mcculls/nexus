@@ -17,7 +17,7 @@ Sonatype.repoServer.ArtifactContainer = function(config){
     collapsible: true,
     collapsed: true,
     region: 'south',
-    artifactInformationLayout: 'horizontal'
+    halfSize: false
   };
   Ext.apply(this, config, defaultConfig);
   

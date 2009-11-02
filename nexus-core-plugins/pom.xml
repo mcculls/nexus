@@ -27,7 +27,7 @@
 
 	<modules>
 		<module>nexus-lvo-plugin</module>
-		<module>nexus-plugin-console-plugin</module>
+		<!--module>nexus-plugin-console-plugin</module-->
 	</modules>
 
 </project>
