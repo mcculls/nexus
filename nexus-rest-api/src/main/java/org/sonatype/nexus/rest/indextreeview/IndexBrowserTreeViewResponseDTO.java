@@ -6,30 +6,28 @@
  */
 package org.sonatype.nexus.rest.indextreeview;
 
-import org.sonatype.nexus.index.treeview.TreeNode;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias( "procurementTreeViewResponse" )
+@XStreamAlias( "indexBrowserTreeViewResponse" )
 public class IndexBrowserTreeViewResponseDTO
 {
-    private TreeNode data;
+    private IndexBrowserTreeNode data;
 
     public IndexBrowserTreeViewResponseDTO()
     {
     }
 
-    public IndexBrowserTreeViewResponseDTO( TreeNode node )
+    public IndexBrowserTreeViewResponseDTO( IndexBrowserTreeNode node )
     {
         this.data = node;
     }
 
-    public TreeNode getData()
+    public IndexBrowserTreeNode getData()
     {
         return data;
     }
 
-    public void setData( TreeNode data )
+    public void setData( IndexBrowserTreeNode data )
     {
         this.data = data;
     }

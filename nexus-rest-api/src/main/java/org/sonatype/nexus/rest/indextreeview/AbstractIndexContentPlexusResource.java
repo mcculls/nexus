@@ -53,6 +53,7 @@ public abstract class AbstractIndexContentPlexusResource
     {
         super.configureXStream( xstream );
         
+        xstream.processAnnotations( IndexBrowserTreeNode.class );
         xstream.processAnnotations( IndexBrowserTreeViewResponseDTO.class );
     }
 
@@ -83,7 +84,7 @@ public abstract class AbstractIndexContentPlexusResource
                 throw new PlexusResourceException( Status.SERVER_ERROR_INTERNAL, "Unable to retrieve index tree nodes" );
             }
             
-            return new IndexBrowserTreeViewResponseDTO( node );
+            return new IndexBrowserTreeViewResponseDTO( ( IndexBrowserTreeNode ) node );
         }
         catch ( NoSuchRepositoryException e )
         {

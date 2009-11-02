@@ -4,6 +4,9 @@ import org.sonatype.nexus.index.treeview.DefaultMergedTreeNode;
 import org.sonatype.nexus.index.treeview.IndexTreeView;
 import org.sonatype.nexus.index.treeview.TreeNodeFactory;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias( "indexBrowserTreeNode" )
 public class IndexBrowserTreeNode
     extends DefaultMergedTreeNode
 {
