@@ -52,13 +52,6 @@ Sonatype.repoServer.SearchPanel = function(config){
   this.artifactContainer = new Sonatype.repoServer.ArtifactContainer({
   });
   
-  this.appletPanel = new Ext.Panel({
-    fieldLabel: '',
-    html: '<div style="width:10px"></div>'
-  });
-  
-  this.filenameLabel = null;
-  
   Sonatype.repoServer.SearchPanel.superclass.constructor.call(this, {
     layout: 'border',
     hideMode: 'offsets',
@@ -71,7 +64,11 @@ Sonatype.repoServer.SearchPanel = function(config){
 };
 
 Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
+  //search type switched on the drop down button
   switchSearchType: function( button, event ) {
+    //if event is null, this is called directly, and we
+    //we will reset regardless if already selected, otherwise
+    //no need to do anything if already set to same value
     if ( event == null
         || this.searchTypeButton.value != button.value ) {
       this.searchTypeButton.value = button.value;
@@ -80,6 +77,7 @@ Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
       this.loadSearchPanel();
     }
   },
+  //load the dynamic panel
   loadSearchPanel: function() {
     //first remove current items
     while ( this.searchToolbar.items.length > 1 ) {
@@ -101,6 +99,8 @@ Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
       }
     }
   },  
+  //toolbar only supports adding certain types of items, so we
+  //need to do some special handling
   convertToFieldObject : function( config ) {
     if ( config.xtype == 'nexussearchfield' ) {
       return new Ext.app.SearchField( config );
@@ -112,6 +112,7 @@ Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
       return config;
     }
   },  
+  //retrieve the specified search type object
   getSearchType : function( value ) {
     for ( var i = 0 ; i < this.searchTypes.length ; i++ ) {
       if ( this.searchTypes[i].value == value ) {
@@ -121,55 +122,73 @@ Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
     
     return null;
   },
+  //set the warning in the toolbar
   setWarningLabel : function( s ) {
     this.clearWarningLabel();
     this.warningLabel = this.searchToolbar.addText( '<span class="x-toolbar-warning">' + s + '</span>' );
   },
+  //clear the warning in the toolbar
   clearWarningLabel : function() {
     if ( this.warningLabel ) {
       this.warningLabel.destroy();
       this.warningLabel = null;
     }
   },
+  //start the search
   startSearch : function( panel ) {
+    //update history in address bar of browser
     Sonatype.utils.updateHistory( panel );
     
     var searchType = this.getSearchType( this.searchTypeButton.value );
     
     searchType.searchHandler.call( this, panel );
   },
-  setFilenameLabel : function( panel, s ) {
-    if ( panel.filenameLabel ) {
-      panel.filenameLabel.destroy();
-    }
-    panel.filenameLabel = s ? panel.searchToolbar.addText( '<span style="color:#808080;">'+s+'</span>' ) : null;
-  },
+  //get the records from the server using grid
   fetchRecords : function( panel ) {
     panel.artifactContainer.collapsePanel();
     panel.grid.totalRecords = 0;
     panel.grid.store.load();
   },
+  //start the quick search, we will look at all search types
+  //and try to guess which type of search to use
   startQuickSearch: function( v ) {
-    var searchType = 'quick';
-    if ( v.search(/^[0-9a-f]{40}$/) == 0 ) {
-      searchType = 'checksum';
+    var defaultSearchType = null;
+    var searchType = null;
+    for ( var i = 0 ; i < this.searchTypes.length ; i++ ) {
+      //this default search will be used if no other searches match
+      if ( this.searchTypes[i].defaultQuickSearch == true ) {
+        defaultSearchType = this.searchTypes[i];
+      }
+      else if ( this.searchTypes[i].quickSearchCheckHandler.call( this, this, v ) ) {
+        searchType = this.searchTypes[i];
+        break;
+      }
     }
-    else if ( v.search(/^[a-z.]*[A-Z]/) == 0 ) {
-      searchType = 'classname';
+    
+    //apply the default search
+    if ( searchType == null 
+        && defaultSearchType != null ) {
+      searchType = defaultSearchType;
     }
-    this.switchSearchType(
-      {
-        value: searchType
-      },
-      null
-    );
-    this.getTopToolbar().items.itemAt(1).setRawValue( v );
-    this.startSearch( this );
+    
+    if ( searchType != null ) {
+      this.switchSearchType(
+        {
+          value: searchType.value
+        },
+        null
+      );
+      
+      searchType.quickSearchHandler.call( this, this, v );
+      this.startSearch( this );
+    }
   },
+  //apply the bookmark params to page
   applyBookmark : function( bookmark ) {
     if ( bookmark ) {
       var parts = bookmark.split( '~' );
       
+      //if type not specified, simply do a quick search and guess
       if ( parts.length == 1 ) {
         this.startQuickSearch( bookmark );
       }
@@ -187,6 +206,7 @@ Ext.extend(Sonatype.repoServer.SearchPanel, Ext.Panel, {
       }
     }
   },
+  //get the params to build bookmark
   getBookmark : function() {
     var searchType = this.getSearchType( this.searchTypeButton.value );
     
@@ -201,6 +221,13 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
     text: 'Keyword Search',    
     scope: panel,
     handler: panel.switchSearchType,
+    defaultQuickSearch: true,
+    quickSearchCheckHandler: function( panel, value ) {
+      return true;
+    },
+    quickSearchHandler: function( panel, value ) {
+      panel.getTopToolbar().items.itemAt(1).setRawValue( value );
+    },
     searchHandler: function( panel ) {
       var value = panel.getTopToolbar().items.itemAt(1).getRawValue();
       
@@ -239,6 +266,12 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
     text: 'Classname Search',
     scope: panel,
     handler: panel.switchSearchType,
+    quickSearchCheckHandler: function( panel, value ) {
+      return value.search(/^[a-z.]*[A-Z]/) == 0;
+    },
+    quickSearchHandler: function( panel, value ) {
+      panel.getTopToolbar().items.itemAt(1).setRawValue( value );
+    },
     searchHandler: function( panel ) {
       var value = panel.getTopToolbar().items.itemAt(1).getRawValue();
       
@@ -278,11 +311,45 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
     }
   };
   
+  var gavPopulator = function( panel, data ) {
+    //groupId
+    if ( data.length > 1 ) {
+      panel.getTopToolbar().items.itemAt(2).setRawValue( data[1] );
+    }
+    //artifactId
+    if ( data.length > 2 ) {
+      panel.getTopToolbar().items.itemAt(5).setRawValue( data[2] );
+    }
+    //version
+    if ( data.length > 3 ) {
+      panel.getTopToolbar().items.itemAt(8).setRawValue( data[3] );
+    }
+    //packaging
+    if ( data.length > 4 ) {
+      panel.getTopToolbar().items.itemAt(11).setRawValue( data[4] );
+    }
+    //classifier
+    if ( data.length > 5 ) {
+      panel.getTopToolbar().items.itemAt(14).setRawValue( data[5] );
+    }
+  }
+  
   searchTypes.push({
     value: 'gav',
     text: 'GAV Search',
     scope: panel,
     handler: panel.switchSearchType,
+    quickSearchCheckHandler: function( panel, value ) {
+      return value.indexOf( ':' ) > -1;
+    },
+    quickSearchHandler: function( panel, value ) {
+      var parts = value.split( ':' );
+      var data = ['gav'];
+      for ( var i = 0 ; i < parts.length ; i++ ) {
+        data.push( parts[i] );
+      }
+      gavPopulator( panel, data );
+    },
     searchHandler: function( panel ) {
       this.grid.store.baseParams = {};
       
@@ -324,16 +391,7 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
       panel.fetchRecords( panel );
     },
     applyBookmarkHandler: function( panel, data ) {
-      //groupId
-      panel.getTopToolbar().items.itemAt(2).setRawValue( data[1] );
-      //artifactId
-      panel.getTopToolbar().items.itemAt(5).setRawValue( data[2] );
-      //version
-      panel.getTopToolbar().items.itemAt(8).setRawValue( data[3] );
-      //packaging
-      panel.getTopToolbar().items.itemAt(11).setRawValue( data[4] );
-      //classifier
-      panel.getTopToolbar().items.itemAt(14).setRawValue( data[5] );
+      gavPopulator( panel, data );
       panel.startSearch( this );
     },
     getBookmarkHandler: function( panel ) {
@@ -440,7 +498,9 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
         icon: Sonatype.config.resourcePath + '/images/icons/search.gif',
         cls: 'x-btn-icon',
         scope: panel,
-        handler: panel.startGAVSearch
+        handler: function() {
+          this.startSearch( this );
+        }
       }
     ]
   });
@@ -454,6 +514,12 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
       text: 'Checksum Search',
       scope: panel,
       handler: panel.switchSearchType,
+      quickSearchCheckHandler: function( panel, value ) {
+        return value.search(/^[0-9a-f]{40}$/) == 0;
+      },
+      quickSearchHandler: function( panel, value ) {
+        panel.getTopToolbar().items.itemAt(1).setRawValue( value );
+      },
       searchHandler: function( panel ) {
         var value = panel.getTopToolbar().items.itemAt(1).getRawValue();
         
@@ -515,7 +581,15 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
             }
             
             b.disable();
-            b.searchPanel.setFilenameLabel( b.searchPanel, 'Calculating checksum...' );
+            
+            var setFilenameLabel = function( panel, s ) {
+              if ( panel.filenameLabel ) {
+                panel.filenameLabel.destroy();
+              }
+              panel.filenameLabel = s ? panel.searchToolbar.addText( '<span style="color:#808080;">'+s+'</span>' ) : null;
+            };
+            
+            setFilenameLabel( b.searchPanel, 'Calculating checksum...' );
         
             var f = function( b, filename ) {
               var sha1 = 'error calculating checksum';
@@ -524,7 +598,7 @@ Sonatype.Events.addListener( 'searchTypeInit', function( searchTypes, panel ) {
               }
                 
               b.searchPanel.getTopToolbar().items.itemAt(1).setRawValue( sha1 );
-              b.searchPanel.setFilenameLabel( b.searchPanel, filename );
+              setFilenameLabel( b.searchPanel, filename );
               b.enable();
               b.searchPanel.startSearch( b.searchPanel );
             }
