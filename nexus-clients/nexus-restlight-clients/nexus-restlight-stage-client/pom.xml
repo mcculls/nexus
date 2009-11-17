@@ -55,4 +55,54 @@
     	<artifactId>plexus-utils</artifactId>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>its</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.sonatype.nexus.plugin</groupId>
+          <artifactId>nexus-staging-plugin</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.sonatype.components</groupId>
+          <artifactId>plexus-rule</artifactId>
+        </dependency>
+      </dependencies>
+      
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-test-environment-maven-plugin</artifactId>
+            <configuration>
+              <nexusPluginsArtifacts>
+                <stage>
+                  <groupId>com.sonatype.nexus.plugin</groupId>
+                  <artifactId>nexus-staging-plugin</artifactId>
+                </stage>
+                <stage>
+                  <groupId>com.sonatype.components</groupId>
+                  <artifactId>plexus-rule</artifactId>
+                </stage>
+                <license>
+                  <groupId>com.sonatype.nexus.plugin</groupId>
+                  <artifactId>nexus-licensing-plugin</artifactId>
+                </license>
+                <license>
+                  <groupId>com.sonatype.components</groupId>
+                  <artifactId>plexus-licensing</artifactId>
+                </license>
+              </nexusPluginsArtifacts>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>failsafe-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
 </project>

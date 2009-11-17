@@ -24,7 +24,7 @@ public class User
         return userId;
     }
 
-    public void setUserId( String userId )
+    public void setUserId( final String userId )
     {
         this.userId = userId;
     }
@@ -34,7 +34,7 @@ public class User
         return name;
     }
 
-    public void setName( String name )
+    public void setName( final String name )
     {
         this.name = name;
     }
@@ -44,7 +44,7 @@ public class User
         return email;
     }
 
-    public void setEmail( String email )
+    public void setEmail( final String email )
     {
         this.email = email;
     }
@@ -54,7 +54,7 @@ public class User
         return resourceURI;
     }
 
-    public void setResourceURI( String resourceURI )
+    public void setResourceURI( final String resourceURI )
     {
         this.resourceURI = resourceURI;
     }
@@ -64,7 +64,7 @@ public class User
         return status;
     }
 
-    public void setStatus( String status )
+    public void setStatus( final String status )
     {
         this.status = status;
     }
@@ -74,7 +74,7 @@ public class User
         return userManaged;
     }
 
-    public void setUserManaged( boolean userManaged )
+    public void setUserManaged( final boolean userManaged )
     {
         this.userManaged = userManaged;
     }
@@ -84,9 +84,16 @@ public class User
         return roles;
     }
 
-    public void setRoles( List<String> roles )
+    public void setRoles( final List<String> roles )
     {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "User [email=" + email + "\n  name=" + name + "\n  resourceURI=" + resourceURI + "\n  roles=" + roles
+            + "\n  status=" + status + "\n  userId=" + userId + "\n  userManaged=" + userManaged + "]";
     }
 
 }

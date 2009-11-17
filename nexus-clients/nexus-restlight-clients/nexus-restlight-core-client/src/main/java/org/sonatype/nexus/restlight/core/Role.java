@@ -26,7 +26,7 @@ public class Role
         return resourceURI;
     }
 
-    public void setResourceURI( String resourceURI )
+    public void setResourceURI( final String resourceURI )
     {
         this.resourceURI = resourceURI;
     }
@@ -36,7 +36,7 @@ public class Role
         return id;
     }
 
-    public void setId( String id )
+    public void setId( final String id )
     {
         this.id = id;
     }
@@ -46,7 +46,7 @@ public class Role
         return name;
     }
 
-    public void setName( String name )
+    public void setName( final String name )
     {
         this.name = name;
     }
@@ -56,7 +56,7 @@ public class Role
         return description;
     }
 
-    public void setDescription( String description )
+    public void setDescription( final String description )
     {
         this.description = description;
     }
@@ -66,7 +66,7 @@ public class Role
         return sessionTimeout;
     }
 
-    public void setSessionTimeout( int sessionTimeout )
+    public void setSessionTimeout( final int sessionTimeout )
     {
         this.sessionTimeout = sessionTimeout;
     }
@@ -76,7 +76,7 @@ public class Role
         return userManaged;
     }
 
-    public void setUserManaged( boolean userManaged )
+    public void setUserManaged( final boolean userManaged )
     {
         this.userManaged = userManaged;
     }
@@ -86,7 +86,7 @@ public class Role
         return privileges;
     }
 
-    public void setPrivileges( List<String> privileges )
+    public void setPrivileges( final List<String> privileges )
     {
         this.privileges = privileges;
     }
@@ -96,9 +96,17 @@ public class Role
         return roles;
     }
 
-    public void setRoles( List<String> roles )
+    public void setRoles( final List<String> roles )
     {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Role [description=" + description + "\n  id=" + id + "\n  name=" + name + "\n  privileges="
+            + privileges + "\n  resourceURI=" + resourceURI + "\n  roles=" + roles + "\n  sessionTimeout="
+            + sessionTimeout + "\n  userManaged=" + userManaged + "]";
     }
 
 }

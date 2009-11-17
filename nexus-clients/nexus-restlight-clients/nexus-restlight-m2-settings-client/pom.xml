@@ -55,4 +55,46 @@
     	<artifactId>plexus-utils</artifactId>
     </dependency>
   </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>its</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.sonatype.nexus.plugin</groupId>
+          <artifactId>nexus-m2-settings-template-plugin</artifactId>
+        </dependency>
+      </dependencies>
+      
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-test-environment-maven-plugin</artifactId>
+            <configuration>
+              <nexusPluginsArtifacts>
+                <m2settings>
+                  <groupId>com.sonatype.nexus.plugin</groupId>
+                  <artifactId>nexus-m2-settings-template-plugin</artifactId>
+                </m2settings>
+                <license>
+                  <groupId>com.sonatype.nexus.plugin</groupId>
+                  <artifactId>nexus-licensing-plugin</artifactId>
+                </license>
+                <license>
+                  <groupId>com.sonatype.components</groupId>
+                  <artifactId>plexus-licensing</artifactId>
+                </license>
+              </nexusPluginsArtifacts>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>failsafe-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
 </project>

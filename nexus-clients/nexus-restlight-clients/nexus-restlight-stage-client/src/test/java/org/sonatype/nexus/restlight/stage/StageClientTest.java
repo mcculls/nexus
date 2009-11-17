@@ -45,6 +45,19 @@ public class StageClientTest
     private final ConversationalFixture fixture = new ConversationalFixture( getExpectedUser(), getExpectedPassword() );
 
     @Test
+    public void notANexusInstance()
+    {
+        try
+        {
+            new StageClient( "http://repo1.maven.org/", getExpectedUser(), getExpectedPassword() );
+        }
+        catch ( RESTLightClientException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void queryAllOpenRepositoriesForUser()
         throws JDOMException, IOException, RESTLightClientException
     {

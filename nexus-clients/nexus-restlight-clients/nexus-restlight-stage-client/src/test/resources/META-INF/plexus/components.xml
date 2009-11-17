@@ -1,0 +1,12 @@
+<component-set>
+	<components>
+		<component>
+			<role>org.sonatype.nexus.proxy.target.TargetRegistry</role>
+			<implementation>com.sonatype.nexus.staging.DummyTargetRegistry</implementation>
+		</component>
+		<component>
+			<role>org.sonatype.nexus.feeds.FeedRecorder</role>
+			<implementation>com.sonatype.nexus.staging.DummyFeedRecorder</implementation>
+		</component>
+	</components>
+</component-set>
