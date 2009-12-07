@@ -66,8 +66,9 @@ public class NexusWorkDirUtilsTest
     }
 
     private String getFakeBaseDir( String testName )
+        throws IOException
     {
-        return new File( "target", testName + "/WEB-INF" ).getAbsolutePath();
+        return new File( "target", testName + "/WEB-INF" ).getCanonicalPath();
     }
 
     // after setting environment variable nexus-work in my local machine, this test passed
