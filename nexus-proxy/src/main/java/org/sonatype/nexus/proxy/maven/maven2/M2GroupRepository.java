@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.maven.mercury.repository.metadata.MergeOperation;
+import org.apache.maven.mercury.repository.metadata.NexusMergeOperation;
 import org.apache.maven.mercury.repository.metadata.Metadata;
 import org.apache.maven.mercury.repository.metadata.MetadataBuilder;
 import org.apache.maven.mercury.repository.metadata.MetadataException;
@@ -217,16 +217,20 @@ public class M2GroupRepository
                 throw new ItemNotFoundException( request, this );
             }
 
-            Metadata result = new Metadata();
+            Metadata result = existingMetadatas.get( 0 );
 
+            // do a merge if necessary
+            if ( existingMetadatas.size() > 1 )
+            {
             List<MetadataOperation> ops = new ArrayList<MetadataOperation>();
 
-            for ( Metadata metadata : existingMetadatas )
+                for ( int i = 1 ; i < existingMetadatas.size() ; i++ )
             {
-                ops.add( new MergeOperation( new MetadataOperand( metadata ) ) );
+                    ops.add( new NexusMergeOperation( new MetadataOperand( existingMetadatas.get( i ) ) ) );
             }
 
             MetadataBuilder.changeMetadata( result, ops );
+            }
 
             // build the result item
             ByteArrayOutputStream resultOutputStream = new ByteArrayOutputStream();
