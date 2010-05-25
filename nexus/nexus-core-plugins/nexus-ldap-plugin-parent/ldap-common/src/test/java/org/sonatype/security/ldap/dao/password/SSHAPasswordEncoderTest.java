@@ -1,7 +1,5 @@
 package org.sonatype.security.ldap.dao.password;
 
-import java.io.UnsupportedEncodingException;
-
 import junit.framework.Assert;
 
 import org.codehaus.plexus.PlexusTestCase;

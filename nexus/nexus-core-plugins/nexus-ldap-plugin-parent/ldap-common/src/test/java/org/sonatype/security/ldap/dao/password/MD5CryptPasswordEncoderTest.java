@@ -9,7 +9,6 @@ package org.sonatype.security.ldap.dao.password;
 import junit.framework.Assert;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.sonatype.security.ldap.dao.password.PasswordEncoder;
 import org.sonatype.security.ldap.dao.password.hash.MD5Crypt;
 
 

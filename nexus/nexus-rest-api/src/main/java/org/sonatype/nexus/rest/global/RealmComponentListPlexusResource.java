@@ -17,9 +17,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.apache.shiro.realm.Realm;
 import org.codehaus.enunciate.contract.jaxrs.ResourceMethodSignature;
 import org.codehaus.plexus.component.annotations.Component;
-import org.jsecurity.realm.Realm;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;

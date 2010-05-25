@@ -48,12 +48,20 @@ public class UserComparator implements Comparator<CUser>
         }
         else if ( !user1.getModelEncoding().equals( user2.getModelEncoding() ) )
             return -1;*/
-        if ( user1.getName() == null )
+        if ( user1.getFirstName() == null )
         {
-            if ( user2.getName() != null )
+            if ( user2.getFirstName() != null )
                 return -1;
         }
-        else if ( !user1.getName().equals( user2.getName() ) )
+        else if ( !user1.getLastName().equals( user2.getLastName() ) )
+            return -1;
+        
+        if ( user1.getLastName() == null )
+        {
+            if ( user2.getLastName() != null )
+                return -1;
+        }
+        else if ( !user1.getLastName().equals( user2.getLastName() ) )
             return -1;
 //        if ( user1.getPassword() == null )
 //        {

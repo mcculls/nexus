@@ -12,12 +12,11 @@ import javax.naming.NamingException;
 
 import junit.framework.Assert;
 
+import org.apache.shiro.realm.ldap.LdapContextFactory;
 import org.codehaus.plexus.context.Context;
-import org.jsecurity.realm.ldap.LdapContextFactory;
 import org.sonatype.ldaptestsuite.AbstractLdapTestEnvironment;
 import org.sonatype.security.ldap.realms.persist.InvalidConfigurationException;
 import org.sonatype.security.ldap.realms.persist.LdapConfiguration;
-
 import org.sonatype.security.ldap.realms.persist.model.CConnectionInfo;
 
 public class MultipleAccessLdapConfigTest

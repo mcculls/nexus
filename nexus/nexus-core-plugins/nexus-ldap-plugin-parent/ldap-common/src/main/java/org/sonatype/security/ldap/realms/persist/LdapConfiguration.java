@@ -7,7 +7,6 @@
 package org.sonatype.security.ldap.realms.persist;
 
 import org.sonatype.security.ldap.dao.LdapAuthConfiguration;
-
 import org.sonatype.security.ldap.realms.persist.model.CConnectionInfo;
 import org.sonatype.security.ldap.realms.persist.model.CUserAndGroupAuthConfiguration;
 

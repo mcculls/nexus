@@ -18,9 +18,6 @@ package org.sonatype.security.ldap.upgrade.cipher;
 
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.StringUtils;
-import org.sonatype.security.ldap.upgrade.cipher.CryptoUtils;
-import org.sonatype.security.ldap.upgrade.cipher.PlexusCipher;
-import org.sonatype.security.ldap.upgrade.cipher.TestPlexusCipher;
 
 /**
  * Test the Plexus Cipher container

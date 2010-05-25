@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.easymock.EasyMock;
-import org.jsecurity.web.WebUtils;
 
 public class WebSecurityUtil
 {
@@ -23,9 +22,5 @@ public class WebSecurityUtil
         EasyMock.expect( mockRequest.getSession( false ) ).andReturn( mockSession ).anyTimes();
         replay( mockSession );
         replay( mockRequest );
-
-        // we need to bind for the "web" impl of the RealmSecurityManager to work
-        WebUtils.bind( mockRequest );
-        WebUtils.bind( mockResponse );
     }
 }

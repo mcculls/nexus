@@ -15,8 +15,6 @@ import javax.naming.Context;
 import javax.naming.ldap.InitialLdapContext;
 
 import org.sonatype.ldaptestsuite.AbstractLdapTestEnvironment;
-import org.sonatype.security.ldap.dao.LdapAuthConfiguration;
-import org.sonatype.security.ldap.dao.LdapGroupDAO;
 
 
 public class LdapGroupDAOTest

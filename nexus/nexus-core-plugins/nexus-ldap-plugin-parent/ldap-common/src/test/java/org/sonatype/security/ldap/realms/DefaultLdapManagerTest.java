@@ -14,7 +14,6 @@ import junit.framework.Assert;
 import org.codehaus.plexus.context.Context;
 import org.sonatype.ldaptestsuite.AbstractLdapTestEnvironment;
 import org.sonatype.security.ldap.dao.LdapUser;
-import org.sonatype.security.ldap.realms.LdapManager;
 
 
 public class DefaultLdapManagerTest

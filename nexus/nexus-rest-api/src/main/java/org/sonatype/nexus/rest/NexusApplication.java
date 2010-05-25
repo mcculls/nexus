@@ -146,9 +146,7 @@ import org.sonatype.security.rest.model.UserResourceRequest;
 import org.sonatype.security.rest.model.UserResourceResponse;
 import org.sonatype.security.rest.model.UserToRoleResource;
 import org.sonatype.security.rest.model.UserToRoleResourceRequest;
-import org.sonatype.security.web.PlexusMutableWebConfiguration;
-import org.sonatype.security.web.PlexusWebConfiguration;
-import org.sonatype.security.web.SecurityConfigurationException;
+import org.sonatype.security.web.ProtectedPathManager;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -167,7 +165,7 @@ public class NexusApplication
     private ApplicationEventMulticaster applicationEventMulticaster;
 
     @Requirement
-    private PlexusWebConfiguration plexusWebConfiguration;
+    private ProtectedPathManager protectedPathManager;
 
     @Requirement( hint = "indexTemplate" )
     private ManagedPlexusResource indexTemplateResource;
@@ -572,39 +570,12 @@ public class NexusApplication
         bsf.setNext( new NexusPlexusResourceFinder( getContext(), contentResource ) );
 
         // protecting the content service manually
-        if ( PlexusMutableWebConfiguration.class.isAssignableFrom( plexusWebConfiguration.getClass() ) )
-        {
-            try
-            {
-                ( (PlexusMutableWebConfiguration) plexusWebConfiguration ).addProtectedResource( "/content"
-                    + contentResource.getResourceProtection().getPathPattern(), contentResource.getResourceProtection()
-                    .getFilterExpression() );
-            }
-            catch ( SecurityConfigurationException e )
-            {
-                throw new IllegalStateException( "Could not configure JSecurity to protect resource mounted to "
-                    + contentResource.getResourceUri() + " of class " + contentResource.getClass().getName(), e );
-            }
-        }
+        this.protectedPathManager.addProtectedResource( "/content"
+                    + contentResource.getResourceProtection().getPathPattern(), contentResource.getResourceProtection().getFilterExpression() );
 
         // protecting service resources with "wall" permission
-        if ( PlexusMutableWebConfiguration.class.isAssignableFrom( plexusWebConfiguration.getClass() ) )
-        {
-            try
-            {
-                // TODO: recheck this? We are adding a flat wall to be hit if a mapping is missed
-                ( (PlexusMutableWebConfiguration) plexusWebConfiguration ).addProtectedResource( "/service/**",
-                    "authcBasic,perms[nexus:permToCatchAllUnprotecteds]" );
-            }
-            catch ( SecurityConfigurationException e )
-            {
-                throw new IllegalStateException( "Could not configure JSecurity to add WALL to the end of the chain", e );
-            }
-
-            // signal we finished adding resources
-            ( (PlexusMutableWebConfiguration) plexusWebConfiguration ).protectedResourcesAdded();
-        }
-    }
+        this.protectedPathManager.addProtectedResource( "/service/**",
+                                                        "authcBasic,perms[nexus:permToCatchAllUnprotecteds]" );    }
 
     @Override
     protected void handlePlexusResourceSecurity( PlexusResource resource )
@@ -616,19 +587,8 @@ public class NexusApplication
             return;
         }
 
-        if ( PlexusMutableWebConfiguration.class.isAssignableFrom( plexusWebConfiguration.getClass() ) )
-        {
-            try
-            {
-                ( (PlexusMutableWebConfiguration) plexusWebConfiguration ).addProtectedResource( "/service/*"
-                    + descriptor.getPathPattern(), descriptor.getFilterExpression() );
-            }
-            catch ( SecurityConfigurationException e )
-            {
-                throw new IllegalStateException( "Could not configure JSecurity to protect resource mounted to "
-                    + resource.getResourceUri() + " of class " + resource.getClass().getName(), e );
-            }
-        }
+        this.protectedPathManager.addProtectedResource( "/service/*"
+                                                        + descriptor.getPathPattern(), descriptor.getFilterExpression() );
     }
 
     @Override

@@ -20,7 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jsecurity.web.WebUtils;
+import org.apache.shiro.web.util.WebUtils;
 import org.sonatype.nexus.proxy.AccessDeniedException;
 import org.sonatype.nexus.proxy.ItemNotFoundException;
 import org.sonatype.nexus.proxy.RequestContext;
@@ -97,7 +97,7 @@ public class NexusTargetMappingAuthorizationFilter
     }
 
     @Override
-    protected Action getActionFromHttpVerb( ServletRequest request )
+    protected String getActionFromHttpVerb( ServletRequest request )
     {
         String action = ( (HttpServletRequest) request ).getMethod().toLowerCase();
 
@@ -152,6 +152,6 @@ public class NexusTargetMappingAuthorizationFilter
             }
         }
 
-        return this.getRepositoryRouter().authorizePath( getResourceStoreRequest( request, false ), getActionFromHttpVerb( request ) ) ;
+        return this.getRepositoryRouter().authorizePath( getResourceStoreRequest( request, false ), Action.valueOf( getActionFromHttpVerb( request ) ) ) ;
     }
 }

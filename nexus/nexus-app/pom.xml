@@ -99,10 +99,6 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.jsecurity</groupId>
-      <artifactId>jsecurity</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.sonatype.micromailer</groupId>
       <artifactId>micromailer</artifactId>
     </dependency>

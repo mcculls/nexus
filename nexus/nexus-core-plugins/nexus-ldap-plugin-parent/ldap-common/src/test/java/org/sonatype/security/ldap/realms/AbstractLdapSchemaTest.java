@@ -11,17 +11,16 @@ import java.util.SortedSet;
 
 import junit.framework.Assert;
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.realm.Realm;
 import org.codehaus.plexus.context.Context;
-import org.jsecurity.authc.AuthenticationException;
-import org.jsecurity.authc.AuthenticationInfo;
-import org.jsecurity.authc.UsernamePasswordToken;
-import org.jsecurity.realm.Realm;
 import org.sonatype.ldaptestsuite.AbstractLdapTestEnvironment;
 import org.sonatype.security.ldap.dao.LdapDAOException;
 import org.sonatype.security.ldap.dao.LdapUser;
 import org.sonatype.security.ldap.dao.NoSuchLdapGroupException;
 import org.sonatype.security.ldap.dao.NoSuchLdapUserException;
-import org.sonatype.security.ldap.realms.LdapManager;
 import org.sonatype.security.ldap.realms.persist.LdapConfiguration;
 
 public abstract class AbstractLdapSchemaTest

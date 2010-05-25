@@ -9,7 +9,6 @@ package org.sonatype.security.ldap.realms.persist;
 import junit.framework.Assert;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.sonatype.security.ldap.realms.persist.PasswordHelper;
 import org.sonatype.security.ldap.upgrade.cipher.PlexusCipherException;
 
 

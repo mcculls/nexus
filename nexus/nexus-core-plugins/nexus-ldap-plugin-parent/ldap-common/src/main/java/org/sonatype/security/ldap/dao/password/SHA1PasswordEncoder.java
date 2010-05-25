@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.digest.Hex;
 import org.sonatype.plexus.components.cipher.Base64;
 
 /**

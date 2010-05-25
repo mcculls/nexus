@@ -14,14 +14,13 @@ import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
+import org.apache.shiro.realm.ldap.LdapContextFactory;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
-import org.jsecurity.realm.ldap.LdapContextFactory;
 import org.sonatype.security.ldap.realms.persist.LdapConfiguration;
-import org.sonatype.security.ldap.realms.tools.LdapURL;
-
 import org.sonatype.security.ldap.realms.persist.model.CConnectionInfo;
+import org.sonatype.security.ldap.realms.tools.LdapURL;
 
 @Component( role = LdapContextFactory.class, hint = "PlexusLdapContextFactory" )
 public class PlexusLdapContextFactory

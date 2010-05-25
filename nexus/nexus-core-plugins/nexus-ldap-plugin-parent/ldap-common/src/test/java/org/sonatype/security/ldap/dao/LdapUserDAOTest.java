@@ -14,10 +14,6 @@ import javax.naming.Context;
 import javax.naming.ldap.InitialLdapContext;
 
 import org.sonatype.ldaptestsuite.AbstractLdapTestEnvironment;
-import org.sonatype.security.ldap.dao.LdapAuthConfiguration;
-import org.sonatype.security.ldap.dao.LdapUser;
-import org.sonatype.security.ldap.dao.LdapUserDAO;
-import org.sonatype.security.ldap.dao.NoSuchLdapUserException;
 
 
 

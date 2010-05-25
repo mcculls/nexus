@@ -86,7 +86,8 @@ public class LdapUserManagerTest
         Assert.assertNotNull( user );
         Assert.assertEquals( "cstamas", user.getUserId() );
         Assert.assertEquals( "cstamas@sonatype.com", user.getEmailAddress() );
-        Assert.assertEquals( "Tamas Cservenak", user.getName() );
+        Assert.assertEquals( "Tamas", user.getFirstName() );
+        Assert.assertEquals( "Cservenak", user.getLastName() );
 
         Set<String> roleIds = this.getUserRoleIds( user );
         Assert.assertTrue( roleIds.contains( "repoconsumer" ) ); // from LDAP
@@ -105,7 +106,8 @@ public class LdapUserManagerTest
         Assert.assertNotNull( user );
         Assert.assertEquals( "cstamas", user.getUserId() );
         Assert.assertEquals( "cstamas@sonatype.com", user.getEmailAddress() );
-        Assert.assertEquals( "Tamas Cservenak", user.getName() );
+        Assert.assertEquals( "Tamas", user.getFirstName() );
+        Assert.assertEquals( "Cservenak", user.getLastName() );
     }
 
     public void testGetUserIds()
@@ -159,22 +161,26 @@ public class LdapUserManagerTest
         User cstamas = this.getById( users, "cstamas" );
         Assert.assertEquals( "cstamas", cstamas.getUserId() );
         Assert.assertEquals( "cstamas@sonatype.com", cstamas.getEmailAddress() );
-        Assert.assertEquals( "Tamas Cservenak", cstamas.getName() );
+        Assert.assertEquals( "Tamas", cstamas.getFirstName() );
+        Assert.assertEquals( "Cservenak", cstamas.getLastName() );
 
         User brianf = this.getById( users, "brianf" );
         Assert.assertEquals( "brianf", brianf.getUserId() );
         Assert.assertEquals( "brianf@sonatype.com", brianf.getEmailAddress() );
-        Assert.assertEquals( "Brian Fox", brianf.getName() );
+        Assert.assertEquals( "Brian", brianf.getFirstName() );
+        Assert.assertEquals( "Fox", brianf.getLastName() );
 
         User jvanzyl = this.getById( users, "jvanzyl" );
         Assert.assertEquals( "jvanzyl", jvanzyl.getUserId() );
         Assert.assertEquals( "jvanzyl@sonatype.com", jvanzyl.getEmailAddress() );
-        Assert.assertEquals( "Jason Van Zyl", jvanzyl.getName() );
+        Assert.assertEquals( "Jason", jvanzyl.getFirstName() );
+        Assert.assertEquals( "Van Zyl", jvanzyl.getLastName() );
 
         User jdcasey = this.getById( users, "jdcasey" );
         Assert.assertEquals( "jdcasey", jdcasey.getUserId() );
         Assert.assertEquals( "jdcasey@sonatype.com", jdcasey.getEmailAddress() );
-        Assert.assertEquals( "John Casey", jdcasey.getName() );
+        Assert.assertEquals( "John", jdcasey.getFirstName() );
+        Assert.assertEquals( "Casey", jdcasey.getLastName() );
 
         Assert.assertEquals( "Ids: " + users, 4, users.size() );
     }

@@ -11,21 +11,22 @@
  * Sonatype Nexus (TM) Professional Version is available from Sonatype, Inc.
  * "Sonatype" and "Sonatype Nexus" are trademarks of Sonatype, Inc.
  */
-package org.sonatype.jsecurity.realms;
+package org.sonatype.security.realms;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.codehaus.plexus.component.annotations.Component;
-import org.jsecurity.authc.AuthenticationException;
-import org.jsecurity.authc.AuthenticationInfo;
-import org.jsecurity.authc.AuthenticationToken;
-import org.jsecurity.authc.SimpleAuthenticationInfo;
-import org.jsecurity.authc.UsernamePasswordToken;
-import org.jsecurity.authc.credential.SimpleCredentialsMatcher;
-import org.jsecurity.authz.AuthorizationInfo;
-import org.jsecurity.realm.AuthorizingRealm;
-import org.jsecurity.subject.PrincipalCollection;
 
 /**
  * This is a sample of how you can inject your own authentication system
@@ -40,7 +41,7 @@ import org.jsecurity.subject.PrincipalCollection;
  * use the role-hint of MemoryAuthenticationOnlyRealm.
  * 
  */
-@Component(role=org.jsecurity.realm.Realm.class, hint="MemoryAuthenticationOnlyRealm")
+@Component(role=Realm.class, hint="MemoryAuthenticationOnlyRealm")
 public class MemoryAuthenticationOnlyRealm
     extends AuthorizingRealm
 {

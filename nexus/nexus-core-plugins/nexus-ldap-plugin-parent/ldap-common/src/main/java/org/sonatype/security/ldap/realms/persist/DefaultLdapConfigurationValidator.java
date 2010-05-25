@@ -8,7 +8,6 @@ package org.sonatype.security.ldap.realms.persist;
 
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
-
 import org.sonatype.security.ldap.realms.persist.model.CConnectionInfo;
 import org.sonatype.security.ldap.realms.persist.model.CUserAndGroupAuthConfiguration;
 import org.sonatype.security.ldap.realms.persist.model.CUserRoleMapping;

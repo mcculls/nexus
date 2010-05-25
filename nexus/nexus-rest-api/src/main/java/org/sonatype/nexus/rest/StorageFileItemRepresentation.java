@@ -24,6 +24,8 @@ import org.mortbay.jetty.EofException;
 import org.restlet.data.MediaType;
 import org.restlet.data.Tag;
 import org.restlet.resource.OutputRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.nexus.proxy.attributes.inspectors.DigestCalculatingInspector;
 import org.sonatype.nexus.proxy.item.StorageFileItem;
 
@@ -31,6 +33,8 @@ public class StorageFileItemRepresentation
     extends OutputRepresentation
 {
     private final StorageFileItem file;
+    
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     public StorageFileItemRepresentation( StorageFileItem file )
     {
@@ -75,11 +79,13 @@ public class StorageFileItemRepresentation
         }
         catch ( EofException e )
         {
+            this.logger.trace( e.getMessage(), e );
             // https://issues.sonatype.org/browse/NEXUS-217
         }
         catch ( SocketException e )
         {
             // https://issues.sonatype.org/browse/NEXUS-217
+            this.logger.trace( e.getMessage(), e );
         }
         finally
         {

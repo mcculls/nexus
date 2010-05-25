@@ -12,13 +12,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.apache.shiro.realm.ldap.LdapContextFactory;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
-import org.jsecurity.realm.ldap.LdapContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.plexus.appevents.ApplicationEventMulticaster;

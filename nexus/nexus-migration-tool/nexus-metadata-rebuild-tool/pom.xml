@@ -84,10 +84,6 @@
 					<artifactId>lucene-core</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.jsecurity</groupId>
-					<artifactId>jsecurity</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>commons-beanutils</groupId>
 					<artifactId>commons-beanutils</artifactId>
 				</exclusion>

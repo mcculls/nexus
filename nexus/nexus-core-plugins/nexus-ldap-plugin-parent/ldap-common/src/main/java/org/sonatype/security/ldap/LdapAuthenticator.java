@@ -3,10 +3,10 @@ package org.sonatype.security.ldap;
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapContext;
 
+import org.apache.shiro.realm.ldap.LdapContextFactory;
+import org.apache.shiro.realm.ldap.LdapUtils;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.jsecurity.realm.ldap.LdapContextFactory;
-import org.jsecurity.realm.ldap.LdapUtils;
 import org.sonatype.security.authentication.AuthenticationException;
 import org.sonatype.security.ldap.dao.LdapUser;
 import org.sonatype.security.ldap.dao.password.PasswordEncoderManager;

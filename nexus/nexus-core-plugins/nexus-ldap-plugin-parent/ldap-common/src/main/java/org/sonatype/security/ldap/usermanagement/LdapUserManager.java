@@ -45,7 +45,7 @@ public class LdapUserManager
         {
             try
             {
-                return toPlexusUser( this.ldapManager.getUser( userId ) );
+                return toUser( this.ldapManager.getUser( userId ) );
             }
             catch ( NoSuchLdapUserException e )
             {
@@ -80,7 +80,7 @@ public class LdapUserManager
                 Collection<LdapUser> ldapUsers = this.ldapManager.getAllUsers();
                 for ( LdapUser ldapUser : ldapUsers )
                 {
-                    users.add( this.toPlexusUser( ldapUser ) );
+                    users.add( this.toUser( ldapUser ) );
                 }
             }
             catch ( LdapDAOException e )
@@ -91,7 +91,7 @@ public class LdapUserManager
         return users;
     }
 
-    private User toPlexusUser( LdapUser ldapUser )
+    private User toUser( LdapUser ldapUser )
     {
         User user = new DefaultUser();
         user.setEmailAddress( ldapUser.getEmail() );
@@ -135,7 +135,7 @@ public class LdapUserManager
 
                 for ( LdapUser ldapUser : ldapUsers )
                 {
-                    users.add( this.toPlexusUser( ldapUser ) );
+                    users.add( this.toUser( ldapUser ) );
                 }
             }
             catch ( LdapDAOException e )

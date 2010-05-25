@@ -5,10 +5,10 @@ import java.util.SortedSet;
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapContext;
 
+import org.apache.shiro.realm.ldap.LdapContextFactory;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
-import org.jsecurity.realm.ldap.LdapContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -55,7 +55,10 @@
       <artifactId>security-configuration</artifactId>
       <version>${plexus-security.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>

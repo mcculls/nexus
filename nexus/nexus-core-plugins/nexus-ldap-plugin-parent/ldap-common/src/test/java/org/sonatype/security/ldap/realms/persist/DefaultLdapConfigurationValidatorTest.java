@@ -19,11 +19,6 @@ import junit.framework.Assert;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.sonatype.security.ldap.realms.persist.ConfigurationValidator;
-import org.sonatype.security.ldap.realms.persist.ValidationMessage;
-import org.sonatype.security.ldap.realms.persist.ValidationRequest;
-import org.sonatype.security.ldap.realms.persist.ValidationResponse;
-
 import org.sonatype.security.ldap.realms.persist.model.Configuration;
 import org.sonatype.security.ldap.realms.persist.model.io.xpp3.LdapConfigurationXpp3Reader;
 
