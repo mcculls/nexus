@@ -23,10 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
-import org.jsecurity.subject.Subject;
-import org.jsecurity.web.filter.authz.PermissionsAuthorizationFilter;
 import org.sonatype.nexus.Nexus;
 import org.sonatype.nexus.configuration.application.NexusConfiguration;
 import org.sonatype.nexus.feeds.AuthcAuthzEvent;
@@ -246,6 +246,11 @@ public class HttpVerbMappingAuthorizationFilter
         }
 
         return false;
+    }
+
+    protected Object getAttribute( String key )
+    {
+        return this.getFilterConfig().getServletContext().getAttribute( key );
     }
 
 }

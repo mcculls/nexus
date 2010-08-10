@@ -8,8 +8,8 @@ package org.sonatype.nexus;
 
 import junit.framework.Assert;
 
-import org.jsecurity.authc.UsernamePasswordToken;
-import org.jsecurity.subject.SimplePrincipalCollection;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.sonatype.security.SecuritySystem;
 import org.sonatype.security.authentication.AuthenticationException;
 

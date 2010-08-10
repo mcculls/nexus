@@ -18,8 +18,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.jsecurity.subject.Subject;
-import org.jsecurity.web.filter.authc.AuthenticationFilter;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authc.AuthenticationFilter;
 
 /**
  * A filter simply to log out.
