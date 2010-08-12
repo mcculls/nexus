@@ -120,10 +120,8 @@ public class SimpleRealmTest
         PrincipalCollection principal =
             new SimplePrincipalCollection( "admin-simple", SecuritySystem.class.getSimpleName() );
 
-        // test one of the privleges that the admin user has
-        Assert.assertTrue( plexusSecurity.isPermitted( principal, "nexus:repositories:create" ) );// Repositories -
-        // (create,read)
-
+        // test one of the privleges that the admin user has Repositories - (create,read)
+        Assert.assertTrue( plexusSecurity.isPermitted( principal, "nexus:repositories:create" ) );
     }
 
     /**
