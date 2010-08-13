@@ -68,23 +68,30 @@ public abstract class AbstractLdapAuthenticatingRealm
         LdapContextFactory ldapContextFactory )
         throws NamingException
     {
-        Set<String> roles = new HashSet<String>();
-        String username = principals.getPrimaryPrincipal().toString();
-        try
+        // only authorize users from this realm
+        if( principals.getRealmNames().contains( this.getName() ))
         {
-            roles = this.ldapManager.getUserRoles(username  );
-        }
-        catch ( LdapDAOException e )
-        {
-            this.logger.error( e.getMessage(), e );
-            throw new NamingException(e.getMessage());
-        }
-        catch ( NoLdapUserRolesFoundException e )
-        {
-            this.logger.debug( "User: " + username + " does not have any ldap roles.", e );
-        }
         
-        return new SimpleAuthorizationInfo( roles );
+            Set<String> roles = new HashSet<String>();
+            String username = principals.getPrimaryPrincipal().toString();
+            try
+            {
+                roles = this.ldapManager.getUserRoles(username  );
+            }
+            catch ( LdapDAOException e )
+            {
+                this.logger.error( e.getMessage(), e );
+                throw new NamingException(e.getMessage());
+            }
+            catch ( NoLdapUserRolesFoundException e )
+            {
+                this.logger.debug( "User: " + username + " does not have any ldap roles.", e );
+            }
+            
+            return new SimpleAuthorizationInfo( roles );
+        }
+        return null;
+        
     }
 
     protected AuthenticationInfo buildAuthenticationInfo( String username, char[] password )
