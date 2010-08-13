@@ -81,5 +81,10 @@ public class SimpleRealm
 
         return new SimpleAuthenticationInfo( user.getUserId(), user.getPassword(), getName() );
     }
-
+    
+    @Override
+    public String getName()
+    {
+        return "Simple";
+    }
 }
