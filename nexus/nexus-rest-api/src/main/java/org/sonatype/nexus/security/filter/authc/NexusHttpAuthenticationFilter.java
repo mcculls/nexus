@@ -323,6 +323,7 @@ public class NexusHttpAuthenticationFilter
                             + RemoteIPFinder.findIP( (HttpServletRequest) request );
 
         recordAuthcEvent( request, msg );
+        getLogger().debug( msg, ae );
 
         postAuthcEvent( request, token.getPrincipal().toString(), false );
 
