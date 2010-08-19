@@ -17,10 +17,4 @@ public class NexusLdapAuthenticationRealm
 
     public static final String ROLE = "NexusLdapAuthenticationRealm";
     
-    @Override
-    public String getName()
-    {
-        return ROLE;
-    }
-
 }

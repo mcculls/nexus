@@ -103,7 +103,7 @@ public abstract class AbstractLdapAuthenticatingRealm
     @Override
     public String getName()
     {
-        return "LDAP";
+        return "LdapAuthenticatingRealm";
     }
 
     /*
