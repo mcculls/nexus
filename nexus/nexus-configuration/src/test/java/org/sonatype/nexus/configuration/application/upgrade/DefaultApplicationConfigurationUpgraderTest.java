@@ -351,4 +351,16 @@ public class DefaultApplicationConfigurationUpgraderTest
         securityResultIsFine( "/org/sonatype/nexus/configuration/upgrade/security-configuration-108.xml" );
     }
 
+    public void testFrom142()
+        throws Exception
+    {
+        copyFromClasspathToFile( "/org/sonatype/nexus/configuration/upgrade/nexus-142.xml", getNexusConfiguration() );
+
+        Configuration configuration = configurationUpgrader.loadOldConfiguration( new File( getNexusConfiguration() ) );
+
+        assertEquals( Configuration.MODEL_VERSION, configuration.getVersion() );
+
+        resultIsFine( "/org/sonatype/nexus/configuration/upgrade/nexus-142.xml", configuration );
+    }
+
 }
