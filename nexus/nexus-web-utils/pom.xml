@@ -76,17 +76,16 @@
       <groupId>org.sonatype.plexus</groupId>
       <artifactId>plexus-restlet-bridge</artifactId>
       <exclusions>
-      	<exclusion>
-      		<artifactId>servlet-api</artifactId>
-      		<groupId>org.mortbay.jetty</groupId>
-      	</exclusion>
+        <exclusion>
+          <artifactId>servlet-api</artifactId>
+          <groupId>org.mortbay.jetty</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     
     <dependency>
       <groupId>org.sonatype.sisu.inject</groupId>
       <artifactId>guice-servlet</artifactId>
-      <version>3.0.2</version>
       <exclusions>
         <exclusion>
           <groupId>org.sonatype.sisu</groupId>
