@@ -31,7 +31,6 @@ import javax.ws.rs.Produces;
 
 import org.codehaus.enunciate.contract.jaxrs.ResourceMethodSignature;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.util.StringUtils;
 import org.restlet.Context;
 import org.restlet.data.Form;
 import org.restlet.data.Request;
@@ -153,7 +152,8 @@ public class ScheduledServiceListPlexusResource
                     item.setLastRunResult( getLastRunResult( task ) );
                     item.setId( task.getId() );
                     item.setName( task.getName() );
-                    item.setStatus( StringUtils.capitalise( task.getTaskState().toString() ) );
+                    item.setStatus( task.getTaskState().toString() );
+                    item.setReadableStatus( getReadableState( task.getTaskState() ) );
                     item.setTypeId( task.getType() );
                     ScheduledTaskDescriptor descriptor =
                         getNexusConfiguration().getScheduledTaskDescriptor( task.getType() );
@@ -220,6 +220,7 @@ public class ScheduledServiceListPlexusResource
                 resourceStatus.getResource().setId( task.getId() );
                 resourceStatus.setResourceURI( createChildReference( request, this, task.getId() ).toString() );
                 resourceStatus.setStatus( task.getTaskState().toString() );
+                resourceStatus.setReadableStatus( getReadableState( task.getTaskState() ) );
                 resourceStatus.setCreated( task.getScheduledAt() == null ? "n/a" : task.getScheduledAt().toString() );
                 resourceStatus.setLastRunResult( TaskState.BROKEN.equals( task.getTaskState() ) ? "Error" : "Ok" );
                 resourceStatus.setLastRunTime( task.getLastRun() == null ? "n/a" : task.getLastRun().toString() );
